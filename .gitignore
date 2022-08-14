@@ -50,3 +50,30 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+##### VisualStudioCode
+.vscode/
+.vscode/*
+*.code-workspace
+
+##### MacOS
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+#minilibx
+*.ipa
+*.dSYM.zip
+*.dSYM
+timeline.xctimeline
+playground.xcworkspace
+*.swiftdoc
+minilibx/*~
+
+# CLion stuf
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf
