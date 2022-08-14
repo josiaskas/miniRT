@@ -46,14 +46,15 @@ all : $(NAME)
 $(NAME): $(OBJS_DIR) $(OBJS)
 	@echo "$(GREEN)finish building objects$(RESET_COLOR)"
 	@$(MAKE) re -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(OBJS) -L./$(LIBFT_DIR) -o $@
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -o $@
 	@echo "$(GREEN) $(NAME) est construit$(RESET_COLOR)"
 $(OBJS_DIR):
 	@echo "$(GREEN) building object dir $(RESET_COLOR)"
 	@mkdir -p $(OBJS_DIR)
 
-$(OBJS_DIR)/%.o : %.c
-	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) $< -o $@
+$(OBJS_DIR)/%.o : %.c $(INCLUDES)
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -c $< -o $@
 clean :
 	@rm -rf $(OBJS_DIR)
 	@$(MAKE) clean -C $(LIBFT_DIR)
