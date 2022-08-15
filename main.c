@@ -1,8 +1,18 @@
-//
-// Created by Josias Mutshaila kasongo on 2022-08-14.
-//
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/08/14 18:54:04 by jkasongo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minirt.h"
 
 int main(void){
+	ft_putendl_fd("Hello world", STDOUT_FILENO);
 	return (0);
 }

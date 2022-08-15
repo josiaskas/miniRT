@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = minirt
+NAME = miniRT
 CC = clang
 CFLAGS = -Wall -Wextra -Werror -g
 INCLUDES_DIR = ./includes
@@ -28,14 +28,14 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c
+UTILS_SRCS = vector.c point.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #sources
 SRCS = main.c $(UTILS_SRCS_PREFIXED)
 
 #includes
-INCLUDES_FILES = minirt.h
+INCLUDES_FILES = minirt.h point.h
 INCLUDES = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
 
 #objsm
@@ -46,21 +46,24 @@ all : $(NAME)
 $(NAME): $(OBJS_DIR) $(OBJS)
 	@echo "$(GREEN)finish building objects$(RESET_COLOR)"
 	@$(MAKE) re -C $(LIBFT_DIR)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -o $@
-	@echo "$(GREEN) $(NAME) est construit$(RESET_COLOR)"
+	@$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $@
+	@echo "$(GREEN)$(NAME) est construit$(RESET_COLOR)"
 $(OBJS_DIR):
-	@echo "$(GREEN) building object dir $(RESET_COLOR)"
+	@echo "$(GREEN)building object dir $(RESET_COLOR)"
 	@mkdir -p $(OBJS_DIR)
 
 $(OBJS_DIR)/%.o : %.c $(INCLUDES)
 	@mkdir -p $(@D)
-	$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -c $< -o $@
+	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -c $< -o $@
+
 clean :
 	@rm -rf $(OBJS_DIR)
 	@$(MAKE) clean -C $(LIBFT_DIR)
 	@echo "$(GREEN)cleaning objs$(RESET_COLOR)"
 
 fclean : clean
+	@rm -f ./$(NAME)
+	@echo "$(RED)clean$(RESET_COLOR)"
 
 re : fclean all
 
