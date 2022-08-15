@@ -33,10 +33,10 @@ UTILS_SRCS = vector.c point.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #sources
-SRCS = main.c $(UTILS_SRCS_PREFIXED)
+SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED)
 
 #includes
-INCLUDES_FILES = minirt.h point.h
+INCLUDES_FILES = minirt.h vector.h point.h raytrace.h
 INCLUDES = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
 
 #objsm
