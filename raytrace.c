@@ -15,8 +15,8 @@
 
 bool	do_raytracing(t_app *app)
 {
-	app->error_code = 4;
-	app->error_message = "Error during raytracing";
+	app->error_code = 0;
+	app->error_message = NULL;
 
 	// logic of raytracing here
 	return (true);

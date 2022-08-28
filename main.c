@@ -70,11 +70,11 @@ static void	init_app(char *filename)
 	if (open_file(filename, app) != 0)
 		exit_app(app, true);
 	//parsing file here
-
+	ft_printf("Start parsing file: %s \n", app->file_name);
 	//init window
 	if (!init_window(app))
 		exit_app(app, true);
-
+	ft_putendl_fd("Init window", STDOUT_FILENO);
 	if (!do_raytracing(app))
 		exit_app(app, true);
 	app_loop(app);
