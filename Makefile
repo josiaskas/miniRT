@@ -6,7 +6,7 @@
 #    By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/14 18:37:04 by jkasongo          #+#    #+#              #
-#    Updated: 2022/08/14 20:34:07 by jkasongo         ###   ########.fr        #
+#    Updated: 2022/08/30 17:19:07 by jkasongo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -29,18 +29,26 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c point.c
+UTILS_SRCS = vector.c vector_suite.c point.c ray.c camera.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
+#parsing sources
+PARSER_DIR = parsing/
+PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c
+PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
+
+
 #sources
-SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED)
+SRCS_DIR = srcs/
+SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED)
+SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(SRCS))
 
 #includes
-INCLUDES_FILES = minirt.h vector.h point.h raytrace.h
+INCLUDES_FILES = minirt.h vector.h raytrace.h
 INCLUDES = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
 
 #objsm
-OBJS := $(SRCS:%.c=$(OBJS_DIR)/%.o)
+OBJS := $(SRCS_PREFIXED:%.c=$(OBJS_DIR)/%.o)
 
 all : $(NAME)
 
