@@ -13,7 +13,15 @@
 #ifndef RAYTRACE_H
 # define RAYTRACE_H
 # include "vector.h"
-# include "point.h"
 
+
+typedef	struct s_camera
+{
+	t_point	*origin;
+	double	angle;
+}	t_cam;
+
+t_cam	*build_camera(t_point *origin, double angle);
+void	free_cam(t_cam *cam);
 #endif //RAYTRACE_H
 

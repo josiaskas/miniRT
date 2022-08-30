@@ -19,3 +19,31 @@ void	ft_print_error(char *error_message, int code)
 	ft_putchar_fd(' ', STDERR_FILENO);
 	ft_putendl_fd(error_message, STDERR_FILENO);
 }
+
+void	clean_app_stuff(t_app *app)
+{
+	if (app->img)
+		free(app->img);
+	if (app->mouse)
+		free(app->mouse);
+	if (app->in_fd != 0)
+		close(app->in_fd);
+	if (app->out_fd != 0)
+		close(app->out_fd);
+	if (app->data)
+		free(app->data);
+}
+
+void	exit_app(t_app *app, bool error)
+{
+	if (!app)
+		exit(-1);
+	if (error)
+		ft_print_error(app->error_message, app->error_code);
+	clean_app_stuff(app);
+	free(app);
+	if (error)
+		exit(-1);
+	else
+		exit(0);
+}

@@ -1,35 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytrace.c                                         :+:      :+:    :+:   */
+/*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:54:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/08/28 12:16:05 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
 #include "raytrace.h"
 
-
-void	init_raytracing(t_app *app)
+// return a t_cam * , can be freed with free_cam
+inline t_cam	*build_camera(t_point *origin, double angle)
 {
-	app->error_code = 0;
-	app->error_message = NULL;
-	if (app->data)
-		free(app->data);
-	app->data = ft_calloc((W_WIDTH * W_HEIGHT), sizeof(t_vector));
+	t_cam	*cam;
+
+	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
+	if (cam)
+	{
+		cam->origin = origin;
+		cam->angle = angle;
+	}
+	return (cam);
 }
 
-bool	do_raytracing(t_app *app)
+// free camera
+void	free_cam(t_cam *cam)
 {
-	t_repere	*orthogonal;
-
-	init_raytracing(app);
-	orthogonal = init_repere(W_HEIGHT, W_WIDTH, 1);
-
-	free_repere(orthogonal);
-	return (true);
+	if (cam)
+	{
+		if (cam->origin)
+			free(cam->origin);
+		free(cam);
+	}
 }

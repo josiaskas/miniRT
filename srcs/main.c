@@ -12,79 +12,53 @@
 
 #include "minirt.h"
 
-void	exit_app(t_app *app, bool error)
+static	void run_app(bool render_in_a_window, t_app *app)
 {
-	if (!app)
-		exit(-1);
-	if (error)
-		ft_print_error(app->error_message, app->error_code);
-	if (app->img)
-		free(app->img);
-	if (app->mouse)
-		free(app->mouse);
-	if (app->fd != 0)
-		close(app->fd);
-	free(app);
-	if (error)
-		exit(-1);
+	if (!do_raytracing(app))
+		exit_app(app, true);
+	if (!render_in_a_window)
+		write_image_to_file(app);
 	else
-		exit(0);
-}
-
-// open a file with the correct extension
-static int open_file(char *filename, t_app *app)
-{
-	int		fd;
-	char	*extension;
-
-	extension = ft_strnstr(filename, ".rt", ft_strlen(filename));
-	if (!extension)
 	{
-
-		app->error_message = "miniRT need a file format like *.rt";
-		app->error_code = 1;
-		return (-1);
+		if (!init_window(app))
+			exit_app(app, true);
+		ft_putendl_fd("Init window", STDOUT_FILENO);
+		app_loop(app);
 	}
-	fd = open(filename, O_RDONLY);
-	if (fd < 0)
-	{
-		app->error_message = strerror(errno);
-		app->error_code = 2;
-		return (-1);
-	}
-	app->file_name = filename;
-	app->fd = fd;
-	return (0);
+	exit_app(app, false);
 }
 
 /*
  * Try to initialise the app with the filename given
  * Parse the file given
- * Init Mlx window and start the loop
+ * Init Mlx window or write inside a file
  */
-static void	init_app(char *filename)
+static void	init_app(char *filename, char *outFile)
 {
 	t_app	*app;
+	bool	in_window;
 
 	app = (t_app *)ft_calloc(1, sizeof(t_app));
-	if (open_file(filename, app) != 0)
+	if (open_rt_file(filename, app) != 0)
 		exit_app(app, true);
-	//parsing file here
-	ft_printf("Start parsing file: %s \n", app->file_name);
-	//init window
-	if (!init_window(app))
+	in_window = true;
+	if (outFile)
+	{
+		if (open_out_file(outFile, app) != 0)
+			exit_app(app, true);
+		in_window = false;
+	}
+	if (!parse_rt_file(app))
 		exit_app(app, true);
-	ft_putendl_fd("Init window", STDOUT_FILENO);
-	if (!do_raytracing(app))
-		exit_app(app, true);
-	app_loop(app);
-	exit_app(app, false);
+	run_app(in_window, app);
 }
 
 int main(int argc, char *argv[])
 {
 	if (argc == 2)
-		init_app(argv[1]);
+		init_app(argv[1], NULL);
+	else if (argc == 3)
+		init_app(argv[1], argv[2]);
 	else
 		ft_putendl_fd("Usage: miniRT *.rt", STDOUT_FILENO);
 	return (0);
