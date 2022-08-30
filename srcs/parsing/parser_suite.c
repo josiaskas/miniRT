@@ -1,35 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytrace.c                                         :+:      :+:    :+:   */
+/*   parser_suite.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:54:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/08/30 14:54:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
-#include "raytrace.h"
+#include "parser.h"
 
 
-void	init_raytracing(t_app *app)
+bool	ft_is_a_number(char *str)
 {
-	app->error_code = 0;
-	app->error_message = NULL;
-	if (app->data)
-		free(app->data);
-	app->data = ft_calloc((W_WIDTH * W_HEIGHT), sizeof(t_vector));
-}
+	size_t	i;
 
-bool	do_raytracing(t_app *app)
-{
-	t_repere	*orthogonal;
-	ft_putendl_fd("Start ray tracing", STDOUT_FILENO);
-	init_raytracing(app);
-	orthogonal = init_repere(W_HEIGHT, W_WIDTH, 1);
-
-	free(orthogonal);
+	i = 0;
+	if (!str)
+		return (false);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	if (i > 10)
+		return (false);
 	return (true);
 }

@@ -20,7 +20,7 @@ void	ft_print_error(char *error_message, int code)
 	ft_putendl_fd(error_message, STDERR_FILENO);
 }
 
-void	clean_app_stuff(t_app *app)
+static void	clean_app_stuff(t_app *app)
 {
 	if (app->img)
 		free(app->img);
@@ -34,6 +34,12 @@ void	clean_app_stuff(t_app *app)
 		free(app->data);
 }
 
+static void	clean_raytrace_stuff(t_app *app)
+{
+	if (app->scene)
+		free_scene(app->scene);
+}
+
 void	exit_app(t_app *app, bool error)
 {
 	if (!app)
@@ -41,6 +47,7 @@ void	exit_app(t_app *app, bool error)
 	if (error)
 		ft_print_error(app->error_message, app->error_code);
 	clean_app_stuff(app);
+	clean_raytrace_stuff(app);
 	free(app);
 	if (error)
 		exit(-1);

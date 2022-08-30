@@ -50,6 +50,16 @@ inline t_vector	*get_heap_vector(double i, double j, double k)
 	return (vector);
 }
 
+inline t_vector	build_simple_vector(double i, double j, double k)
+{
+	t_vector	vector;
+
+	vector.x = i;
+	vector.y = j;
+	vector.z = k;
+	return (vector);
+}
+
 /*
  * Retourne un repere qui sort de l'ecran
  * Ayant trois vecteur de direction
@@ -61,23 +71,9 @@ inline t_repere *init_repere(double x, double y, double z)
 
 	orthogonal = (t_repere *)ft_calloc(1, sizeof(t_repere));
 	if (orthogonal){
-		orthogonal->rep_x = get_heap_vector(x, 0, 0);
-		orthogonal->rep_y = get_heap_vector(0, y, 0);
-		orthogonal->rep_z = get_heap_vector(0, 0, z);
+		orthogonal->rep_x = build_simple_vector(x, 0, 0);
+		orthogonal->rep_y = build_simple_vector(0, y, 0);
+		orthogonal->rep_z = build_simple_vector(0, 0, z);
 	}
 	return orthogonal;
-}
-
-void	free_repere(t_repere *rep)
-{
-	if (rep)
-	{
-		if (rep->rep_x)
-			free(rep->rep_x);
-		if (rep->rep_y)
-			free(rep->rep_y);
-		if (rep->rep_z)
-			free(rep->rep_z);
-		free(rep);
-	}
 }

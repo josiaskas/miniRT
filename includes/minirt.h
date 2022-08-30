@@ -16,6 +16,7 @@
 # include "../minilibx/mlx.h"
 # include "hooks_key.h"
 # include "vector.h"
+# include "raytrace.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <string.h>
@@ -53,6 +54,7 @@ typedef struct s_app
 	int			out_fd;
 	t_vector	*data;
 	t_mouse		*mouse;
+	t_scene		*scene;
 }	t_app;
 
 int		write_image_to_file(t_app *app);

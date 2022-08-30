@@ -14,7 +14,7 @@
 
 /*
  * Build the ray with origin and direction vector
- * return a *t_ray to be freed (free_ray)
+ * return a *t_ray to be freed
 */
 inline t_ray	*build_ray(t_point *origin, t_vector *direction)
 {

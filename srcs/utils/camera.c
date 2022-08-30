@@ -13,7 +13,7 @@
 #include "raytrace.h"
 
 // return a t_cam * , can be freed with free_cam
-inline t_cam	*build_camera(t_point *origin, double angle)
+inline t_cam	*build_camera(t_point origin, t_vector dir, double angle)
 {
 	t_cam	*cam;
 
@@ -21,18 +21,35 @@ inline t_cam	*build_camera(t_point *origin, double angle)
 	if (cam)
 	{
 		cam->origin = origin;
-		cam->angle = angle;
+		cam->orientation = dir;
+		cam->h_angle = angle;
 	}
 	return (cam);
 }
 
-// free camera
-void	free_cam(t_cam *cam)
+inline t_scene	*init_scene()
 {
-	if (cam)
+	t_scene	*scene;
+
+	scene = NULL;
+	scene = (t_scene *)ft_calloc(1, sizeof(t_scene));
+	if (scene)
 	{
-		if (cam->origin)
-			free(cam->origin);
-		free(cam);
+		scene->hittable = ft_new_array();
+		scene->lights = ft_new_array();
+		scene->cameras = ft_new_array();
+	}
+	return (scene);
+}
+
+// destroy hittable, lights and cameras on the scene
+void	free_scene(t_scene *scene)
+{
+	if (scene)
+	{
+		ft_free_d_array(scene->hittable);
+		ft_free_d_array(scene->lights);
+		ft_free_d_array(scene->cameras);
+		free(scene);
 	}
 }

@@ -6,7 +6,7 @@
 #    By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/14 18:37:04 by jkasongo          #+#    #+#              #
-#    Updated: 2022/08/28 12:19:07 by jkasongo         ###   ########.fr        #
+#    Updated: 2022/08/30 17:19:07 by jkasongo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,7 +34,7 @@ UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
 PARSER_DIR = parsing/
-PARSER_SRCS = parser.c file.c
+PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 
