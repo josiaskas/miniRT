@@ -1,24 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   point.h                                            :+:      :+:    :+:   */
+/*   parser_suite.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:56:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/08/30 14:54:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef POINT_H
-# define POINT_H
-# include "vector.h"
+#include "parser.h"
 
-typedef struct s_point
+
+bool	ft_is_a_number(char *str)
 {
-	double coord[3];
-}	t_point;
+	size_t	i;
 
-t_vector	get_line_f_p(t_point *a, t_point *b);
-double		get_distance_b_p(t_point *a, t_point *b);
-#endif //POINT_H
+	i = 0;
+	if (!str)
+		return (false);
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	if (i > 10)
+		return (false);
+	return (true);
+}
