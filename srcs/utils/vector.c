@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:56:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,7 @@
 inline double get_vector_norm_2(t_vector *v)
 {
 	if (v)
-	{
-		return ((v->coord[0] * v->coord[0]) + (v->coord[1] * v->coord[1]) +
-				(v->coord[2] * v->coord[2]));
-	}
+		return ((v->x * v->x) + (v->y * v->y) + (v->z * v->z));
 	return (0);
 }
 
@@ -36,14 +33,14 @@ inline t_vector	add_vector(t_vector *a, t_vector *b)
 {
 	t_vector  r;
 
-	r.coord[0] = 0;
-	r.coord[1] = 0;
-	r.coord[2] = 0;
+	r.x = 0;
+	r.y = 0;
+	r.z = 0;
 	if (a && b)
 	{
-		r.coord[0] = (a->coord[0] + b->coord[0]);
-		r.coord[1] = (a->coord[1] + b->coord[1]);
-		r.coord[2] = (a->coord[2] + b->coord[2]);
+		r.x = (a->x + b->x);
+		r.y = (a->y + b->y);
+		r.z = (a->z + b->z);
 	}
 	return (r);
 }
@@ -53,27 +50,27 @@ inline t_vector	multiply_vector(double i, t_vector *v)
 {
 	t_vector  r;
 
-	r.coord[0] = 0;
-	r.coord[1] = 0;
-	r.coord[2] = 0;
+	r.x = 0;
+	r.y = 0;
+	r.z = 0;
 	if (v)
 	{
-		r.coord[0] = (i * v->coord[0]);
-		r.coord[1] = (i * v->coord[1]);
-		r.coord[2] = (i * v->coord[2]);
+		r.x = (i * v->x);
+		r.y = (i * v->y);
+		r.z = (i * v->z);
 	}
 	return (r);
 }
 
 // return normalized version of a vector
-inline t_vector	get_normalized(t_vector *v)
+inline t_vector	get_vector_normalized(t_vector *v)
 {
 	t_vector	n;
 	double		coef;
 
-	n.coord[0] = 0;
-	n.coord[1] = 0;
-	n.coord[2] = 0;
+	n.x = 0;
+	n.y = 0;
+	n.z = 0;
 	if (v)
 	{
 		coef = get_vector_norm(v);
