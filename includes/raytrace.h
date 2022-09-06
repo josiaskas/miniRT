@@ -60,8 +60,10 @@ typedef struct s_scene
 
 
 t_cam	*build_camera(t_point origin, t_vector dir, double angle, double n);
-void	free_cam(t_cam *cam);
 t_scene	*init_scene();
+
+t_ray	*get_viewport_ray(double x, double y, t_cam *cam);
+
 void	free_scene(t_scene *scene);
 #endif //RAYTRACE_H
 

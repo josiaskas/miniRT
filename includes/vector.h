@@ -35,8 +35,8 @@ typedef struct s_repere
 
 typedef struct s_ray
 {
-	t_point		*origin;
-	t_vector	*dir;
+	t_point		origin;
+	t_vector	dir;
 }	t_ray;
 
 double		get_vector_norm(t_vector *v);
@@ -54,8 +54,7 @@ double		get_distance_b_p(t_point *a, t_point *b);
 
 double		degrees_to_radians(double degree);
 
-t_ray		*build_ray(t_point *origin, t_vector *direction);
+t_ray		*build_ray(t_point origin, t_vector direction);
 t_point		get_point_on_ray_at(double t, t_ray *ray);
-void		free_ray(t_ray *ray);
 t_repere	*init_repere(double x, double y, double z);
 #endif //VECTOR_H

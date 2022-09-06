@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "vector.h"
-#include <stdio.h>
 
 // retourne la norme au carré du vecteur
 inline double get_vector_norm_2(t_vector *v)

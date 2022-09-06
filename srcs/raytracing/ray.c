@@ -1,23 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.h                                           :+:      :+:    :+:   */
+/*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 14:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 14:26:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/08/30 11:54:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/08/30 11:54:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PARSER_H
-# define PARSER_H
-# include "vector.h"
+#include "raytracing.h"
 
-bool	parse_a_vector(char *token, t_vector *vector);
-bool	parse_double_from_str(char *str, double *result);
-bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr);
-bool	all_vector_coord_are_in_range(double min, double max, t_vector *v);
-bool	ft_is_a_number(char *str, bool is_decimal);
+// return the position vector of the pixel on the viewport
+t_point	get_pixel_position_point(double x, double y)
+{
 
-#endif //PARSER_H
+}
