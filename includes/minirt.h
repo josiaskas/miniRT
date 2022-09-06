@@ -22,8 +22,8 @@
 # include <string.h>
 # include <errno.h>
 
-# define W_HEIGHT 800
-# define W_WIDTH 1200
+# define W_HEIGHT 720
+# define W_WIDTH 1280
 
 typedef struct s_mouse
 {

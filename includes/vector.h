@@ -52,6 +52,8 @@ t_vector	build_simple_vector(double i, double j, double k);
 t_vector	get_line_f_p(t_point *a, t_point *b);
 double		get_distance_b_p(t_point *a, t_point *b);
 
+double		degrees_to_radians(double degree);
+
 t_ray		*build_ray(t_point *origin, t_vector *direction);
 t_point		get_point_on_ray_at(double t, t_ray *ray);
 void		free_ray(t_ray *ray);

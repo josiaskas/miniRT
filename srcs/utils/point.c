@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vector.h"
+#include <math.h>
 
 // return a vector build from two point, une droite
 t_vector get_line_f_p(t_point *a, t_point *b)
@@ -43,4 +44,13 @@ double get_distance_b_p(t_point *a, t_point *b)
 				+ pow((b->z - a->z), 2));
 	}
 	return (d);
+}
+
+// transform degree angle to radian
+inline double	degrees_to_radians(double degree)
+{
+	double	radian;
+
+	radian = degree * (M_PI / 180.0);
+	return  (radian);
 }

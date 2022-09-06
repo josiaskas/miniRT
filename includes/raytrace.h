@@ -17,22 +17,25 @@
 typedef enum e_hittable_type
 {
 	e_hit_sphere,
+	e_hit_plane,
+	e_hit_triangle,
 	e_hit_light,
 }	t_hit_type;
 
 typedef	struct s_camera
 {
-	t_point	origin;
-	t_point	orientation;
-	double	h_angle;
+	t_point		origin;
+	t_vector	dir;
+	t_vector	dir_ort;
+	double		fov;
+	double		near_clp_plane;
+	double		far_clp_plane;
+	double		v_w;
+	double		v_h;
+	t_vector	u1;
+	t_vector	u2;
+	t_vector	r_init;
 }	t_cam;
-
-typedef struct s_scene
-{
-	t_array		*hittable;
-	t_array		*lights;
-	t_array		*cameras;
-}	t_scene;
 
 typedef struct s_hittable
 {
@@ -44,7 +47,19 @@ typedef struct s_hittable
 	double		conf_data_2;
 }	t_hittable;
 
-t_cam	*build_camera(t_point origin, t_vector dir, double angle);
+typedef struct s_scene
+{
+	t_array		*hittable;
+	t_array		*lights;
+	t_array		*cameras;
+	int			viewport_pixel_w;
+	int			viewport_pixel_h;
+	double		aspect_ratio;
+	t_cam		*selected_camera;
+}	t_scene;
+
+
+t_cam	*build_camera(t_point origin, t_vector dir, double angle, double n);
 void	free_cam(t_cam *cam);
 t_scene	*init_scene();
 void	free_scene(t_scene *scene);
