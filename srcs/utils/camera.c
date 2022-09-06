@@ -12,7 +12,6 @@
 
 #include "minirt.h"
 #include "raytrace.h"
-#include <stdio.h>
 
 inline t_scene *init_scene()
 {
@@ -80,20 +79,6 @@ t_cam *build_camera(t_point origin, t_vector dir, double fov, double n)
 		cam->v_h = 2 * n * tan(degrees_to_radians(fov / 2));
 		cam->v_w = ((double)W_WIDTH / (double)W_HEIGHT) * cam->v_h;
 		build_camera_viewport_vectors(cam);
-		printf("Camera Added\nfov: %.2lf, n: %lf donc H: %lf L:%lf\n",
-			   cam->fov, cam->near_clp_plane, cam->v_h, cam->v_w);
-		printf("vecteur origin: (%.2lf, %.2lf, %.2lf)\n", cam->origin.x,
-			   cam->origin.y, cam->origin.z);
-		printf("vecteur dir: (%lf, %lf, %lf)\n", cam->dir.x, cam->dir.y,
-			   cam->dir.z);
-		printf("vecteur dir_ort: (%lf, %lf, %lf)\n", cam->dir_ort.x,
-			   cam->dir_ort.y, cam->dir_ort.z);
-		printf("vecteur u1: (%lf, %lf, %lf)\n", cam->u1.x, cam->u1.y,
-			   cam->u1.z);
-		printf("vecteur u2: (%lf, %lf, %lf)\n", cam->u2.x, cam->u2.y,
-			   cam->u2.z);
-		printf("vecteur r(ini): (%lf, %lf, %lf)\n", cam->r_init.x, cam->r_init.y,
-			   cam->r_init.z);
 	}
 	return (cam);
 }

@@ -14,7 +14,7 @@
 
 static	void run_app(bool render_in_a_window, t_app *app)
 {
-	exit_app(app, false);
+//	exit_app(app, false);
 	if (!do_raytracing(app))
 		exit_app(app, true);
 	if (!render_in_a_window)

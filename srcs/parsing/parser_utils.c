@@ -37,7 +37,7 @@ bool	parse_double_from_str(char *str, double *result)
 	values = ft_split(str, '.');
 	while (values[i] != 0)
 		i++;
-	if (!ft_is_a_number(values[0]))
+	if (!ft_is_a_number(values[0], false))
 		status = false;
 	if ((i > 2) || (status == false))
 		status = false;
@@ -45,7 +45,7 @@ bool	parse_double_from_str(char *str, double *result)
 		*result = *result = ft_parse_double(values[0], NULL);
 	else
 	{
-		if (!ft_is_a_number(values[1]))
+		if (!ft_is_a_number(values[1], true))
 			status = false;
 		*result = ft_parse_double(values[0], values[1]);
 	}

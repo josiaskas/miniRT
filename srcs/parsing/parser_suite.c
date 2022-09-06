@@ -12,14 +12,16 @@
 
 #include "parser.h"
 
-
-bool	ft_is_a_number(char *str)
+// check if is only digit, if decimal '-' in front is false
+bool	ft_is_a_number(char *str, bool is_decimal)
 {
 	size_t	i;
 
 	i = 0;
 	if (!str)
 		return (false);
+	if (str[0] == '-' && (!is_decimal))
+		i++;
 	while (str[i])
 	{
 		if (!ft_isdigit(str[i]))
