@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vector.h"
+#include <stdio.h>
 
 // retourne la norme au carré du vecteur
 inline double get_vector_norm_2(t_vector *v)
@@ -76,7 +77,7 @@ inline t_vector	get_vector_normalized(t_vector *v)
 		coef = get_vector_norm(v);
 		if (coef != 0){
 			coef = (1 / coef);
-			return (multiply_vector(coef, &n));
+			return (multiply_vector(coef, v));
 		}
 	}
 	return (n);

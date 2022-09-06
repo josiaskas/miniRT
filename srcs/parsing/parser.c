@@ -53,7 +53,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (angle < 0 || angle > 180)
 		return (false);
-	camera = build_camera(origin, orientation, angle);
+	camera = build_camera(origin, orientation, angle, 1);
 	ft_push(app->scene->cameras, camera);
 	return (true);
 }
