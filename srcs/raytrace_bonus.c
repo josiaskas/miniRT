@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytrace.c                                         :+:      :+:    :+:   */
+/*   raytrace_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,13 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#include "../includes/minirt.h"
+#include "../includes/multithread.h"
 #include <stdio.h>
+
 
 void init_raytracing(t_app *app)
 {
 	size_t	i;
-	t_scene *scene;
+	t_scene	*scene;
 
 	app->error_code = 0;
 	app->error_message = NULL;
@@ -32,36 +34,36 @@ void init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-t_color get_pixel_data(t_scene *scene, double x, double y)
+t_color get_pixel_data(t_scene *scene, int x, int y)
 {
 	t_color	color;
 	t_cam	*camera;
 	t_ray	*ray;
 
-	camera = scene->selected_camera;
-	ray = get_viewport_ray(x, y, camera);
-	color = do_intersect_object(scene, ray, RAY_T_MAX);
+	camera	= scene->selected_camera;
+	ray		= get_viewport_ray(x, y, camera);
+	color	= do_intersect_object(scene, ray, RAY_T_MAX);
 	free(ray);
 	return (color);
 }
 
-bool do_raytracing(t_app *app)
+void	*run_thread_pixel(void *thread_info)
 {
-	int		x;
-	int		y;
+	t_thread	*data;
+	int			x;
+	int			y;
 
-	y = 0;
+	data = (t_thread *)thread_info;
+	x = data->x;
+	y = data->y;
+	data->data[y][x] = get_pixel_data(data->scene, (double)x, (double)y);
+	return (data);
+}
+
+bool	do_raytracing(t_app *app)
+{
 	init_raytracing(app);
-	while (y < W_HEIGHT)
-	{
-		x = 0;
-		while (x < W_WIDTH)
-		{
-			app->data[y][x] = get_pixel_data(app->scene, (double)x, (double)y);
-			x++;
-		}
-		y++;
-	}
+	run_threads(run_thread_pixel, app->scene, app->data);
 	printf("finished raytracing\n");
 	return (true);
 }

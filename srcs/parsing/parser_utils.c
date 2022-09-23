@@ -17,10 +17,10 @@ static double ft_parse_double(char *str1, char *str2)
 {
 	double	r;
 	double	f;
-	int		after_dot;
+	double	after_dot;
 
 	r = (double)ft_atoi(str1);
-	after_dot = (int)ft_strlen(str2) * -1;
+	after_dot = (double)ft_strlen(str2) * -1.0f;
 	f = pow(10, after_dot) * (double)ft_atoi(str2) ;
 	return (r + f);
 }
@@ -42,7 +42,7 @@ bool	parse_double_from_str(char *str, double *result)
 	if ((i > 2) || (status == false))
 		status = false;
 	else if (i == 1)
-		*result = *result = ft_parse_double(values[0], NULL);
+		*result = ft_parse_double(values[0], NULL);
 	else
 	{
 		if (!ft_is_a_number(values[1], true))

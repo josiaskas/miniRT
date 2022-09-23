@@ -31,7 +31,7 @@ static void	clean_app_stuff(t_app *app)
 	if (app->out_fd != 0)
 		close(app->out_fd);
 	if (app->data)
-		free(app->data);
+		free_array((void **)app->data, W_HEIGHT);
 }
 
 static void	clean_raytrace_stuff(t_app *app)

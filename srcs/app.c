@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <stdio.h>
 
-static int	close_window(t_app *app)
+static int close_window(t_app *app)
 {
 	if (app->error_code > 3)
 		exit_app(app, true);
@@ -21,22 +22,53 @@ static int	close_window(t_app *app)
 	return (0);
 }
 
-static int	key_pressed_hook(int key, t_app *app)
+static int key_pressed_hook(int key, t_app *app)
 {
 	if (key == MAIN_PAD_ESC)
 		close_window(app);
 	return (0);
 }
 
-// loop and call hooks function on event
-void	app_loop(t_app *app)
+void watch_color_info(int x, int y, t_color *color){
+	printf("color at (x:%d y:%d) color :(%lf, %lf, %lf)\n",
+		   x, y, color->x, color->y, color->z);
+}
+static void draw_scene(t_image *img, t_color **colors)
 {
+	int		x;
+	int		y;
+	int		pos;
+	char	*pixel;
+
+	y = 0;
+	while (y < W_HEIGHT)
+	{
+		x = 0;
+		while (x < W_WIDTH)
+		{
+			pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+			pixel = img->data + pos;
+			*(unsigned int *)pixel = get_vector_trgb(colors[y][x]);
+			x++;
+		}
+		y++;
+	}
+}
+
+// loop and call hooks function on event
+void app_loop(t_app *app)
+{
+	t_image *img;
+
+	img = app->img;
+	draw_scene(img, app->data);
+	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
 	mlx_hook(app->window, 2, 1L << 0, key_pressed_hook, app);
 	mlx_hook(app->window, 17, 0, close_window, app);
 	mlx_loop(app->mlx);
 }
 
-bool	init_window(t_app *app)
+bool init_window(t_app *app)
 {
 	t_image *img;
 

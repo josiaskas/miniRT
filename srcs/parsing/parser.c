@@ -12,6 +12,29 @@
 
 #include "minirt.h"
 #include "parser.h"
+#include <stdio.h>
+
+bool	parse_plan(char **tokens, t_app *app)
+{
+	t_hittable	*plan;
+
+	plan = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	ft_push(app->scene->hittable, plan);
+	plan->type = e_hit_plane;
+	if (!tokens_has_valid_params_nbr(tokens, 4))
+		return (false);
+	if (!parse_a_vector(tokens[1], &plan->origin))
+		return (false);
+	if (!parse_a_vector(tokens[2], &plan->conf_vector))
+		return (false);
+	if (!parse_a_vector(tokens[3], &plan->color))
+		return (false);
+	if (!all_vector_coord_are_in_range(-1, 1, &plan->conf_vector))
+		return (false);
+	if (!all_vector_coord_are_in_range(0, 255, &plan->color))
+		return (false);
+	return (true);
+}
 
 bool	parse_sphere(char **tokens, t_app *app)
 {
@@ -53,7 +76,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (angle < 0 || angle > 180)
 		return (false);
-	camera = build_camera(origin, orientation, angle, 1);
+	camera = build_camera(origin, orientation, angle, 1.0f);
 	ft_push(app->scene->cameras, camera);
 	return (true);
 }
@@ -71,6 +94,8 @@ bool	parse_file_line(char *line, t_app *app)
 		status = parse_sphere(tokens, app);
 	else if (ft_strncmp(tokens[0], "C", 1) == 0)
 		status = parse_camera(tokens, app);
+	else if (ft_strncmp(tokens[0], "pl", 2) == 0)
+		status = parse_plan(tokens, app);
 	ft_free_splitted(tokens);
 	return (status);
 }
@@ -84,7 +109,7 @@ bool	parse_rt_file(t_app *app)
 	app->scene  = init_scene();
 	app->error_message = "Error during parsing";
 	app->error_code = 2;
-	ft_putendl_fd("Start File parsing", STDOUT_FILENO);
+	printf("Start File parsing\n");
 	res = get_next_line(app->in_fd, &line);
 	while (res > 0)
 	{
