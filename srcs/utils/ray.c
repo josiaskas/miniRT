@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,10 @@ static t_point	get_pixel_position_point(double x, double y, t_cam *cam)
 	return	p_view;
 }
 
-// return a ray p_view (distance of n from the point) to the scene
+/*
+ * return a ray p_view (distance of n from the point) to the scene
+ * we don't normalize the ray direction, optimisation
+*/
 inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 {
 	t_point		p_view;
@@ -56,7 +59,7 @@ inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 
 	p_view = get_pixel_position_point(x, y, cam);
 	dir =  get_vector_between(&cam->origin, &p_view);
-	dir = normalize(&dir);
+	//dir = normalize(&dir);
 	return (build_ray(p_view, dir));
 }
 

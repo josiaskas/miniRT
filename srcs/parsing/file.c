@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 // open input file with the correct extension
-int	open_rt_file(char *filename, t_app *app)
+int open_rt_file(char *filename, t_app *app)
 {
 	int		fd;
 	char	*extension;
@@ -39,9 +39,9 @@ int	open_rt_file(char *filename, t_app *app)
 	return (0);
 }
 
-int	open_out_file(char *file, t_app *app)
+int open_out_file(char *file, t_app *app)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU | S_IRGRP | S_IROTH);
 	if (fd < 0)
@@ -54,11 +54,11 @@ int	open_out_file(char *file, t_app *app)
 	return (0);
 }
 
-static void	write_data_to_fd(t_color **data)
+static void write_data_to_fd(t_color **data)
 {
-	int			x;
-	int			y;
-	t_vector	color;
+	int		x;
+	int		y;
+	t_color	color;
 
 	y = 0;
 	while (y < W_HEIGHT)
@@ -67,7 +67,8 @@ static void	write_data_to_fd(t_color **data)
 		while (x < W_WIDTH)
 		{
 			color = data[y][x];
-			printf("%d %d %d ", (int)color.x, (int)color.y, (int)color.z);
+			printf("%d %d %d ", (int)(color.r * 255.0f),
+				   (int)(color.g * 255.0f), (int)(color.b * 255.0f));
 			x++;
 		}
 		printf("\n");
@@ -76,9 +77,9 @@ static void	write_data_to_fd(t_color **data)
 }
 
 // write inside a file data build dy raytracing
-int	write_image_to_file(t_app *app)
+int write_image_to_file(t_app *app)
 {
-	int	cpy_stdout;
+	int cpy_stdout;
 
 	if (app->out_fd && app->data)
 	{

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,24 +32,27 @@ inline t_vector ft_cross(t_vector *a, t_vector *b)
 	return (vector);
 }
 
-/*
- * Retourne un vecteur créer sur la heap avec (i, j, k)
- * t_vector * (free)
-*/
-inline t_vector *make_heap_vector(double i, double j, double k)
+// a - b
+inline t_vector substract_vector(t_vector *a, t_vector *b)
 {
-	t_vector *vector;
+	t_vector v;
 
-	vector = ft_calloc(1, sizeof(t_vector));
-	if (vector)
+	v.x = 0;
+	v.y = 0;
+	v.z = 0;
+
+	if (a && b)
 	{
-		vector->x = i;
-		vector->y = j;
-		vector->z = k;
+		v.x = (a->x - b->x);
+		v.y = (a->y - b->y);
+		v.z = (a->z - b->z);
 	}
-	return (vector);
+	return (v);
 }
 
+/*
+ * Retourne un vecteur créer sur la stack avec (i, j, k)
+*/
 inline t_vector make_vector(double i, double j, double k)
 {
 	t_vector vector;
@@ -60,35 +63,21 @@ inline t_vector make_vector(double i, double j, double k)
 	return (vector);
 }
 
-/*
- * Retourne un repere qui sort de l'ecran
- * Ayant trois vecteur de direction
- * t_repere * (free_repere)
-*/
-inline t_repere *init_repere(double x, double y, double z)
+inline t_vector4	normalize_vec4(t_vector4 *v)
 {
-	t_repere *orthogonal;
+	double		c;
+	double		norm;
+	t_vector4	n;
 
-	orthogonal = (t_repere *)ft_calloc(1, sizeof(t_repere));
-	if (orthogonal)
+	ft_bzero(&n, sizeof (t_vector4));
+	if (v)
 	{
-		orthogonal->rep_x = make_vector(x, 0, 0);
-		orthogonal->rep_y = make_vector(0, y, 0);
-		orthogonal->rep_z = make_vector(0, 0, z);
+		c = ((v->r * v->r) + (v->g * v->g) + (v->b * v->b) + (v->a * v->a));
+		norm = sqrt(c);
+		n.r = (1 / norm) * v->r;
+		n.g = (1 / norm) * v->g;
+		n.b = (1 / norm) * v->b;
+		n.a = (1 / norm) * v->a;
 	}
-	return orthogonal;
-}
-
-inline unsigned int get_vector_trgb(t_color color)
-{
-	int r;
-	int g;
-	int b;
-	int t;
-
-	t = 1 << 24;
-	r = (int)(color.x) << 16;
-	g = (int)(color.y) << 8;
-	b = (int)(color.z);
-	return (t | r | g | b);
+	return (n);
 }

@@ -22,8 +22,16 @@ typedef struct s_vector
 	double z;
 }	t_vector;
 
+typedef struct s_vector4
+{
+	double a;
+	double r;
+	double g;
+	double b;
+}	t_vector4;
+
 typedef t_vector t_point;
-typedef t_vector t_color;
+typedef t_vector4 t_color;
 
 typedef struct s_repere
 {
@@ -46,16 +54,16 @@ t_vector		multiply_vector(double i, t_vector *v);
 t_vector		normalize(t_vector *v);
 double			ft_dot(t_vector *u, t_vector *v);
 t_vector		ft_cross(t_vector *u, t_vector *v);
-t_vector		*make_heap_vector(double i, double j, double k);
 t_vector		make_vector(double i, double j, double k);
 
 t_vector		get_vector_between(t_point *a, t_point *b);
 double			get_distance_b_p(t_point *a, t_point *b);
 
-double			degrees_to_radians(double degree);
+t_vector4		normalize_vec4(t_vector4 *v);
+t_vector4		clamp_color_vect(t_color *v);
 unsigned int	get_vector_trgb(t_color color);
 
 t_ray			*build_ray(t_point origin, t_vector direction);
 t_point			get_point_on_ray_at(double t, t_ray *ray);
-t_repere		*init_repere(double x, double y, double z);
+
 #endif //VECTOR_H

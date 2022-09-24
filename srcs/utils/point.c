@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,29 +46,34 @@ double	get_distance_b_p(t_point *a, t_point *b)
 	return (d);
 }
 
-// a - b
-inline t_vector substract_vector(t_vector *a, t_vector *b)
+/*
+ * Normalize and make sure color vector is between 0 and 1;
+*/
+inline t_vector4	clamp_color_vect(t_color *v)
 {
-	t_vector v;
+	t_vector4	normalized;
+	t_vector4	clamped;
 
-	v.x = 0;
-	v.y = 0;
-	v.z = 0;
-
-	if (a && b)
-	{
-		v.x = (a->x - b->x);
-		v.y = (a->y - b->y);
-		v.z = (a->z - b->z);
-	}
-	return (v);
+	normalized = normalize_vec4(v);
+	clamped.r = (normalized.r / 2) + 0.5f;
+	clamped.g = (normalized.g / 2) + 0.5f;
+	clamped.b = (normalized.b / 2) + 0.5f;
+	clamped.a = (normalized.a / 2) + 0.5f;
+	return (clamped);
 }
 
-// transform degree angle to radian
-double	degrees_to_radians(double degree)
+// return unsigned int value of the color
+inline unsigned int get_vector_trgb(t_color color)
 {
-	double	radian;
+	unsigned int r;
+	unsigned int g;
+	unsigned int b;
+	unsigned int a;
 
-	radian = (degree * M_PI) / 180.0f;
-	return  (radian);
+	r = (unsigned int)(color.r * 255.0f);
+	g = (unsigned int)(color.g * 255.0f);
+	b = (unsigned int)(color.b * 255.0f);
+	a = (unsigned int)(color.a * 255.0f);
+
+	return ((a<<24) | (r << 16) | (g << 8) | b);
 }

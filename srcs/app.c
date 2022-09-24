@@ -29,10 +29,6 @@ static int key_pressed_hook(int key, t_app *app)
 	return (0);
 }
 
-void watch_color_info(int x, int y, t_color *color){
-	printf("color at (x:%d y:%d) color :(%lf, %lf, %lf)\n",
-		   x, y, color->x, color->y, color->z);
-}
 static void draw_scene(t_image *img, t_color **colors)
 {
 	int		x;

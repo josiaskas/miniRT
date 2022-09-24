@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 18:24:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ t_color get_pixel_data(t_scene *scene, double x, double y)
 
 	camera = scene->selected_camera;
 	ray = get_viewport_ray(x, y, camera);
-	color = do_intersect_object(scene, ray, RAY_T_MAX);
+	color = do_tracing(scene, ray, RAY_T_MAX);
 	free(ray);
 	return (color);
 }

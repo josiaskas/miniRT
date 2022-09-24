@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 20:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/12 20:59:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,12 @@ bool	intersect_plan_ray(t_ray *ray, t_hittable *plan, double *t)
 		return (false);
 	*t = time;
 	return (true);
+}
+
+inline t_vector	get_plan_contact_surf_norm(t_hit *hit)
+{
+	t_hittable	*plan;
+
+	plan = (t_hittable *)hit->object;
+	return (plan->conf_vector);
 }

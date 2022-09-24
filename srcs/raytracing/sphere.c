@@ -6,14 +6,14 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 20:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/12 20:59:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 #include <math.h>
 
-bool solve_quadratic(double a, double b, double c, double *t0, double *t1)
+bool	solve_quadratic(double a, double b, double c, double *t0, double *t1)
 {
 	double	discriminant;
 	double	q;
@@ -65,4 +65,14 @@ bool	intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t)
 	}
 	*t = t0;
 	return (true);
+}
+
+inline t_vector	get_sphere_contact_surf_norm(t_hit *hit)
+{
+	t_vector	n;
+	t_hittable	*sphere;
+
+	sphere = (t_hittable *)hit->object;
+	n =	get_vector_between(&sphere->origin, &hit->point);
+	return (n);
 }

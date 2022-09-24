@@ -40,15 +40,32 @@ typedef	struct s_camera
 	t_vector	r_init;
 }	t_cam;
 
+typedef	struct	s_light
+{
+	t_point		origin;
+	double		cd;
+	t_vector 	color;
+}	t_light;
+
 typedef struct s_hittable
 {
 	t_hit_type	type;
 	t_point		origin;
-	t_color		color;
+	t_vector	color;
 	t_vector	conf_vector;
 	double		conf_data_1;
 	double		conf_data_2;
 }	t_hittable;
+
+typedef	struct s_hit_info
+{
+	bool		intersection;
+	t_hit_type	type;
+	void		*object;
+	double		t;
+	t_ray		*ray;
+	t_point		point;
+}	t_hit;
 
 typedef struct s_scene
 {
@@ -62,17 +79,21 @@ typedef struct s_scene
 }	t_scene;
 
 
-t_cam	*build_camera(t_point origin, t_vector dir, double angle, double n);
-t_scene	*init_scene();
+t_cam		*build_camera(t_point origin, t_vector dir, double angle, double n);
+t_scene		*init_scene();
 
-t_ray	*get_viewport_ray(double x, double y, t_cam *cam);
-t_color	do_intersect_object(t_scene *scene, t_ray *ray, double min_time);
+t_ray		*get_viewport_ray(double x, double y, t_cam *cam);
+t_hit		do_intersect_objects(t_scene *scene, t_ray *ray, double max_time);
+t_color		do_tracing(t_scene *scene, t_ray *ray, double max_time);
 
-bool	intersect_plan_ray(t_ray *ray, t_hittable *plan, double *t);
 
-bool	solve_quadratic(double a, double b, double c, double *t0, double *t1);
-bool	intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t);
+bool		intersect_plan_ray(t_ray *ray, t_hittable *plan, double *t);
+t_vector	get_plan_contact_surf_norm(t_hit *hit);
 
-void	free_scene(t_scene *scene);
+bool		solve_quadratic(double a, double b, double c, double *t0, double *t1);
+bool		intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t);
+t_vector	get_sphere_contact_surf_norm(t_hit *hit);
+
+void		free_scene(t_scene *scene);
 #endif //RAYTRACE_H
 
