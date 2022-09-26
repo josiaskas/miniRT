@@ -22,4 +22,5 @@ bool	all_vector_coord_are_in_range(double min, double max, t_vector *v);
 bool	ft_is_a_number(char *str, bool is_decimal);
 bool	parse_plan(char **tokens, t_app *app);
 bool	parse_light(char **tokens, t_app *app);
+bool	parse_ambiant_light(char **tokens, t_app *app);
 #endif //PARSER_H

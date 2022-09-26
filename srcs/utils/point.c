@@ -46,34 +46,29 @@ double	get_distance_b_p(t_point *a, t_point *b)
 	return (d);
 }
 
-/*
- * Normalize and make sure color vector is between 0 and 1;
-*/
-inline t_vector4	clamp_color_vect(t_color *v)
+inline t_vector4 vector4_add(t_vector4 *a, t_vector4 *b)
 {
-	t_vector4	normalized;
-	t_vector4	clamped;
+	t_vector4	addition;
 
-	normalized = normalize_vec4(v);
-	clamped.r = (normalized.r / 2) + 0.5f;
-	clamped.g = (normalized.g / 2) + 0.5f;
-	clamped.b = (normalized.b / 2) + 0.5f;
-	clamped.a = (normalized.a / 2) + 0.5f;
-	return (clamped);
+	addition.a = a->a + b->a;
+	addition.r = a->r + b->r;
+	addition.g = a->g + b->g;
+	addition.b = a->b + b->b;
+
+	return (addition);
 }
 
-// return unsigned int value of the color
-inline unsigned int get_vector_trgb(t_color color)
+inline t_vector4	vector4_multi(double k, t_vector4 *v)
 {
-	unsigned int r;
-	unsigned int g;
-	unsigned int b;
-	unsigned int a;
+	t_vector4	multiplication;
 
-	r = (unsigned int)(color.r * 255.0f);
-	g = (unsigned int)(color.g * 255.0f);
-	b = (unsigned int)(color.b * 255.0f);
-	a = (unsigned int)(color.a * 255.0f);
-
-	return ((a<<24) | (r << 16) | (g << 8) | b);
+	ft_bzero(&multiplication, sizeof(multiplication));
+	if (v)
+	{
+		multiplication.a = k * v->a;
+		multiplication.r = k * v->r;
+		multiplication.g = k * v->g;
+		multiplication.b = k * v->b;
+	}
+	return (multiplication);
 }

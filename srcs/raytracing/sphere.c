@@ -74,5 +74,6 @@ inline t_vector	get_sphere_contact_surf_norm(t_hit *hit)
 
 	sphere = (t_hittable *)hit->object;
 	n =	get_vector_between(&sphere->origin, &hit->point);
+	n = normalize(&n);
 	return (n);
 }

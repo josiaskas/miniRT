@@ -60,7 +60,13 @@ t_vector		get_vector_between(t_point *a, t_point *b);
 double			get_distance_b_p(t_point *a, t_point *b);
 
 t_vector4		normalize_vec4(t_vector4 *v);
-t_vector4		clamp_color_vect(t_color *v);
+t_vector4		vector4_add(t_vector4 *a, t_vector4 *b);
+t_vector4		vector4_multi(double k, t_vector4 *v);
+
+t_color			make_color_vector(t_vector	*v, double alpha);
+t_color			color_add(t_color *a, t_color *b);
+t_color			color_multi(double k, t_color *c);
+t_color			color_multi2(t_color *a, t_color *b);
 unsigned int	get_vector_trgb(t_color color);
 
 t_ray			*build_ray(t_point origin, t_vector direction);

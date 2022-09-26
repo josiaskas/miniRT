@@ -48,27 +48,21 @@ t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time)
 		i++;
 	}
 	if (hit.intersection)
-		hit.point = get_point_on_ray_at(hit.t, ray);
+		hit.point = get_point_on_ray_at((hit.t - 0.0001), ray);
 	return (hit);
 }
 
 
 t_color	get_object_hit_color(t_scene *scene, t_hit *hit, double max_time)
 {
-	t_vector	normal;
 	t_color		color;
 
 	if (hit->type == e_hit_sphere)
-		normal = get_sphere_contact_surf_norm(hit);
+		hit->normal = get_sphere_contact_surf_norm(hit);
 	else if (hit->type == e_hit_plane)
-		normal = get_plan_contact_surf_norm(hit);
-
-	(void)scene;
+		hit->normal = get_plan_contact_surf_norm(hit);
 	(void)max_time;
-	color.a = 1;
-	color.r = normal.x;
-	color.g = normal.y;
-	color.b = normal.z;
+	color = shading_light(hit, scene);
 	return (color);
 }
 
@@ -82,10 +76,9 @@ t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time)
 	t_color	color;
 
 	ft_bzero(&color, sizeof(t_color));
-	color.a = 1.0;
+	color.a = 1;
 	first_hit = do_intersect_objects(scene, ray, max_time);
 	if (first_hit.intersection)
 		color = get_object_hit_color(scene, &first_hit, max_time);
-	color = clamp_color_vect(&color);
 	return (color);
 }
