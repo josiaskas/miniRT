@@ -48,7 +48,7 @@ t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time)
 		i++;
 	}
 	if (hit.intersection)
-		hit.point = get_point_on_ray_at((hit.t - 0.0001), ray);
+		hit.point = get_point_on_ray_at((hit.t - RAY_T_MIN), ray);
 	return (hit);
 }
 

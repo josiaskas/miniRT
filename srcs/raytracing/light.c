@@ -12,7 +12,7 @@
 
 #include "raytrace.h"
 
-static t_color s_diff_calc(double dot, double distance, t_color c)
+static t_color s_diff_calc(double dot, double distance2, t_color c)
 {
 	t_color diffuse_color;
 
@@ -20,8 +20,8 @@ static t_color s_diff_calc(double dot, double distance, t_color c)
 	if (dot < 0)
 		dot = 0;
 	diffuse_color = color_multi(dot, &diffuse_color);
-	if (distance > 1)
-		diffuse_color = color_multi((1 / distance), &diffuse_color);
+	if (distance2 > 1)
+		diffuse_color = color_multi((1/distance2), &diffuse_color);
 	return (diffuse_color);
 }
 
@@ -37,14 +37,14 @@ t_color calc_diffuse_light(t_light *light, t_hit *hit, t_scene *scene)
 	obstacle.intersection = false;
 	diffuse_color.a = 1;
 	to_light_vector = get_vector_between(&hit->point, &light->origin);
+	to_light_vector = normalize(&to_light_vector);
 	to_light = build_ray(hit->point, to_light_vector);
-	obstacle = do_intersect_objects(scene, to_light, RAY_T_MAX);
+	obstacle = do_intersect_objects(scene, to_light, vector_norm(&to_light_vector));
 	free(to_light);
 	if (obstacle.intersection)
 		return (diffuse_color);
-	to_light_vector = normalize(&to_light_vector);
 	diffuse_color = s_diff_calc(ft_dot(&to_light_vector, &hit->normal),
-								ft_dot(&to_light_vector, &to_light_vector),
+								vector_norm_2(&to_light_vector),
 								light->color);
 	return (diffuse_color);
 }
@@ -71,15 +71,15 @@ t_color diffuse_light_sum(t_hit *hit, t_scene *scene)
 
 t_color shading_light(t_hit *hit, t_scene *scene)
 {
-	t_color	color;
-	//t_color amb_l;
-	t_color	diff_l;
+	t_color		color;
+	t_hittable	*object;
+	t_color		amb_l;
+	t_color		diff_l;
 
-	//(void)hit;
-	//amb_l = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
+	object = (t_hittable *)hit->object;
+	amb_l = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
 	diff_l = diffuse_light_sum(hit, scene);
-
-	color = diff_l;
-
+	color = color_add(&amb_l, &diff_l);
+	color = color_multi2(&object->color, &color);
 	return (color);
 }

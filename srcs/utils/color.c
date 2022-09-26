@@ -34,12 +34,6 @@ inline t_color color_add(t_color *a, t_color *b)
 
 	add = vector4_add(a, b);
 	add.a = 1;
-	if (add.r > 1)
-		add.r = 1;
-	if (add.g > 1)
-		add.g = 1;
-	if (add.b > 1)
-		add.b = 1;
 	return (add);
 }
 
@@ -49,12 +43,6 @@ inline t_color color_multi(double k, t_color *c)
 
 	m = vector4_multi(k, c);
 	m.a = c->a;
-	if (m.r > 1)
-		m.r = 1;
-	if (m.g > 1)
-		m.g = 1;
-	if (m.b > 1)
-		m.b = 1;
 	return (m);
 }
 
@@ -62,19 +50,11 @@ inline t_color	color_multi2(t_color *a, t_color *b)
 {
 	t_color	m;
 
-	m.a = a->a * b->a;
 	m.r = a->r * b->r;
 	m.g = a->g * b->g;
 	m.b = a->b * b->b;
 
-	if (m.a > 1)
-		m.a = 1;
-	if (m.r > 1)
-		m.r = 1;
-	if (m.g > 1)
-		m.g = 1;
-	if (m.b > 1)
-		m.b = 1;
+	m.a = 1;
 	return (m);
 }
 
@@ -86,6 +66,13 @@ inline unsigned int get_vector_trgb(t_color color)
 	unsigned int b;
 	unsigned int a;
 
+	// correction saturation
+	if (color.r > 1)
+		color.r = 1;
+	if (color.g > 1)
+		color.g = 1;
+	if (color.b > 1)
+		color.b = 1;
 	r = (unsigned int)(color.r * 255);
 	g = (unsigned int)(color.g * 255);
 	b = (unsigned int)(color.b * 255);
