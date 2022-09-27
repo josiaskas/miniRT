@@ -25,6 +25,7 @@ inline t_scene *init_scene()
 		scene->hittable = ft_new_array();
 		scene->lights = ft_new_array();
 		scene->cameras = ft_new_array();
+		scene->ambiant.intensity = 0;
 	}
 	return (scene);
 }

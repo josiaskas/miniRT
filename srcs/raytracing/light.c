@@ -12,74 +12,30 @@
 
 #include "raytrace.h"
 
-static t_color s_diff_calc(double dot, double distance2, t_color c)
+static inline t_color	ambiant_light(t_hit *hit, t_scene *scene)
 {
-	t_color diffuse_color;
+	t_color		surface_color;
+	t_color		light_color;
+	t_color		ambiant_light;
+	double		reflexion_const;
 
-	diffuse_color = c;
-	if (dot < 0)
-		dot = 0;
-	diffuse_color = color_multi(dot, &diffuse_color);
-	if (distance2 > 1)
-		diffuse_color = color_multi((1/distance2), &diffuse_color);
-	return (diffuse_color);
+	light_color = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
+	reflexion_const = ((t_hittable *)hit->object)->const_reflex[0];
+	surface_color = ((t_hittable *)hit->object)->color;
+	if (reflexion_const != 1)
+		surface_color = color_multi(reflexion_const, &surface_color);
+	ambiant_light = color_multi2(&light_color, &surface_color);
+	return (ambiant_light);
 }
 
-t_color calc_diffuse_light(t_light *light, t_hit *hit, t_scene *scene)
-{
-	t_vector to_light_vector;
-	t_hit obstacle;
-	t_ray *to_light;
-	t_color diffuse_color;
-
-	ft_bzero(&obstacle, sizeof(t_hit));
-	ft_bzero(&diffuse_color, sizeof(t_color));
-	obstacle.intersection = false;
-	diffuse_color.a = 1;
-	to_light_vector = get_vector_between(&hit->point, &light->origin);
-	to_light_vector = normalize(&to_light_vector);
-	to_light = build_ray(hit->point, to_light_vector);
-	obstacle = do_intersect_objects(scene, to_light, vector_norm(&to_light_vector));
-	free(to_light);
-	if (obstacle.intersection)
-		return (diffuse_color);
-	diffuse_color = s_diff_calc(ft_dot(&to_light_vector, &hit->normal),
-								vector_norm_2(&to_light_vector),
-								light->color);
-	return (diffuse_color);
-}
-
-t_color diffuse_light_sum(t_hit *hit, t_scene *scene)
-{
-	size_t i;
-	t_color sum;
-	t_color calc;
-	t_light *light;
-
-	i = 0;
-	ft_bzero(&sum, sizeof(t_color));
-	sum.a = 1;
-	while (i < scene->lights->length)
-	{
-		light = (t_light *)ft_get_elem(scene->lights, i);
-		calc = calc_diffuse_light(light, hit, scene);
-		sum = color_add(&sum, &calc);
-		i++;
-	}
-	return (sum);
-}
-
-t_color shading_light(t_hit *hit, t_scene *scene)
+t_color	shading_light(t_hit *hit, t_scene *scene)
 {
 	t_color		color;
-	t_hittable	*object;
 	t_color		amb_l;
-	t_color		diff_l;
+	t_color		sources_l;
 
-	object = (t_hittable *)hit->object;
-	amb_l = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
-	diff_l = diffuse_light_sum(hit, scene);
-	color = color_add(&amb_l, &diff_l);
-	color = color_multi2(&object->color, &color);
+	amb_l = ambiant_light(hit, scene);
+	sources_l = light_from_sources(hit, scene);
+	color = color_add(&amb_l, &sources_l);
 	return (color);
 }

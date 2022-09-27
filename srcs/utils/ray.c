@@ -59,7 +59,7 @@ inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 
 	p_view = get_pixel_position_point(x, y, cam);
 	dir =  get_vector_between(&cam->origin, &p_view);
-	//dir = normalize(&dir);
+	dir = normalize(&dir);
 	return (build_ray(p_view, dir));
 }
 

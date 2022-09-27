@@ -24,6 +24,13 @@ typedef enum e_hittable_type
 	e_hit_light,
 }	t_hit_type;
 
+typedef enum e_hittable_composition
+{
+	e_metallic,
+	e_plastic,
+	e_glass
+}	t_composition;
+
 typedef	struct s_camera
 {
 	t_point		origin;
@@ -55,6 +62,11 @@ typedef struct s_hittable
 	t_vector	conf_vector;
 	double		conf_data_1;
 	double		conf_data_2;
+	double		const_reflex[3];
+	double		plasticity;
+	double		indice_refraction;
+	double		reflectivity;
+	double		transparency;
 }	t_hittable;
 
 typedef	struct s_hit_info
@@ -99,7 +111,7 @@ bool		solve_quadratic(double a, double b, double c, double *t0, double *t1);
 bool		intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t);
 t_vector	get_sphere_contact_surf_norm(t_hit *hit);
 
-t_color		diffuse_light_sum(t_hit *hit, t_scene *scene);
+t_color		light_from_sources(t_hit *hit, t_scene *scene);
 t_color		shading_light(t_hit *hit, t_scene *scene);
 void		free_scene(t_scene *scene);
 #endif //RAYTRACE_H

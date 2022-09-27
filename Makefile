@@ -12,7 +12,7 @@
 
 NAME = miniRT
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -g
+CFLAGS = -O2 -Wall -Wextra -Werror
 INCLUDES_DIR = ./includes
 OBJS_DIR = ./objs
 OBJS_BONUS_DIR = ./objs_bonus
@@ -35,12 +35,12 @@ UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
 PARSER_DIR = parsing/
-PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c
+PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c object_creation.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #parsing sources
 RAYTRACING_DIR = raytracing/
-RAYTRACING_SRCS = intersect.c light.c sphere.c plan.c
+RAYTRACING_SRCS = intersect.c light.c diffuse_light.c sphere.c plan.c
 RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #multithreading sources
