@@ -15,7 +15,7 @@
 
 inline void	init_hittable_info(t_hittable *object, t_composition matiere)
 {
-	object->plasticity = 0.23;
+	object->plasticity = 1;
 	object->const_reflex[0] = 1;
 	object->const_reflex[1] = 1;
 	object->const_reflex[2] = 1;
@@ -25,5 +25,8 @@ inline void	init_hittable_info(t_hittable *object, t_composition matiere)
 	if (matiere == e_glass)
 		object->transparency = 0.8;
 	if (matiere == e_plastic)
-		object->const_reflex[0] = 0.4;
+	{
+		object->plasticity = 0.5;
+		object->const_reflex[0] = 0.5;
+	}
 }

@@ -37,10 +37,10 @@ static inline t_color	s_blinn_c(double dot, t_hittable *o, t_color *light)
 	if (dot <= 0.f)
 		return (ref_spec_color);
 	specular_factor = pow(dot, n_phong);
-	s_plastic  = color_multi((1 - o->plasticity), &o->color);
-	s_plastic.r += o->plasticity;
-	s_plastic.g += o->plasticity;
-	s_plastic.b += o->plasticity;
+	s_plastic  = color_multi(o->plasticity, &o->color);
+	s_plastic.r += (1 - o->plasticity);
+	s_plastic.g += (1 - o->plasticity);
+	s_plastic.b += (1 - o->plasticity);
 	s_plastic = color_multi(o->const_reflex[2], &s_plastic);
 	s_plastic = color_multi(specular_factor, &s_plastic);
 	ref_spec_color = color_multi2(light, &s_plastic);
