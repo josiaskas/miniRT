@@ -32,3 +32,54 @@ bool	ft_is_a_number(char *str, bool is_decimal)
 		return (false);
 	return (true);
 }
+
+bool	parse_sphere(char **tokens, t_app *app)
+{
+	t_hittable	*sphere;
+	t_vector	v_color;
+
+	app->error_message = "Error during parsing, On a sphere";
+	sphere = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	ft_push(app->scene->hittable, sphere);
+	sphere->type = e_hit_sphere;
+	if (!tokens_has_valid_params_nbr(tokens, 4))
+		return (false);
+	if (!parse_a_vector(tokens[1], &sphere->origin))
+		return (false);
+	if (!parse_double_from_str(tokens[2], &sphere->conf_data_1))
+		return (false);
+	if (!parse_a_vector(tokens[3], &v_color))
+		return (false);
+	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+		return (false);
+	sphere->color = make_color_vector(&v_color, 1);
+	init_hittable_info(sphere, e_metallic);
+	return (true);
+}
+
+bool	parse_plan(char **tokens, t_app *app)
+{
+	t_hittable	*plan;
+	t_vector	v_color;
+
+	app->error_message = "Error during parsing, On a plan";
+	plan = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	ft_push(app->scene->hittable, plan);
+	plan->type = e_hit_plane;
+	if (!tokens_has_valid_params_nbr(tokens, 4))
+		return (false);
+	if (!parse_a_vector(tokens[1], &plan->origin))
+		return (false);
+	if (!parse_a_vector(tokens[2], &plan->conf_vector))
+		return (false);
+	if (!parse_a_vector(tokens[3], &v_color))
+		return (false);
+	if (!all_vector_coord_are_in_range(-1, 1, &plan->conf_vector))
+		return (false);
+	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+		return (false);
+	plan->color =  make_color_vector(&v_color, 1);
+	init_hittable_info(plan, e_metallic);
+	return (true);
+}
+
