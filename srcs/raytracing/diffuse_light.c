@@ -29,11 +29,14 @@ static inline t_color	s_blinn_c(double dot, t_hittable *o, t_color *light)
 	t_color	ref_spec_color;
 	t_color	s_plastic;
 	double	specular_factor;
+	double	n_phong;
 
-	ft_bzero(&ref_spec_color, sizeof(t_color));
-	if (dot <= 0)
+	n_phong = 48.0f;
+	ref_spec_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	ref_spec_color.a = 1;
+	if (dot <= 0.f)
 		return (ref_spec_color);
-	specular_factor = pow(dot, 48);
+	specular_factor = pow(dot, n_phong);
 	s_plastic  = color_multi((1 - o->plasticity), &o->color);
 	s_plastic.r += o->plasticity;
 	s_plastic.g += o->plasticity;
@@ -44,61 +47,55 @@ static inline t_color	s_blinn_c(double dot, t_hittable *o, t_color *light)
 	return (ref_spec_color);
 }
 
-static inline t_color	calc_light_cont(t_vector *to_l, t_hit *hit, t_light *l)
+static inline t_color	calc_light_cont(t_vector to_l, t_hit *hit, t_light *l, double d)
 {
 	t_color	c[3];
-	double	dot[2];
-	double	distance2;
+	double	alpha;
+	double	theta;
 	t_vector h;
 
-	ft_bzero(&c[1], sizeof (t_color));
-	dot[0] = ft_dot(to_l, &hit->normal);
-	distance2 = vector_norm_2(to_l);
-	c[0] = s_diff_c(dot[0], &l->color, hit->object);
-	c[2] = color_add(&c[0], &c[1]);
-	if (distance2 > 1)
-		c[2] = color_multi((1 / distance2), &c[2]);
+	alpha = ft_dot(&to_l, &hit->normal);
+	c[0] = s_diff_c(alpha, &l->color, hit->object);
 	h = multiply_vector(-1, &hit->ray->dir);
-	h = add_vector(&h, to_l);
+	h = add_vector(&h, &to_l);
 	h = normalize(&h);
-	dot[1] = ft_dot(&h, &hit->normal);
-	c[1] = s_blinn_c(dot[1], hit->object, &l->color);
+	theta = ft_dot(&h, &hit->normal);
+	c[1] = s_blinn_c(theta, hit->object, &l->color);
+	if (d > 1)
+		c[2] = color_multi((1 / (d * d)), &c[2]);
 	c[2] = color_add(&c[0], &c[1]);
 	return (c[2]);
 }
 
 static inline t_color	calc_d_r(t_light *l, t_hit *hit, t_scene *scn)
 {
-	t_vector	to_light_vector;
+	t_vector	t_l_dir;
 	t_hit		obstacle;
-	t_ray		*to_light;
-	t_color		color;
+	t_ray		*t_l_ray;
+	double		d;
 
 	ft_bzero(&obstacle, sizeof(t_hit));
-	ft_bzero(&color, sizeof(t_color));
-	color.a = 1;
 	obstacle.intersection = false;
-	to_light_vector = get_vector_between(&hit->point, &l->origin);
-	to_light_vector = normalize(&to_light_vector);
-	to_light = build_ray(hit->point, to_light_vector);
-	obstacle = do_intersect_objects(scn, to_light, vector_norm(&to_light_vector));
-	free(to_light);
+	t_l_dir = get_vector_between(&hit->point, &l->origin);
+	d = vector_norm(&t_l_dir);
+	t_l_dir = normalize(&t_l_dir);
+	t_l_ray = build_ray(hit->point, t_l_dir);
+	obstacle = do_intersect_objects(scn, t_l_ray, d);
+	free(t_l_ray);
 	if (obstacle.intersection)
-		return (color);
-	color = calc_light_cont(&to_light_vector, hit, l);
-	return (color);
+		return (vec4(0.0f, 0.0f, 0.0f, 1.0f));
+	return (calc_light_cont(t_l_dir, hit, l, d));
 }
 
 inline t_color light_from_sources(t_hit *hit, t_scene *scene)
 {
-	size_t i;
-	t_color sum;
+	size_t	i;
+	t_color	sum;
 	t_color calc;
 	t_light *light;
 
 	i = 0;
-	ft_bzero(&sum, sizeof(t_color));
-	sum.a = 1;
+	sum = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	while (i < scene->lights->length)
 	{
 		light = (t_light *)ft_get_elem(scene->lights, i);

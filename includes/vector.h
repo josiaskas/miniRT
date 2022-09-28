@@ -62,6 +62,7 @@ double			get_distance_b_p(t_point *a, t_point *b);
 t_vector4		normalize_vec4(t_vector4 *v);
 t_vector4		vector4_add(t_vector4 *a, t_vector4 *b);
 t_vector4		vector4_multi(double k, t_vector4 *v);
+t_vector4		vec4(double r, double g, double b, double a);
 
 t_color			make_color_vector(t_vector	*v, double alpha);
 t_color			color_add(t_color *a, t_color *b);

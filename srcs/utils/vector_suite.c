@@ -81,3 +81,14 @@ inline t_vector4	normalize_vec4(t_vector4 *v)
 	}
 	return (n);
 }
+
+inline t_vector4 vec4(double r, double g, double b, double a)
+{
+	t_vector4 vector;
+
+	vector.r = r;
+	vector.g = g;
+	vector.b = b;
+	vector.a = a;
+	return (vector);
+}

@@ -15,7 +15,7 @@
 
 inline void	init_hittable_info(t_hittable *object, t_composition matiere)
 {
-	object->plasticity = 0.5;
+	object->plasticity = 0.23;
 	object->const_reflex[0] = 1;
 	object->const_reflex[1] = 1;
 	object->const_reflex[2] = 1;

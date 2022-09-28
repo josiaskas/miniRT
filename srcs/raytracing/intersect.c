@@ -75,8 +75,7 @@ t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time)
 	t_hit	first_hit;
 	t_color	color;
 
-	ft_bzero(&color, sizeof(t_color));
-	color.a = 1;
+	color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	first_hit = do_intersect_objects(scene, ray, max_time);
 	if (first_hit.intersection)
 		color = get_object_hit_color(scene, &first_hit, max_time);
