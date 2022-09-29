@@ -33,7 +33,7 @@ inline t_color color_add(t_color *a, t_color *b)
 	t_color	add;
 
 	add = vector4_add(a, b);
-	add.a = 1;
+	color_check_saturation(&add);
 	return (add);
 }
 
@@ -43,39 +43,11 @@ inline t_color color_multi(double k, t_color *c)
 
 	m = vector4_multi(k, c);
 	m.a = c->a;
+	color_check_saturation(&m);
 	return (m);
 }
 
-inline t_color	color_multi2(t_color *a, t_color *b)
+inline void	gamma_correction(t_color *color)
 {
-	t_color	m;
-
-	m.r = a->r * b->r;
-	m.g = a->g * b->g;
-	m.b = a->b * b->b;
-
-	m.a = 1;
-	return (m);
-}
-
-// return unsigned int value of the color
-inline unsigned int get_vector_trgb(t_color color)
-{
-	unsigned int r;
-	unsigned int g;
-	unsigned int b;
-	unsigned int a;
-
-	// correction saturation
-	if (color.r > 1)
-		color.r = 1;
-	if (color.g > 1)
-		color.g = 1;
-	if (color.b > 1)
-		color.b = 1;
-	r = (unsigned int)(color.r * 255);
-	g = (unsigned int)(color.g * 255);
-	b = (unsigned int)(color.b * 255);
-	a = (unsigned int)(color.a);
-	return ((a<<24) | (r << 16) | (g << 8) | b);
+	(void)color;
 }

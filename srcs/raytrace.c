@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
-#include <stdio.h>
 
 void init_raytracing(t_app *app)
 {
@@ -20,7 +19,6 @@ void init_raytracing(t_app *app)
 
 	app->error_code = 0;
 	app->error_message = NULL;
-	printf("Start ray tracing\n");
 	scene = app->scene;
 	if (app->data)
 		free_array((void **)app->data, W_HEIGHT);
@@ -62,6 +60,5 @@ bool do_raytracing(t_app *app)
 		}
 		y++;
 	}
-	printf("finished raytracing\n");
 	return (true);
 }

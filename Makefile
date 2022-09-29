@@ -30,7 +30,7 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c vector_suite.c point.c ray.c camera.c color.c
+UTILS_SRCS = vector.c vector_suite.c point.c camera.c color.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
@@ -38,10 +38,15 @@ PARSER_DIR = parsing/
 PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c object_creation.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
-#parsing sources
+#raytracing sources
 RAYTRACING_DIR = raytracing/
 RAYTRACING_SRCS = intersect.c light.c diffuse_light.c sphere.c plan.c
 RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
+
+#config sources
+CONFIG_DIR = config/
+CONFIG_SRCS = key_hooks.c mouse_hooks.c
+CONFIG_SRCS_PREFIXED = $(addprefix $(CONFIG_DIR), $(CONFIG_SRCS))
 
 #multithreading sources
 THREADING_DIR = multithreading/
@@ -50,15 +55,15 @@ THREADING_SRCS_PREFIXED = $(addprefix $(THREADING_DIR), $(THREADING_SRCS))
 
 #sources
 SRCS_DIR = srcs/
-SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED)
+SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED)
 SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(SRCS))
 
 #bonus sources
-BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
+BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
 BONUS_SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(BONUS_SRCS))
 
 #includes
-INCLUDES_FILES = minirt.h vector.h raytrace.h
+INCLUDES_FILES = minirt.h vector.h raytrace.h parser.h window.h ray.h
 INCLUDES = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
 
 #objsm

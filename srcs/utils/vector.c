@@ -61,21 +61,3 @@ inline t_vector	multiply_vector(double i, t_vector *v)
 	}
 	return (r);
 }
-
-// return normalized version of a vector
-inline t_vector	normalize(t_vector *v)
-{
-	t_vector	n;
-	double		coef;
-
-	n.x = 0;
-	n.y = 0;
-	n.z = 0;
-	if (v)
-	{
-		coef = vector_norm(v);
-		if (coef != 0)
-			return (multiply_vector((1 / coef), v));
-	}
-	return (n);
-}

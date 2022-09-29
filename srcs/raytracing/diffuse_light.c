@@ -12,7 +12,7 @@
 
 #include "raytrace.h"
 
-static inline t_color	s_diff_c(double dot, t_color *light, t_hittable *o)
+static inline t_color	diff_l_calc(double dot, t_color *light, t_hittable *o)
 {
 	t_color diffuse_color;
 
@@ -24,7 +24,7 @@ static inline t_color	s_diff_c(double dot, t_color *light, t_hittable *o)
 	return (diffuse_color);
 }
 
-static inline t_color	s_blinn_c(double dot, t_hittable *o, t_color *light)
+static inline t_color	s_blinn_calc(double dot, t_hittable *o, t_color *light)
 {
 	t_color	ref_spec_color;
 	t_color	s_plastic;
@@ -47,20 +47,20 @@ static inline t_color	s_blinn_c(double dot, t_hittable *o, t_color *light)
 	return (ref_spec_color);
 }
 
-static inline t_color	calc_light_cont(t_vector to_l, t_hit *hit, t_light *l, double d)
+static inline t_color	src_l(t_vector to_l, t_hit *hit, t_light *l, double d)
 {
-	t_color	c[3];
-	double	alpha;
-	double	theta;
-	t_vector h;
+	t_color		c[3];
+	double		alpha;
+	double		theta;
+	t_vector	h;
 
 	alpha = ft_dot(&to_l, &hit->normal);
-	c[0] = s_diff_c(alpha, &l->color, hit->object);
+	c[0] = diff_l_calc(alpha, &l->color, hit->object);
 	h = multiply_vector(-1, &hit->ray->dir);
 	h = add_vector(&h, &to_l);
 	h = normalize(&h);
 	theta = ft_dot(&h, &hit->normal);
-	c[1] = s_blinn_c(theta, hit->object, &l->color);
+	c[1] = s_blinn_calc(theta, hit->object, &l->color);
 	if (d > 1)
 		c[2] = color_multi((1 / (d * d)), &c[2]);
 	c[2] = color_add(&c[0], &c[1]);
@@ -84,7 +84,7 @@ static inline t_color	calc_d_r(t_light *l, t_hit *hit, t_scene *scn)
 	free(t_l_ray);
 	if (obstacle.intersection)
 		return (vec4(0.0f, 0.0f, 0.0f, 1.0f));
-	return (calc_light_cont(t_l_dir, hit, l, d));
+	return (src_l(t_l_dir, hit, l, d));
 }
 
 inline t_color light_from_sources(t_hit *hit, t_scene *scene)

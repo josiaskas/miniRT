@@ -38,11 +38,11 @@ void build_camera_viewport_vectors(t_cam *cam)
 
 	v = cam->dir;
 	if (v.x != 0)
-		cam->dir_ort = make_vector(((-v.y) / v.x), 1, 0);
+		cam->dir_ort = vect3(((-v.y) / v.x), 1, 0);
 	else if (v.z != 0)
-		cam->dir_ort = make_vector(0, 1, (-v.y) / v.z);
+		cam->dir_ort = vect3(0, 1, (-v.y) / v.z);
 	else
-		cam->dir_ort = make_vector(1, 0, 0);
+		cam->dir_ort = vect3(1, 0, 0);
 	cam->dir_ort = normalize(&cam->dir_ort);
 	v = ft_cross(&cam->dir, &cam->dir_ort);
 	v = normalize(&v);

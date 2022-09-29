@@ -20,8 +20,8 @@ static inline t_color	ambiant_light(t_hit *hit, t_scene *scene)
 	double		reflexion_const;
 
 	light_color = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
-	reflexion_const = ((t_hittable *)hit->object)->const_reflex[0];
-	surface_color = ((t_hittable *)hit->object)->color;
+	reflexion_const = hit->object->const_reflex[0];
+	surface_color = hit->object->color;
 	if (reflexion_const != 1)
 		surface_color = color_multi(reflexion_const, &surface_color);
 	ambiant_light = color_multi2(&light_color, &surface_color);

@@ -11,23 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
-#include <stdio.h>
-
-static int close_window(t_app *app)
-{
-	if (app->error_code > 3)
-		exit_app(app, true);
-	else
-		exit_app(app, false);
-	return (0);
-}
-
-static int key_pressed_hook(int key, t_app *app)
-{
-	if (key == MAIN_PAD_ESC)
-		close_window(app);
-	return (0);
-}
+#include "window.h"
 
 static void draw_scene(t_image *img, t_color **colors)
 {
@@ -51,6 +35,19 @@ static void draw_scene(t_image *img, t_color **colors)
 	}
 }
 
+int	no_event_hook(t_app	*app)
+{
+	int	x;
+	int	y;
+
+	if (app->mouse->b_pressed)
+	{
+		mlx_mouse_get_pos(app->window, &x, &y);
+		return(mouse_moved(x, y ,app));
+	}
+	return (0);
+}
+
 // loop and call hooks function on event
 void app_loop(t_app *app)
 {
@@ -59,6 +56,11 @@ void app_loop(t_app *app)
 	img = app->img;
 	draw_scene(img, app->data);
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
+
+	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
+	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
+
+	mlx_loop_hook(app->mlx, no_event_hook, app);
 	mlx_hook(app->window, 2, 1L << 0, key_pressed_hook, app);
 	mlx_hook(app->window, 17, 0, close_window, app);
 	mlx_loop(app->mlx);

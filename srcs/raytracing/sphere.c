@@ -13,25 +13,25 @@
 #include "raytrace.h"
 #include <math.h>
 
-bool	solve_quadratic(double a, double b, double c, double *t0, double *t1)
+inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 {
 	double	discriminant;
 	double	q;
 	double	temp;
 
-	discriminant = (b * b) - (4.0f * a * c);
+	discriminant = (terms[1] * terms[1]) - (4.0f * terms[0] * terms[2]);
 	if (discriminant < 0)
 		return (false);
 	else if (discriminant == 0)
-		*t0 = -0.5f * (b / a);
+		*t0 = -0.5f * (terms[1] / terms[0]);
 	else
 	{
-		if (b > 0.0f)
-			q = -0.5f * (b + sqrt(discriminant));
+		if (terms[1] > 0.0f)
+			q = -0.5f * (terms[1] + sqrt(discriminant));
 		else
-			q = -0.5f * (b - sqrt(discriminant));
-		*t0 = q / a;
-		*t1 = c / q;
+			q = -0.5f * (terms[1] - sqrt(discriminant));
+		*t0 = q / terms[0];
+		*t1 = terms[2] / q;
 	}
 	if (*t0 > *t1)
 	{
@@ -55,7 +55,7 @@ bool	intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t)
 	terms[1] = 2 * ft_dot(&ray->dir, &L);
 	terms[3] = sphere->conf_data_1 * sphere->conf_data_1;
 	terms[2] = ft_dot(&L, &L) - terms[3];
-	if (!solve_quadratic(terms[0], terms[1], terms[2], &t0, &t1))
+	if (!solve_quad(terms, &t0, &t1))
 		return (false);
 	if (t0 < 0)
 	{

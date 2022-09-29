@@ -31,11 +31,12 @@
 
 typedef struct s_mouse
 {
-	int		start_x; //if pressed set by the beginning of pressing
-	int		start_y;
-	int		x;
-	int		y;
-	bool	b_pressed;
+	int			start_x;
+	int			start_y;
+	int			x;
+	int			y;
+	bool		b_pressed;
+	t_hittable	*selected_object;
 }	t_mouse;
 
 typedef struct s_image {
@@ -69,6 +70,7 @@ bool	parse_rt_file(t_app *app);
 void	exit_app(t_app *app, bool error);
 
 bool	init_window(t_app *app);
+int		close_window(t_app *app);
 void	app_loop(t_app *app);
 bool	do_raytracing(t_app *app);
 #endif

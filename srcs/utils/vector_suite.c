@@ -6,21 +6,11 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/29 16:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
-
-/*
- * Retourne le résultat du produit scalaire (dot product)
- * |u| * |v|
- * double
-*/
-inline double ft_dot(t_vector *u, t_vector *v)
-{
-	return ((u->x * v->x) + (u->y * v->y) + (u->z * v->z));
-}
 
 inline t_vector ft_cross(t_vector *a, t_vector *b)
 {
@@ -53,7 +43,7 @@ inline t_vector substract_vector(t_vector *a, t_vector *b)
 /*
  * Retourne un vecteur créer sur la stack avec (i, j, k)
 */
-inline t_vector make_vector(double i, double j, double k)
+inline t_vector vect3(double i, double j, double k)
 {
 	t_vector vector;
 

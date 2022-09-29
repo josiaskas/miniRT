@@ -1,34 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   multithread.h                                      :+:      :+:    :+:   */
+/*   key_hooks.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/21 17:25:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/21 17:36:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/09/24 14:56:04 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/09/24 18:56:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MULTITHREAD_H
-# define MULTITHREAD_H
+#include "window.h"
 
-# ifndef THREAD_NUMBER
-#  define THREAD_NUMBER 2
-# endif
-
-# include <pthread.h>
-# include <sys/time.h>
-# include "raytrace.h"
-
-typedef struct s_thread_v
+int	key_pressed_hook(int key, t_app *app)
 {
-	pthread_t	thread_id;
-	t_color		**data;
-	int			x;
-	int			y;
-	t_scene		*scene;
-}	t_thread;
-
-void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs);
-#endif //MULTITHREAD_H
+	if (key == MAIN_PAD_ESC)
+		close_window(app);
+	return (0);
+}

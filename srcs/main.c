@@ -14,25 +14,36 @@
 
 static	void run_app(bool render_in_a_window, t_app *app)
 {
-//	exit_app(app, false);
-	if (!do_raytracing(app))
-		exit_app(app, true);
 	if (!render_in_a_window)
+	{
+		if (!do_raytracing(app))
+			exit_app(app, true);
 		write_image_to_file(app);
+	}
 	else
 	{
 		if (!init_window(app))
 			exit_app(app, true);
-		ft_putendl_fd("Init window", STDOUT_FILENO);
+		if (!do_raytracing(app))
+			exit_app(app, true);
 		app_loop(app);
 	}
 	exit_app(app, false);
 }
 
+int	close_window(t_app *app)
+{
+	if (app->error_code > 3)
+		exit_app(app, true);
+	else
+		exit_app(app, false);
+	return (0);
+}
+
 /*
  * Try to initialise the app with the filename given
  * Parse the file given
- * Init Mlx window or write inside a file
+ * Init Mlx config or write inside a file
  */
 static void	init_app(char *filename, char *outFile)
 {
