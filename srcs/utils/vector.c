@@ -13,7 +13,7 @@
 #include "vector.h"
 
 // retourne la norme au carré du vecteur
-inline double get_vector_norm_2(t_vector *v)
+inline double vector_norm_2(t_vector *v)
 {
 	if (v)
 		return ((v->x * v->x) + (v->y * v->y) + (v->z * v->z));
@@ -21,10 +21,10 @@ inline double get_vector_norm_2(t_vector *v)
 }
 
 // retourne la norme du vecteur
-inline double get_vector_norm(t_vector *v)
+inline double vector_norm(t_vector *v)
 {
 	if (v)
-		return (sqrt(get_vector_norm_2(v)));
+		return (sqrt(vector_norm_2(v)));
 	return (0);
 }
 
@@ -63,7 +63,7 @@ inline t_vector	multiply_vector(double i, t_vector *v)
 }
 
 // return normalized version of a vector
-inline t_vector	get_vector_normalized(t_vector *v)
+inline t_vector	normalize(t_vector *v)
 {
 	t_vector	n;
 	double		coef;
@@ -73,11 +73,9 @@ inline t_vector	get_vector_normalized(t_vector *v)
 	n.z = 0;
 	if (v)
 	{
-		coef = get_vector_norm(v);
-		if (coef != 0){
-			coef = (1 / coef);
-			return (multiply_vector(coef, &n));
-		}
+		coef = vector_norm(v);
+		if (coef != 0)
+			return (multiply_vector((1 / coef), v));
 	}
 	return (n);
 }

@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <stdio.h>
 
 // open input file with the correct extension
-int	open_rt_file(char *filename, t_app *app)
+int open_rt_file(char *filename, t_app *app)
 {
 	int		fd;
 	char	*extension;
@@ -38,9 +39,9 @@ int	open_rt_file(char *filename, t_app *app)
 	return (0);
 }
 
-int	open_out_file(char *file, t_app *app)
+int open_out_file(char *file, t_app *app)
 {
-	int		fd;
+	int	fd;
 
 	fd = open(file, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU | S_IRGRP | S_IROTH);
 	if (fd < 0)
@@ -53,44 +54,41 @@ int	open_out_file(char *file, t_app *app)
 	return (0);
 }
 
-static void	write_data_to_fd(t_vector *data, int fd)
+static void write_data_to_fd(t_color **data)
 {
-	int			x;
-	int			y;
-	int			offset;
-	t_vector	color;
+	int		x;
+	int		y;
+	t_color	color;
 
-	y = W_HEIGHT - 1;
-	while (y >= 0)
+	y = 0;
+	while (y < W_HEIGHT)
 	{
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			offset = (y * (W_HEIGHT)) + x;
-			color = get_vector_normalized(&data[offset]);
-			ft_putnbr_fd((int)(color.x * 255.99), fd);
-			write(fd, " ", 1);
-			ft_putnbr_fd((int)(color.y * 255.99), fd);
-			write(fd, " ", 1);
-			ft_putnbr_fd((int)(color.z * 255.99), fd);
-			write(fd, "\n", 1);
+			color = data[y][x];
+			printf("%d %d %d ", (int)(color.r * 255.0f),
+				   (int)(color.g * 255.0f), (int)(color.b * 255.0f));
 			x++;
 		}
-		--y;
+		printf("\n");
+		y++;
 	}
 }
 
 // write inside a file data build dy raytracing
-int	write_image_to_file(t_app *app)
+int write_image_to_file(t_app *app)
 {
+	int cpy_stdout;
+
 	if (app->out_fd && app->data)
 	{
-		ft_putendl_fd("P3", app->out_fd);
-		ft_putnbr_fd(W_WIDTH, app->out_fd);
-		ft_putstr_fd(" ", app->out_fd);
-		ft_putnbr_fd(W_HEIGHT, app->out_fd);
-		ft_putendl_fd("\n255", app->out_fd);
-		write_data_to_fd(app->data, app->out_fd);
+		cpy_stdout = dup(STDOUT_FILENO);
+		dup2(app->out_fd, STDOUT_FILENO);
+		printf("P3\n%d %d\n255\n", W_WIDTH, W_HEIGHT);
+		write_data_to_fd(app->data);
+		dup2(cpy_stdout, app->out_fd);
+		app->out_fd = 0;
 	}
 	return (0);
 }

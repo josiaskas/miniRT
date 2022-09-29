@@ -22,8 +22,12 @@
 # include <string.h>
 # include <errno.h>
 
-# define W_HEIGHT 800
-# define W_WIDTH 1200
+# define W_HEIGHT 720
+# define W_WIDTH 1280
+
+# ifndef IS_BONUS
+#  define IS_BONUS 0
+# endif
 
 typedef struct s_mouse
 {
@@ -52,7 +56,7 @@ typedef struct s_app
 	int			error_code;
 	int			in_fd;
 	int			out_fd;
-	t_vector	*data;
+	t_color		**data;
 	t_mouse		*mouse;
 	t_scene		*scene;
 }	t_app;

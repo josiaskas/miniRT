@@ -12,12 +12,17 @@
 
 #ifndef PARSER_H
 # define PARSER_H
+# include "minirt.h"
 # include "vector.h"
 
 bool	parse_a_vector(char *token, t_vector *vector);
 bool	parse_double_from_str(char *str, double *result);
 bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr);
 bool	all_vector_coord_are_in_range(double min, double max, t_vector *v);
-bool	ft_is_a_number(char *str);
-
+bool	ft_is_a_number(char *str, bool is_decimal);
+bool	parse_sphere(char **tokens, t_app *app);
+bool	parse_plan(char **tokens, t_app *app);
+bool	parse_light(char **tokens, t_app *app);
+bool	parse_ambiant_light(char **tokens, t_app *app);
+void	init_hittable_info(t_hittable *object, t_composition matiere);
 #endif //PARSER_H

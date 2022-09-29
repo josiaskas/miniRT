@@ -6,14 +6,15 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
+#include <math.h>
 
-// return a vector build from two point, une droite
-t_vector get_line_f_p(t_point *a, t_point *b)
+// return a vector build from two point, une droite or (b-a)
+inline t_vector	get_vector_between(t_point *a, t_point *b)
 {
 	t_vector v;
 
@@ -31,7 +32,7 @@ t_vector get_line_f_p(t_point *a, t_point *b)
 }
 
 // return the distance between two point
-double get_distance_b_p(t_point *a, t_point *b)
+double	get_distance_b_p(t_point *a, t_point *b)
 {
 	double d;
 
@@ -43,4 +44,31 @@ double get_distance_b_p(t_point *a, t_point *b)
 				+ pow((b->z - a->z), 2));
 	}
 	return (d);
+}
+
+inline t_vector4 vector4_add(t_vector4 *a, t_vector4 *b)
+{
+	t_vector4	addition;
+
+	addition.a = a->a + b->a;
+	addition.r = a->r + b->r;
+	addition.g = a->g + b->g;
+	addition.b = a->b + b->b;
+
+	return (addition);
+}
+
+inline t_vector4	vector4_multi(double k, t_vector4 *v)
+{
+	t_vector4	multiplication;
+
+	ft_bzero(&multiplication, sizeof(multiplication));
+	if (v)
+	{
+		multiplication.a = k * v->a;
+		multiplication.r = k * v->r;
+		multiplication.g = k * v->g;
+		multiplication.b = k * v->b;
+	}
+	return (multiplication);
 }

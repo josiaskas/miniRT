@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,42 +17,45 @@
  * |u| * |v|
  * double
 */
-inline double	get_scalar_product(t_vector *u, t_vector *v)
+inline double ft_dot(t_vector *u, t_vector *v)
 {
-	return ((u->x * v->x) + (u->y * v->y) + (u->z * v->y));
+	return ((u->x * v->x) + (u->y * v->y) + (u->z * v->z));
 }
 
-inline t_vector	get_vector_cross(t_vector *u, t_vector *v)
+inline t_vector ft_cross(t_vector *a, t_vector *b)
 {
-	t_vector	vector;
+	t_vector vector;
 
-	vector.x = (u->y * v->z )- (u->z * v->y);
-	vector.y = (u->z * v->x) - (u->x * v->z);
-	vector.z = (u->x * v->y) - (u->y * v->x);
+	vector.x = (a->y * b->z) - (a->z * b->y);
+	vector.y = (a->z * b->x) - (a->x * b->z);
+	vector.z = (a->x * b->y) - (a->y * b->x);
 	return (vector);
+}
+
+// a - b
+inline t_vector substract_vector(t_vector *a, t_vector *b)
+{
+	t_vector v;
+
+	v.x = 0;
+	v.y = 0;
+	v.z = 0;
+
+	if (a && b)
+	{
+		v.x = (a->x - b->x);
+		v.y = (a->y - b->y);
+		v.z = (a->z - b->z);
+	}
+	return (v);
 }
 
 /*
- * Retourne un vecteur créer sur la heap avec (i, j, k)
- * t_vector * (free)
+ * Retourne un vecteur créer sur la stack avec (i, j, k)
 */
-inline t_vector	*get_heap_vector(double i, double j, double k)
+inline t_vector make_vector(double i, double j, double k)
 {
-	t_vector  *vector;
-
-	vector = ft_calloc(1, sizeof (t_vector));
-	if (vector)
-	{
-		vector->x = i;
-		vector->y = j;
-		vector->z = k;
-	}
-	return (vector);
-}
-
-inline t_vector	build_simple_vector(double i, double j, double k)
-{
-	t_vector	vector;
+	t_vector vector;
 
 	vector.x = i;
 	vector.y = j;
@@ -60,20 +63,32 @@ inline t_vector	build_simple_vector(double i, double j, double k)
 	return (vector);
 }
 
-/*
- * Retourne un repere qui sort de l'ecran
- * Ayant trois vecteur de direction
- * t_repere * (free_repere)
-*/
-inline t_repere *init_repere(double x, double y, double z)
+inline t_vector4	normalize_vec4(t_vector4 *v)
 {
-	t_repere *orthogonal;
+	double		c;
+	double		norm;
+	t_vector4	n;
 
-	orthogonal = (t_repere *)ft_calloc(1, sizeof(t_repere));
-	if (orthogonal){
-		orthogonal->rep_x = build_simple_vector(x, 0, 0);
-		orthogonal->rep_y = build_simple_vector(0, y, 0);
-		orthogonal->rep_z = build_simple_vector(0, 0, z);
+	ft_bzero(&n, sizeof (t_vector4));
+	if (v)
+	{
+		c = ((v->r * v->r) + (v->g * v->g) + (v->b * v->b) + (v->a * v->a));
+		norm = sqrt(c);
+		n.r = (1 / norm) * v->r;
+		n.g = (1 / norm) * v->g;
+		n.b = (1 / norm) * v->b;
+		n.a = (1 / norm) * v->a;
 	}
-	return orthogonal;
+	return (n);
+}
+
+inline t_vector4 vec4(double r, double g, double b, double a)
+{
+	t_vector4 vector;
+
+	vector.r = r;
+	vector.g = g;
+	vector.b = b;
+	vector.a = a;
+	return (vector);
 }
