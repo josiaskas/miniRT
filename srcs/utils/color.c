@@ -3,17 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 22:22:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/25 22:24:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:32:31 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 
 /*
- * Normalize color vector v and return with an alpha and range for all canals (0-1)
+ * Normalize color vector v
+ * return with an alpha and range for all canals (0-1)
  * make sure v as no negative
 */
 inline t_color	make_color_vector(t_vector	*v, double alpha)
@@ -28,7 +29,7 @@ inline t_color	make_color_vector(t_vector	*v, double alpha)
 	return (color);
 }
 
-inline t_color color_add(t_color *a, t_color *b)
+inline t_color	color_add(t_color *a, t_color *b)
 {
 	t_color	add;
 
@@ -37,7 +38,7 @@ inline t_color color_add(t_color *a, t_color *b)
 	return (add);
 }
 
-inline t_color color_multi(double k, t_color *c)
+inline t_color	color_multi(double k, t_color *c)
 {
 	t_color	m;
 

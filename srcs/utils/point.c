@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   point.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:30:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 // return a vector build from two point, une droite or (b-a)
 inline t_vector	get_vector_between(t_point *a, t_point *b)
 {
-	t_vector v;
+	t_vector	v;
 
 	v.x = 0;
 	v.y = 0;
@@ -34,7 +34,7 @@ inline t_vector	get_vector_between(t_point *a, t_point *b)
 // return the distance between two point
 double	get_distance_b_p(t_point *a, t_point *b)
 {
-	double d;
+	double	d;
 
 	d = 0;
 	if (a && b)
@@ -46,7 +46,7 @@ double	get_distance_b_p(t_point *a, t_point *b)
 	return (d);
 }
 
-inline t_vector4 vector4_add(t_vector4 *a, t_vector4 *b)
+inline t_vector4	vector4_add(t_vector4 *a, t_vector4 *b)
 {
 	t_vector4	addition;
 

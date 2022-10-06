@@ -72,5 +72,5 @@ void	exit_app(t_app *app, bool error);
 bool	init_window(t_app *app);
 int		close_window(t_app *app);
 void	app_loop(t_app *app);
-bool	do_raytracing(t_app *app);
+bool	render(t_app *app);
 #endif

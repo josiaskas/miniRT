@@ -3,20 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:54:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 20:17:06 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include <stdio.h>
 
-static	void run_app(bool render_in_a_window, t_app *app)
+static	void	run_app(bool render_in_a_window, t_app *app)
 {
 	if (!render_in_a_window)
 	{
-		if (!do_raytracing(app))
+		if (!render(app))
 			exit_app(app, true);
 		write_image_to_file(app);
 	}
@@ -24,7 +25,7 @@ static	void run_app(bool render_in_a_window, t_app *app)
 	{
 		if (!init_window(app))
 			exit_app(app, true);
-		if (!do_raytracing(app))
+		if (!render(app))
 			exit_app(app, true);
 		app_loop(app);
 	}
@@ -65,7 +66,7 @@ static void	init_app(char *filename, char *outFile)
 	run_app(in_window, app);
 }
 
-int main(int argc, char *argv[])
+int	main(int argc, char *argv[])
 {
 	if (argc == 2)
 		init_app(argv[1], NULL);

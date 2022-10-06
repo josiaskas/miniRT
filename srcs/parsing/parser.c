@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 11:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:54:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:37:18 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,15 @@ bool	parse_light(char **tokens, t_app *app)
 		return (false);
 	if (light->cd < 0 || light->cd > 1.0f)
 		return (false);
-	light->color =  make_color_vector(&v_color, 1);
+	light->color = make_color_vector(&v_color, 1);
 	light->color = color_multi(light->cd, &light->color);
 	return (true);
 }
 
 bool	parse_ambiant_light(char **tokens, t_app *app)
 {
-	t_ambiant 		ambiant;
-	t_vector		v_color;
+	t_ambiant	ambiant;
+	t_vector	v_color;
 
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
@@ -99,7 +99,7 @@ bool	parse_file_line(char *line, t_app *app)
 	status = true;
 	if (!ft_strlen(line))
 		return (true);
-	tokens = ft_split(line, ' ');
+	tokens = ft_split_v(line, " \t\n\r\v");
 	if (ft_strncmp(tokens[0], "sp", 2) == 0)
 		status = parse_sphere(tokens, app);
 	else if (ft_strncmp(tokens[0], "C", 1) == 0)
@@ -120,7 +120,7 @@ bool	parse_rt_file(t_app *app)
 	int		res;
 
 	line = NULL;
-	app->scene  = init_scene();
+	app->scene = init_scene();
 	app->error_message = "Error during parsing";
 	app->error_code = 2;
 	printf("Start File parsing\n");

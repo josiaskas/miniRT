@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 19:25:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,7 @@
 #include "../includes/multithread.h"
 #include <stdio.h>
 
-
-void init_raytracing(t_app *app)
+void	init_raytracing(t_app *app)
 {
 	size_t	i;
 	t_scene	*scene;
@@ -34,15 +33,15 @@ void init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-t_color get_pixel_data(t_scene *scene, int x, int y)
+t_color	get_pixel_data(t_scene *scene, int x, int y)
 {
 	t_color	color;
 	t_cam	*camera;
 	t_ray	*ray;
 
-	camera	= scene->selected_camera;
-	ray		= get_viewport_ray(x, y, camera);
-	color	= do_tracing(scene, ray, RAY_T_MAX);
+	camera = scene->selected_camera;
+	ray = get_viewport_ray(x, y, camera);
+	color = do_tracing(scene, ray, RAY_T_MAX);
 	free(ray);
 	return (color);
 }
@@ -60,7 +59,7 @@ void	*run_thread_pixel(void *thread_info)
 	return (data);
 }
 
-bool	do_raytracing(t_app *app)
+bool	render(t_app *app)
 {
 	init_raytracing(app);
 	run_threads(run_thread_pixel, app->scene, app->data);

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   raytrace_loop.c                                    :+:      :+:    :+:   */
+/*   loop.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/12 18:56:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 19:33:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	run_thread_batch(int x, int y, t_thread	info[], void* (*apply)(void *
 	return (x);
 }
 
-void	run_threads(void* (*apply)(void *), t_scene *scn, t_color **clrs)
+void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
 {
 	int			x;
 	int			y;
@@ -57,4 +57,3 @@ void	run_threads(void* (*apply)(void *), t_scene *scn, t_color **clrs)
 		y++;
 	}
 }
-

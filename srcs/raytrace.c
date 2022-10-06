@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:21:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void init_raytracing(t_app *app)
+void	init_raytracing(t_app *app)
 {
 	size_t	i;
-	t_scene *scene;
+	t_scene	*scene;
 
 	app->error_code = 0;
 	app->error_message = NULL;
@@ -30,7 +30,7 @@ void init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-t_color get_pixel_data(t_scene *scene, double x, double y)
+t_color	get_pixel_data(t_scene *scene, double x, double y)
 {
 	t_color	color;
 	t_cam	*camera;
@@ -43,7 +43,7 @@ t_color get_pixel_data(t_scene *scene, double x, double y)
 	return (color);
 }
 
-bool do_raytracing(t_app *app)
+bool	render(t_app *app)
 {
 	int		x;
 	int		y;

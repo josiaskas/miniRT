@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   vector_suite.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/29 16:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:28:51 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 
-inline t_vector ft_cross(t_vector *a, t_vector *b)
+inline t_vector	ft_cross(t_vector *a, t_vector *b)
 {
-	t_vector vector;
+	t_vector	vector;
 
 	vector.x = (a->y * b->z) - (a->z * b->y);
 	vector.y = (a->z * b->x) - (a->x * b->z);
@@ -23,9 +23,9 @@ inline t_vector ft_cross(t_vector *a, t_vector *b)
 }
 
 // a - b
-inline t_vector substract_vector(t_vector *a, t_vector *b)
+inline t_vector	substract_vector(t_vector *a, t_vector *b)
 {
-	t_vector v;
+	t_vector	v;
 
 	v.x = 0;
 	v.y = 0;
@@ -43,9 +43,9 @@ inline t_vector substract_vector(t_vector *a, t_vector *b)
 /*
  * Retourne un vecteur créer sur la stack avec (i, j, k)
 */
-inline t_vector vect3(double i, double j, double k)
+inline t_vector	vect3(double i, double j, double k)
 {
-	t_vector vector;
+	t_vector	vector;
 
 	vector.x = i;
 	vector.y = j;
@@ -72,9 +72,9 @@ inline t_vector4	normalize_vec4(t_vector4 *v)
 	return (n);
 }
 
-inline t_vector4 vec4(double r, double g, double b, double a)
+inline t_vector	vec4(double r, double g, double b, double a)
 {
-	t_vector4 vector;
+	t_vector4	vector;
 
 	vector.r = r;
 	vector.g = g;

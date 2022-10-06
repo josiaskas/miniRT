@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   diffuse_light.c                                            :+:      :+:    :+:   */
+/*   diffuse_light.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/23 23:44:14 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:45:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 19:31:53 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static inline t_color	diff_l_calc(double dot, t_color *light, t_hittable *o)
 {
-	t_color diffuse_color;
+	t_color	diffuse_color;
 
 	if (dot < 0)
 		dot = 0;
@@ -37,7 +37,7 @@ static inline t_color	s_blinn_calc(double dot, t_hittable *o, t_color *light)
 	if (dot <= 0.f)
 		return (ref_spec_color);
 	specular_factor = pow(dot, n_phong);
-	s_plastic  = color_multi(o->plasticity, &o->color);
+	s_plastic = color_multi(o->plasticity, &o->color);
 	s_plastic.r += (1 - o->plasticity);
 	s_plastic.g += (1 - o->plasticity);
 	s_plastic.b += (1 - o->plasticity);
@@ -87,12 +87,12 @@ static inline t_color	calc_d_r(t_light *l, t_hit *hit, t_scene *scn)
 	return (src_l(t_l_dir, hit, l, d));
 }
 
-inline t_color light_from_sources(t_hit *hit, t_scene *scene)
+inline t_color	light_from_sources(t_hit *hit, t_scene *scene)
 {
 	size_t	i;
 	t_color	sum;
-	t_color calc;
-	t_light *light;
+	t_color	calc;
+	t_light	*light;
 
 	i = 0;
 	sum = vec4(0.0f, 0.0f, 0.0f, 1.0f);

@@ -40,7 +40,7 @@ PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #raytracing sources
 RAYTRACING_DIR = raytracing/
-RAYTRACING_SRCS = intersect.c light.c diffuse_light.c sphere.c plan.c
+RAYTRACING_SRCS = intersect.c light.c diffuse_light.c sphere.c plan.c cylinder.c triangle.c
 RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #config sources

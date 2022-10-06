@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   camera.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/28 12:16:05 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:33:52 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "raytrace.h"
 #include <stdio.h>
 
-inline t_scene *init_scene()
+inline t_scene	*init_scene(void)
 {
 	t_scene	*scene;
 
@@ -31,7 +31,7 @@ inline t_scene *init_scene()
 }
 
 // on essaye le plus possible d'avoir y = 1
-void build_camera_viewport_vectors(t_cam *cam)
+void	build_camera_viewport_vectors(t_cam *cam)
 {
 	t_vector	v;
 	t_vector	u;
@@ -61,7 +61,7 @@ void build_camera_viewport_vectors(t_cam *cam)
  * build also the two vector discribing the viewport plane
  * far_clp_plane by default 300
 */
-t_cam *build_camera(t_point origin, t_vector dir, double fov, double n)
+t_cam	*build_camera(t_point origin, t_vector dir, double fov, double n)
 {
 	t_cam	*cam;
 	double	aspect_ratio;

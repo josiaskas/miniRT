@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersect.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:34:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 19:32:39 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time)
 		hit.point = get_point_on_ray_at((hit.t - RAY_T_MIN), ray);
 	return (hit);
 }
-
 
 t_color	get_object_hit_color(t_scene *scene, t_hit *hit, double max_time)
 {

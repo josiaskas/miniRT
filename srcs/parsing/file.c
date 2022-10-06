@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 11:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:54:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:38:30 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <stdio.h>
 
 // open input file with the correct extension
-int open_rt_file(char *filename, t_app *app)
+int	open_rt_file(char *filename, t_app *app)
 {
 	int		fd;
 	char	*extension;
@@ -39,7 +39,7 @@ int open_rt_file(char *filename, t_app *app)
 	return (0);
 }
 
-int open_out_file(char *file, t_app *app)
+int	open_out_file(char *file, t_app *app)
 {
 	int	fd;
 
@@ -54,7 +54,7 @@ int open_out_file(char *file, t_app *app)
 	return (0);
 }
 
-static void write_data_to_fd(t_color **data)
+static void	write_data_to_fd(t_color **data)
 {
 	int		x;
 	int		y;
@@ -68,7 +68,7 @@ static void write_data_to_fd(t_color **data)
 		{
 			color = data[y][x];
 			printf("%d %d %d ", (int)(color.r * 255.0f),
-				   (int)(color.g * 255.0f), (int)(color.b * 255.0f));
+				(int)(color.g * 255.0f), (int)(color.b * 255.0f));
 			x++;
 		}
 		printf("\n");
@@ -77,9 +77,9 @@ static void write_data_to_fd(t_color **data)
 }
 
 // write inside a file data build dy raytracing
-int write_image_to_file(t_app *app)
+int	write_image_to_file(t_app *app)
 {
-	int cpy_stdout;
+	int	cpy_stdout;
 
 	if (app->out_fd && app->data)
 	{

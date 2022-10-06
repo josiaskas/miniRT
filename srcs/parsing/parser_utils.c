@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 14:56:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/05 21:37:36 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
 // return a double formed from two strings "12"."34"
-static double ft_parse_double(char *str1, char *str2)
+static double	ft_parse_double(char *str1, char *str2)
 {
 	double	r;
 	double	f;
@@ -92,7 +92,7 @@ inline bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr)
 }
 
 // check if vector parameters are in [min, max]
-inline bool all_vector_coord_are_in_range(double min, double max, t_vector *v)
+inline bool	all_vector_coord_are_in_range(double min, double max, t_vector *v)
 {
 	if (v->x < min || v->x > max)
 		return (false);
