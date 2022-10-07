@@ -24,10 +24,10 @@ typedef struct s_vector
 
 typedef struct s_vector4
 {
-	double	a;
 	double	r;
 	double	g;
 	double	b;
+	double	a;
 }	t_vector4;
 
 typedef t_vector	t_point;
@@ -37,8 +37,6 @@ double			vector_norm(t_vector *v);
 double			vector_norm_2(t_vector *v);
 t_vector		add_vector(t_vector *a, t_vector *b);
 t_vector		substract_vector(t_vector *a, t_vector *b);
-t_vector		multiply_vector(double i, t_vector *v);
-t_vector		ft_cross(t_vector *u, t_vector *v);
 t_vector		vect3(double i, double j, double k);
 
 t_vector		get_vector_between(t_point *a, t_point *b);
@@ -52,6 +50,23 @@ t_vector4		vec4(double r, double g, double b, double a);
 t_color			make_color_vector(t_vector	*v, double alpha);
 t_color			color_add(t_color *a, t_color *b);
 t_color			color_multi(double k, t_color *c);
+
+// multiply a vector with a number
+static inline t_vector	multiply_vector(double i, t_vector *v)
+{
+	t_vector	r;
+
+	r.x = 0;
+	r.y = 0;
+	r.z = 0;
+	if (v)
+	{
+		r.x = (i * v->x);
+		r.y = (i * v->y);
+		r.z = (i * v->z);
+	}
+	return (r);
+}
 
 /*
  * Retourne le résultat du produit scalaire (dot product)
@@ -74,47 +89,21 @@ static inline t_vector	normalize(t_vector *v)
 	n.z = 0;
 	if (v)
 	{
-		coef = vector_norm(v);
+		coef = sqrt(((v->x * v->x) + (v->y * v->y) + (v->z * v->z)));
 		if (coef != 0)
 			return (multiply_vector((1 / coef), v));
 	}
 	return (n);
 }
 
-static inline void	color_check_saturation(t_color *color)
+static inline t_vector	ft_cross(t_vector *a, t_vector *b)
 {
-	if (color->r > 1.0f)
-		color->r = 1.0f;
-	if (color->g > 1.0f)
-		color->g = 1.0f;
-	if (color->b > 1.0f)
-		color->b = 1.0f;
-}
+	t_vector	vector;
 
-static inline unsigned int	get_vector_trgb(t_color color)
-{
-	unsigned int	r;
-	unsigned int	g;
-	unsigned int	b;
-	unsigned int	a;
-
-	color_check_saturation(&color);
-	r = (unsigned int)(color.r * 255);
-	g = (unsigned int)(color.g * 255);
-	b = (unsigned int)(color.b * 255);
-	a = (unsigned int)(color.a);
-	return ((a << 24) | (r << 16) | (g << 8) | b);
-}
-
-inline t_color	color_multi2(t_color *a, t_color *b)
-{
-	t_color	m;
-
-	m.r = a->r * b->r;
-	m.g = a->g * b->g;
-	m.b = a->b * b->b;
-	color_check_saturation(&m);
-	return (m);
+	vector.x = (a->y * b->z) - (a->z * b->y);
+	vector.y = (a->z * b->x) - (a->x * b->z);
+	vector.z = (a->x * b->y) - (a->y * b->x);
+	return (vector);
 }
 
 #endif //VECTOR_H

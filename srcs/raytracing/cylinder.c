@@ -10,4 +10,71 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "raytrace.h"
+#include <math.h>
+
+inline static bool is_on_the_right_side(t_ray *ray, double *t0, t_hittable *c)
+{
+	t_vector	from_top;
+	t_vector	from_bottom;
+	t_point		contact_p;
+	t_point		top_p;
+
+	top_p = multiply_vector(c->conf_data_2, &c->conf_vector);
+	top_p = add_vector(&c->origin, &top_p);
+	contact_p = get_point_on_ray_at(*t0, ray);
+	from_bottom = substract_vector(&contact_p, &c->origin);
+	from_top = substract_vector(&contact_p, &top_p);
+	if (ft_dot(&from_bottom, &c->conf_vector) > 0)
+	{
+		if (ft_dot(&from_top, &c->conf_vector) < 0)
+			return (true);
+	}
+	return (false);
+}
+
+bool intersect_cylinder_ray(t_ray *ray, t_hittable *cylinder, double *t)
+{
+	double		ter[4];
+	t_vector	v[3];
+	double		t0;
+	double		t1;
+
+	v[0] = substract_vector(&ray->origin, &cylinder->origin);
+	v[0] = ft_cross(&v[0], &cylinder->conf_vector);
+	v[0] = ft_cross(&v[0], &cylinder->conf_vector);
+	v[1] = ft_cross(&cylinder->conf_vector, &ray->dir);
+	v[1] = ft_cross(&cylinder->conf_vector, &v[1]);
+	v[2] = multiply_vector(2, &v[0]);
+	ter[0] = ft_dot(&v[1], &v[1]);
+	ter[1] = ft_dot(&v[2], &v[1]);
+	ter[2] = ft_dot(&v[0], &v[0]) - pow((cylinder->conf_data_1 / 2), 2);
+	if (!solve_quad(ter, &t0, &t1))
+		return (false);
+	if (t0 < 0)
+	{
+		t0 = t1;
+		if (t0 < 0)
+			return (false);
+	}
+	if (!is_on_the_right_side(ray, &t0, cylinder))
+		return (false);
+	*t = t0;
+	return (true);
+}
+
+t_vector get_cylinder_contact_surf_norm(t_hit *hit)
+{
+	t_vector	to_point;
+	t_vector	dir_project;
+	t_vector	n;
+	t_hittable	*c;
+
+	c = (t_hittable *)hit->object;
+	to_point = get_vector_between(&c->origin, &hit->point);
+	to_point = normalize(&to_point);
+	dir_project = multiply_vector(ft_dot(&c->conf_vector, &to_point), &c->conf_vector);
+	n = get_vector_between(&dir_project, &to_point);
+	n = normalize(&n);
+	return (n);
+}

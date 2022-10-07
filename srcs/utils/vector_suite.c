@@ -12,16 +12,6 @@
 
 #include "vector.h"
 
-inline t_vector	ft_cross(t_vector *a, t_vector *b)
-{
-	t_vector	vector;
-
-	vector.x = (a->y * b->z) - (a->z * b->y);
-	vector.y = (a->z * b->x) - (a->x * b->z);
-	vector.z = (a->x * b->y) - (a->y * b->x);
-	return (vector);
-}
-
 // a - b
 inline t_vector	substract_vector(t_vector *a, t_vector *b)
 {
@@ -72,7 +62,7 @@ inline t_vector4	normalize_vec4(t_vector4 *v)
 	return (n);
 }
 
-inline t_vector	vec4(double r, double g, double b, double a)
+inline t_vector4	vec4(double r, double g, double b, double a)
 {
 	t_vector4	vector;
 

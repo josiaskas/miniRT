@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "vector.h"
+#include "raytrace.h"
 
 /*
  * Normalize color vector v

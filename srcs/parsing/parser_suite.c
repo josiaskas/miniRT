@@ -108,6 +108,7 @@ bool	parse_cylinder(char **tokens, t_app *app)
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
+	cylinder->conf_vector = normalize(&cylinder->conf_vector);
 	cylinder->color = make_color_vector(&v_color, 1);
 	init_hittable_info(cylinder, e_metallic);
 	return (true);

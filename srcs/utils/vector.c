@@ -44,20 +44,3 @@ inline t_vector	add_vector(t_vector *a, t_vector *b)
 	}
 	return (r);
 }
-
-// multiply a vector with a number
-inline t_vector	multiply_vector(double i, t_vector *v)
-{
-	t_vector	r;
-
-	r.x = 0;
-	r.y = 0;
-	r.z = 0;
-	if (v)
-	{
-		r.x = (i * v->x);
-		r.y = (i * v->y);
-		r.z = (i * v->z);
-	}
-	return (r);
-}

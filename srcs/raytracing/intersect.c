@@ -20,6 +20,8 @@ bool	is_object_intersected(t_ray *ray, t_hittable *object, double *t)
 		return (intersect_sphere_ray(ray, object, t));
 	else if (object->type == e_hit_plane)
 		return (intersect_plan_ray(ray, object, t));
+	else if (object->type == e_hit_cylinder)
+		return (intersect_cylinder_ray(ray, object, t));
 	return (false);
 }
 
@@ -60,6 +62,8 @@ t_color	get_object_hit_color(t_scene *scene, t_hit *hit, double max_time)
 		hit->normal = get_sphere_contact_surf_norm(hit);
 	else if (hit->type == e_hit_plane)
 		hit->normal = get_plan_contact_surf_norm(hit);
+	else if (hit->type == e_hit_cylinder)
+		hit->normal = get_cylinder_contact_surf_norm(hit);
 	(void)max_time;
 	color = shading_light(hit, scene);
 	return (color);

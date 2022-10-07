@@ -110,6 +110,8 @@ bool	parse_file_line(char *line, t_app *app)
 		status = parse_light(tokens, app);
 	else if (ft_strncmp(tokens[0], "A", 1) == 0)
 		status = parse_ambiant_light(tokens, app);
+	else if (ft_strncmp(tokens[0], "cy", 2) == 0)
+		status = parse_cylinder(tokens, app);
 	ft_free_splitted(tokens);
 	return (status);
 }
