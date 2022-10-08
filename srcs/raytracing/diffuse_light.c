@@ -31,7 +31,7 @@ static inline t_color	s_blinn_calc(double dot, t_hittable *o, t_color *light)
 	double	specular_factor;
 	double	n_phong;
 
-	n_phong = 48.0f;
+	n_phong = 200.0f;
 	ref_spec_color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
 	ref_spec_color.a = 1;
 	if (dot <= 0.f)

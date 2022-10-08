@@ -83,7 +83,7 @@ static inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 	p_view = get_pixel_position_p(x, y, cam);
 	dir = get_vector_between(&cam->origin, &p_view);
 	dir = normalize(&dir);
-	return (build_ray(p_view, dir));
+	return (build_ray(cam->origin, dir));
 }
 
 /*
@@ -95,7 +95,6 @@ static inline t_point	get_point_on_ray_at(double t, t_ray *ray)
 {
 	t_point	a;
 
-	ft_bzero(&a, sizeof(t_point));
 	a.x = ray->origin.x + (t * ray->dir.x);
 	a.y = ray->origin.y + (t * ray->dir.y);
 	a.z = ray->origin.z + (t * ray->dir.z);

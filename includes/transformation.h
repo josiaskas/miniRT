@@ -64,7 +64,7 @@ static inline t_vector4	homothetie_m(t_vector4 *with, t_vector4 *src)
 	return (multiply_t4_v4(&homo_matrix, src));
 }
 
-static inline t_vector4 rotation_xy(double ang, t_vector4 *src)
+static inline t_vector4 rotation_z(double ang, t_vector4 *src)
 {
 	t_vector4_4	rot_matrix;
 	double cos_val;
@@ -82,7 +82,7 @@ static inline t_vector4 rotation_xy(double ang, t_vector4 *src)
 	return (multiply_t4_v4(&rot_matrix, src));
 }
 
-static inline t_vector4 rotation_yz(double ang, t_vector4 *src)
+static inline t_vector4 rotation_x(double ang, t_vector4 *src)
 {
 	t_vector4_4	rot_matrix;
 	double cos_val;
@@ -95,6 +95,24 @@ static inline t_vector4 rotation_yz(double ang, t_vector4 *src)
 	rot_matrix.m1[1] = cos_val;
 	rot_matrix.m1[2] = -sin_val;
 	rot_matrix.m2[1] = sin_val;
+	rot_matrix.m2[2] = cos_val;
+	rot_matrix.m3[3] = 1;
+	return (multiply_t4_v4(&rot_matrix, src));
+}
+
+static inline t_vector4 rotation_y(double ang, t_vector4 *src)
+{
+	t_vector4_4	rot_matrix;
+	double cos_val;
+	double sin_val;
+
+	ft_bzero(&rot_matrix, sizeof(t_vector4_4));
+	cos_val = cos(ang);
+	sin_val = sin(ang);
+	rot_matrix.m0[0] = cos_val;
+	rot_matrix.m0[2] = sin_val;
+	rot_matrix.m1[1] = 1;
+	rot_matrix.m2[0] = -sin_val;
 	rot_matrix.m2[2] = cos_val;
 	rot_matrix.m3[3] = 1;
 	return (multiply_t4_v4(&rot_matrix, src));
