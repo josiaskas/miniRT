@@ -30,7 +30,7 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c vector_suite.c point.c camera.c color.c
+UTILS_SRCS = vector.c vector_suite.c color.c camera.c scene.c transformations.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
@@ -40,7 +40,7 @@ PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #raytracing sources
 RAYTRACING_DIR = raytracing/
-RAYTRACING_SRCS = intersect.c light.c diffuse_light.c sphere.c plan.c cylinder.c triangle.c
+RAYTRACING_SRCS = intersect.c light.c sphere.c plan.c cylinder.c triangle.c
 RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #config sources
