@@ -14,6 +14,7 @@
 # define WINDOW_H
 # include "minirt.h"
 # include "hooks_key.h"
+# include "raytrace.h"
 
 int	mouse_pressed(int button, int x, int y, t_app *app);
 int	mouse_release(int button, int x, int y, t_app *app);

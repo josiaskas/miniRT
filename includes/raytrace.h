@@ -12,62 +12,21 @@
 
 #ifndef RAYTRACE_H
 # define RAYTRACE_H
-# include "vector.h"
 # include "ray.h"
-# define RAY_T_MIN 0.00000001f
+# include "color.h"
+# include "transformation.h"
+# include <stdio.h>
+# define RAY_T_MIN 0.000001f
 # define RAY_T_MAX 1.0e30f
-
-typedef enum e_hittable_type
-{
-	e_hit_sphere,
-	e_hit_plane,
-	e_hit_triangle,
-	e_hit_cylinder,
-	e_hit_light,
-}	t_hit_type;
-
-typedef enum e_hittable_composition
-{
-	e_metallic,
-	e_plastic,
-	e_glass
-}	t_composition;
+# define W_HEIGHT 720
+# define W_WIDTH 1280
 
 typedef struct s_light
 {
-	t_point		origin;
-	double		cd;
-	t_color		color;
+	t_point	o;
+	double	cd;
+	t_color	color;
 }	t_light;
-
-typedef struct s_hittable
-{
-	t_hit_type	type;
-	t_point		origin;
-	t_point		p1;
-	t_point		p2;
-	t_point		p3;
-	t_color		color;
-	t_vector	conf_vector;
-	double		conf_data_1;
-	double		conf_data_2;
-	double		const_reflex[3];
-	double		plasticity;
-	double		indice_refraction;
-	double		reflectivity;
-	double		transparency;
-}	t_hittable;
-
-typedef struct s_hit_record
-{
-	bool		intersection;
-	t_hit_type	type;
-	t_hittable	*object;
-	double		t;
-	t_ray		*ray;
-	t_point		point;
-	t_vector	normal;
-}	t_hit;
 
 typedef struct s_ambiant_light
 {
@@ -82,21 +41,31 @@ typedef struct s_scene
 	t_array		*cameras;
 	t_cam		*selected_camera;
 	t_ambiant	ambiant;
+	t_array		*materials;
 }	t_scene;
 
-t_cam		*build_camera(t_point origin, t_vector dir, double angle, double n);
-t_scene		*init_scene(void);
-t_hit		do_intersect_objects(t_scene *scene, t_ray *ray, double max_time);
-t_color		do_tracing(t_scene *scene, t_ray *ray, double max_time);
-bool		intersect_plan_ray(t_ray *ray, t_hittable *plan, double *t);
-bool		intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t);
-bool		intersect_cylinder_ray(t_ray *ray, t_hittable *cylinder, double *t);
-t_vector	get_plan_contact_surf_norm(t_hit *hit);
-t_vector	get_sphere_contact_surf_norm(t_hit *hit);
-t_vector	get_cylinder_contact_surf_norm(t_hit *hit);
-t_color		light_from_sources(t_hit *hit, t_scene *scene);
-t_color		shading_light(t_hit *hit, t_scene *scene);
-void		free_scene(t_scene *scene);
+t_scene	*init_scene(void);
+void	free_scene(t_scene *scene);
+t_cam	*build_camera(t_point origin, t_v3 dir, double angle, double n);
+bool	rotate_camera(t_cam *cam, t_rotation_type type, double angle);
+bool	translate_camera(t_cam *cam, t_v3 destination);
+
+bool	build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color);
+bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
+bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[]);
+bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
+
+t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time);
+t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time);
+void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
+void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
+void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
+t_color	get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light);
+//t_v3	get_plan_contact_surf_norm(t_hit *hit);
+//t_v3	get_sphere_contact_surf_norm(t_hit *hit);
+//t_v3	get_cylinder_contact_surf_norm(t_hit *hit);
+//t_color	light_from_sources(t_hit *hit, t_scene *scene);
+//t_color	shading_light(t_hit *hit, t_scene *scene);
 
 inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 {
@@ -104,7 +73,7 @@ inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 	double	q;
 	double	temp;
 
-	discriminant = (terms[1] * terms[1]) - (4.0f * terms[0] * terms[2]);
+	discriminant = (terms[1] * terms[1]) - (4 * terms[0] * terms[2]);
 	if (discriminant < 0)
 		return (false);
 	else if (discriminant == 0)
@@ -127,40 +96,94 @@ inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 	return (true);
 }
 
-static inline void	color_check_saturation(t_color *color)
+static inline void	build_camera_viewport_vectors(t_cam *cam)
 {
-	if (color->r > 1.0f)
-		color->r = 1.0f;
-	if (color->g > 1.0f)
-		color->g = 1.0f;
-	if (color->b > 1.0f)
-		color->b = 1.0f;
+	t_v3	x;
+	t_v3	y;
+	t_v3	v;
+
+	v = cam->dir;
+	if (cam->dir.x != 0)
+		cam->dir_ort = normalize(v3(((-v.y) / v.x), 1, 0));
+	else if (cam->dir.z != 0)
+		cam->dir_ort = normalize(v3(0, 1, (-v.y) / v.z));
+	else
+		cam->dir_ort = v3(1, 0, 0);
+	x = normalize(ft_cross(cam->dir, cam->dir_ort));
+	cam->u1 = v3_multi((cam->v_w / (double)W_WIDTH), x);
+	y = normalize(ft_cross(cam->dir, cam->u1));
+	cam->u2 = v3_multi((cam->v_h / (double)W_HEIGHT), y);
+	x = v3_multi(((double)W_WIDTH / -2), cam->u1);
+	y = v3_multi(((double)W_HEIGHT) / -2, cam->u2);
+	cam->r_init = v3_add(x , y);
 }
 
-static inline unsigned int	get_vector_trgb(t_color color)
+static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 {
-	unsigned int	r;
-	unsigned int	g;
-	unsigned int	b;
-	unsigned int	a;
+	t_hit	*hit;
 
-	color_check_saturation(&color);
-	r = (unsigned int)(color.r * 255);
-	g = (unsigned int)(color.g * 255);
-	b = (unsigned int)(color.b * 255);
-	a = (unsigned int)(color.a);
-	return ((a << 24) | (r << 16) | (g << 8) | b);
+	hit = (t_hit *)ft_calloc(1, sizeof (t_hit));
+	if (hit)
+	{
+		hit->object = obj;
+		hit->intersection = false;
+		if (obj->type == e_hit_sphere)
+			intersect_sphere(hit, obj, ray);
+		else if (obj->type == e_hit_plane)
+			intersect_plane(hit, obj, ray);
+		else if (obj->type == e_hit_cylinder)
+			intersect_cylinder(hit, obj, ray);
+	}
+	return (hit);
 }
 
-inline t_color	color_multi2(t_color *a, t_color *b)
+static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 {
-	t_color	m;
+	t_array 	*records;
+	t_hittable	*obj;
+	t_hit		*hit;
+	size_t		i;
 
-	m.r = a->r * b->r;
-	m.g = a->g * b->g;
-	m.b = a->b * b->b;
-	color_check_saturation(&m);
-	return (m);
+	records = ft_new_array();
+	if (records)
+	{
+		i = 0;
+		while (i < scene->hittable->length)
+		{
+			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
+			hit = do_intersect(ray, obj);
+			ft_push(records,hit);
+			if ((l == true) && (hit->intersection == true))
+				return (records);
+			i++;
+		}
+	}
+	return (records);
+}
+
+static inline	t_hit	*get_first_obj_hit(t_array *records, double max)
+{
+	size_t	i;
+	double	curr_min;
+	t_hit	*first_hit;
+	t_hit	*hit;
+
+	curr_min = max;
+	first_hit = NULL;
+	i = 0;
+	if (!records)
+		return (NULL);
+	while (i < records->length)
+	{
+		hit = (t_hit *)ft_get_elem(records, i);
+		if (hit->intersection == true && (hit->t < curr_min))
+		{
+			first_hit = hit;
+			curr_min = hit->t;
+		}
+		i++;
+	}
+	return (first_hit);
 }
 
 #endif //RAYTRACE_H

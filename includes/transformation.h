@@ -12,110 +12,122 @@
 
 #ifndef TRANSFORMATION_H
 # define TRANSFORMATION_H
-# include <math.h>
 # include "vector.h"
 
-typedef struct s_vector4_4 {
-	double	m0[4];
-	double	m1[4];
-	double	m2[4];
-	double	m3[4];
-}	t_vector4_4;
-
-static inline t_vector4	multiply_t4_v4(t_vector4_4 *m, t_vector4 *c)
+typedef enum e_rotation_type
 {
-	t_vector4	r;
+	e_rot_on_x,
+	e_rot_on_y,
+	e_rot_on_z,
+}	t_rotation_type;
 
-	r.r = (m->m0[0] * c->r) + (m->m0[1] * c->g) + (m->m0[2] * c->b)
-		+ (m->m0[3] * c->a);
-	r.g = (m->m1[0] * c->r) + (m->m1[1] * c->g) + (m->m1[2] * c->b)
-		  + (m->m1[3] * c->a);
-	r.b = (m->m2[0] * c->r) + (m->m2[1] * c->g) + (m->m2[2] * c->b)
-		  + (m->m2[3] * c->a);
-	r.a = (m->m3[0] * c->r) + (m->m3[1] * c->g) + (m->m3[2] * c->b)
-		  + (m->m3[3] * c->a);
+t_m4	scale_m(t_v3 with);
+t_m4	rotation_z(double ang);
+t_m4	rotation_x(double ang);
+t_m4	rotation_y(double ang);
+t_m4	get_identity_matrix(void);
+
+static inline void	init_m4(t_m4 *a)
+{
+	int i;
+	int j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			a->data[i][j] = 0;
+			j++;
+		}
+		i++;
+	}
+}
+
+static inline t_m4	m4_multi(t_m4 a, t_m4 b)
+{
+	int		i;
+	int		j;
+	int		k;
+	t_m4	r;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			r.data[i][j] = 0;
+			k = 0;
+			while (k < 4)
+			{
+				r.data[i][j] += a.data[i][k] * b.data[k][j];
+				k++;
+			}
+			j++;
+		}
+		i++;
+	}
 	return (r);
 }
 
-static inline t_vector4	translate_m(t_vector4 *with, t_vector4 *src)
+static inline t_m4	translate_m(t_v3 with)
 {
-	t_vector4_4	translation_matrix;
+	t_m4	tr_matrix;
 
-	ft_bzero(&translation_matrix, sizeof(t_vector4_4));
-	translation_matrix.m0[0] = 1;
-	translation_matrix.m0[3] = with->r;
-	translation_matrix.m1[1] = 1;
-	translation_matrix.m1[3] = with->b;
-	translation_matrix.m2[2] = 1;
-	translation_matrix.m2[3] = with->g;
-	translation_matrix.m3[3] = 1;
-	return (multiply_t4_v4(&translation_matrix, src));
+	tr_matrix = get_identity_matrix();
+	tr_matrix.data[0][3] = with.x;
+	tr_matrix.data[1][3] = with.y;
+	tr_matrix.data[2][3] = with.z;
+	return (tr_matrix);
 }
 
-static inline t_vector4	homothetie_m(t_vector4 *with, t_vector4 *src)
+/*
+ * return the transformation matrix or the inverse transformation matrix
+ * trans:translation vector, angles: vector, scaling vector, is inverse check
+*/
+static inline t_m4 get_tr_matrix(t_v3 trans, t_v3 angles, t_v3 sc, bool inv)
 {
-	t_vector4_4	homo_matrix;
+	t_m4	tr;
 
-	ft_bzero(&homo_matrix, sizeof(t_vector4_4));
-	homo_matrix.m0[0] = with->r;
-	homo_matrix.m1[1] = with->b;
-	homo_matrix.m2[2] = with->g;
-	homo_matrix.m3[3] = 1;
-	return (multiply_t4_v4(&homo_matrix, src));
+	if (inv == false)
+	{
+		tr = translate_m(trans);
+		if (angles.z != 0)
+			tr = m4_multi(tr, rotation_z(angles.z));
+		if (angles.y != 0)
+			tr = m4_multi(tr, rotation_y(angles.y));
+		if (angles.x != 0)
+			tr = m4_multi(tr, rotation_x(angles.x));
+		tr = m4_multi(tr, scale_m(sc));
+		return (tr);
+	}
+	tr = scale_m(inverse_comp(sc));
+	if (angles.x != 0)
+		tr = m4_multi(tr, rotation_x(-1 * angles.x));
+	if (angles.y != 0)
+		tr = m4_multi(tr, rotation_y(-1 * angles.y));
+	if (angles.z != 0)
+		tr = m4_multi(tr, rotation_z(-1 * angles.z));
+	tr = m4_multi(tr, translate_m(v3_multi(-1,trans)));
+	return (tr);
 }
 
-static inline t_vector4 rotation_z(double ang, t_vector4 *src)
+static inline t_v4	multiply_m4_v4(t_m4 m, t_v4 c)
 {
-	t_vector4_4	rot_matrix;
-	double cos_val;
-	double sin_val;
+	t_v4	r;
 
-	ft_bzero(&rot_matrix, sizeof(t_vector4_4));
-	cos_val = cos(ang);
-	sin_val = sin(ang);
-	rot_matrix.m0[0] = cos_val;
-	rot_matrix.m0[1] = -sin_val;
-	rot_matrix.m1[0] = sin_val;
-	rot_matrix.m1[1] = cos_val;
-	rot_matrix.m2[2] = 1;
-	rot_matrix.m3[3] = 1;
-	return (multiply_t4_v4(&rot_matrix, src));
+	r.r = (m.data[0][0] * c.r) + (m.data[0][1] * c.g) + (m.data[0][2] * c.b) +
+		  (m.data[0][3] * c.a);
+	r.g = (m.data[1][0] * c.r) + (m.data[1][1] * c.g) + (m.data[1][2] * c.b) +
+		  (m.data[1][3] * c.a);
+	r.b = (m.data[2][0] * c.r) + (m.data[2][1] * c.g) + (m.data[2][2] * c.b) +
+		  (m.data[2][3] * c.a);
+	r.a = (m.data[3][0] * c.r) + (m.data[3][1] * c.g) + (m.data[3][2] * c.b) +
+		  (m.data[3][3] * c.a);
+	return (r);
 }
 
-static inline t_vector4 rotation_x(double ang, t_vector4 *src)
-{
-	t_vector4_4	rot_matrix;
-	double cos_val;
-	double sin_val;
-
-	ft_bzero(&rot_matrix, sizeof(t_vector4_4));
-	cos_val = cos(ang);
-	sin_val = sin(ang);
-	rot_matrix.m0[0] = 1;
-	rot_matrix.m1[1] = cos_val;
-	rot_matrix.m1[2] = -sin_val;
-	rot_matrix.m2[1] = sin_val;
-	rot_matrix.m2[2] = cos_val;
-	rot_matrix.m3[3] = 1;
-	return (multiply_t4_v4(&rot_matrix, src));
-}
-
-static inline t_vector4 rotation_y(double ang, t_vector4 *src)
-{
-	t_vector4_4	rot_matrix;
-	double cos_val;
-	double sin_val;
-
-	ft_bzero(&rot_matrix, sizeof(t_vector4_4));
-	cos_val = cos(ang);
-	sin_val = sin(ang);
-	rot_matrix.m0[0] = cos_val;
-	rot_matrix.m0[2] = sin_val;
-	rot_matrix.m1[1] = 1;
-	rot_matrix.m2[0] = -sin_val;
-	rot_matrix.m2[2] = cos_val;
-	rot_matrix.m3[3] = 1;
-	return (multiply_t4_v4(&rot_matrix, src));
-}
 
 #endif //TRANSFORMATION_H

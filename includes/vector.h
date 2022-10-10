@@ -20,7 +20,7 @@ typedef struct s_vector
 	double	x;
 	double	y;
 	double	z;
-}	t_vector;
+}	t_v3;
 
 typedef struct s_vector4
 {
@@ -28,43 +28,46 @@ typedef struct s_vector4
 	double	g;
 	double	b;
 	double	a;
-}	t_vector4;
+}	t_v4;
 
-typedef t_vector	t_point;
-typedef t_vector4	t_color;
+typedef struct s_matrix4 {
+	double data[4][4];
+}	t_m4;
 
-double			vector_norm(t_vector *v);
-double			vector_norm_2(t_vector *v);
-t_vector		add_vector(t_vector *a, t_vector *b);
-t_vector		substract_vector(t_vector *a, t_vector *b);
-t_vector		vect3(double i, double j, double k);
+typedef t_v3	t_point;
 
-t_vector		get_vector_between(t_point *a, t_point *b);
-double			get_distance_b_p(t_point *a, t_point *b);
+double	v3_norm_2(t_v3 v);
+double	v3_norm(t_v3 v);
+t_v3	v3_add(t_v3 a, t_v3 b);
+t_v3	v3_sub(t_v3 a, t_v3 b);
+t_v3	inverse_comp(t_v3 v);
+t_v4	v3_to_v4(t_v3 v);
+t_v4	v4_add(t_v4 a, t_v4 b);
+t_v4	v4_sub(t_v4 a, t_v4 b);
+t_v4	v4_multi(double k, t_v4 v);
+t_v4	v4(double r, double g, double b, double a);
 
-t_vector4		normalize_vec4(t_vector4 *v);
-t_vector4		vector4_add(t_vector4 *a, t_vector4 *b);
-t_vector4		vector4_multi(double k, t_vector4 *v);
-t_vector4		vec4(double r, double g, double b, double a);
+/*
+ * Retourne un vecteur créer sur la stack avec (i, j, k)
+*/
+static inline t_v3	v3(double i, double j, double k)
+{
+	t_v3	vector;
 
-t_color			make_color_vector(t_vector	*v, double alpha);
-t_color			color_add(t_color *a, t_color *b);
-t_color			color_multi(double k, t_color *c);
+	vector.x = i;
+	vector.y = j;
+	vector.z = k;
+	return (vector);
+}
 
 // multiply a vector with a number
-static inline t_vector	multiply_vector(double i, t_vector *v)
+static inline t_v3	v3_multi(double i, t_v3 v)
 {
-	t_vector	r;
+	t_v3	r;
 
-	r.x = 0;
-	r.y = 0;
-	r.z = 0;
-	if (v)
-	{
-		r.x = (i * v->x);
-		r.y = (i * v->y);
-		r.z = (i * v->z);
-	}
+	r.x = (i * v.x);
+	r.y = (i * v.y);
+	r.z = (i * v.z);
 	return (r);
 }
 
@@ -73,36 +76,29 @@ static inline t_vector	multiply_vector(double i, t_vector *v)
  * |u| * |v|
  * double
 */
-inline double	ft_dot(t_vector *u, t_vector *v)
+inline double	ft_dot(t_v3 u, t_v3 v)
 {
-	return ((u->x * v->x) + (u->y * v->y) + (u->z * v->z));
+	return ((u.x * v.x) + (u.y * v.y) + (u.z * v.z));
 }
 
-// return normalized  t_vector
-static inline t_vector	normalize(t_vector *v)
+// return normalized  t_v3
+static inline t_v3	normalize(t_v3 v)
 {
-	t_vector	n;
-	double		coef;
+	double	norm;
 
-	n.x = 0;
-	n.y = 0;
-	n.z = 0;
-	if (v)
-	{
-		coef = sqrt(((v->x * v->x) + (v->y * v->y) + (v->z * v->z)));
-		if (coef != 0)
-			return (multiply_vector((1 / coef), v));
-	}
-	return (n);
+	norm = sqrt(((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
+	if (norm != 0.f)
+		return (v3_multi((1 / norm), v));
+	return (v3_multi(0, v));
 }
 
-static inline t_vector	ft_cross(t_vector *a, t_vector *b)
+static inline t_v3	ft_cross(t_v3 a, t_v3 b)
 {
-	t_vector	vector;
+	t_v3	vector;
 
-	vector.x = (a->y * b->z) - (a->z * b->y);
-	vector.y = (a->z * b->x) - (a->x * b->z);
-	vector.z = (a->x * b->y) - (a->y * b->x);
+	vector.x = (a.y * b.z) - (a.z * b.y);
+	vector.y = (a.z * b.x) - (a.x * b.z);
+	vector.z = (a.x * b.y) - (a.y * b.x);
 	return (vector);
 }
 

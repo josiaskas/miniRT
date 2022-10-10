@@ -15,15 +15,11 @@
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
 # include "hooks_key.h"
-# include "vector.h"
 # include "raytrace.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <string.h>
 # include <errno.h>
-
-# define W_HEIGHT 720
-# define W_WIDTH 1280
 
 # ifndef IS_BONUS
 #  define IS_BONUS 0
@@ -73,4 +69,5 @@ bool	init_window(t_app *app);
 int		close_window(t_app *app);
 void	app_loop(t_app *app);
 bool	render(t_app *app);
+int		rerender(t_app *app);
 #endif
