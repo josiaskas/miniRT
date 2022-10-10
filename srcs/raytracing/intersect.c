@@ -13,59 +13,57 @@
 #include "raytrace.h"
 #include <stdio.h>
 
-bool	is_object_intersected(t_ray *ray, t_hittable *object, double *t)
-{
-	*t = 0;
-	if (object->type == e_hit_sphere)
-		return (intersect_sphere_ray(ray, object, t));
-	else if (object->type == e_hit_plane)
-		return (intersect_plan_ray(ray, object, t));
-	else if (object->type == e_hit_cylinder)
-		return (intersect_cylinder_ray(ray, object, t));
-	return (false);
-}
+//static bool is_in_shadow(t_scene *scene, t_hit *hit, t_v3 to_light)
+//{
+//	t_ray 	*to_l;
+//	t_array	*records;
+//	bool	in_shadow;
+//
+//	to_l = build_ray(hit->h_point,normalize(to_light));
+//	records = do_intersect_objs(scene, to_l, true);
+//	in_shadow = false;
+//	if (get_first_obj_hit(records, v3_norm(to_light)) != NULL)
+//		in_shadow = true;
+//	free(to_l);
+//	ft_free_d_array(records);
+//	return (in_shadow);
+//}
 
-t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time)
-{
-	t_hit		hit;
-	size_t		i;
-	t_hittable	*object;
-	double		time;
+//static inline t_color	reflected_color(int deep, t_scene *scn, t_hit *hit)
+//{
+//	t_color		color;
+//	t_ray		*ref_ray;
+//
+//	if (deep > 10 || (hit->object->material->reflexive <= RAY_T_MIN))
+//		return (v4(0,0,0,1));
+//	ref_ray = build_ray(hit->h_point, hit->r);
+//	(void)scn;
+//	color = v4(0,0,0.5,1);
+//	free(ref_ray);
+//	color = color_multi(hit->object->material->reflexive, color);
+//	return (color);
+//}
 
-	ft_bzero(&hit, sizeof(t_hit));
+static inline t_color shade_hit(t_scene *scn, t_hit *hit)
+{
+	t_color	color;
+	size_t	i;
+	t_light	*light;
+	t_v3	to_light;
+
 	i = 0;
-	hit.ray = ray;
-	hit.intersection = false;
-	hit.t = max_time;
-	while (i < scene->hittable->length)
+	color = color_multi(scn->ambiant.intensity, scn->ambiant.color);
+	color = hadamar_prod(color, hit->object->color);
+	while (i < scn->lights->length)
 	{
-		object = (t_hittable *)ft_get_elem(scene->hittable, i);
-		if (is_object_intersected(ray, object, &time) && (time < hit.t))
-		{
-			hit.object = object;
-			hit.type = object->type;
-			hit.t = time;
-			hit.intersection = true;
-		}
+		light = (t_light *)ft_get_elem(scn->lights, i);
+		to_light = v3_sub(light->o, hit->h_point);
+//		if (is_in_shadow(scn, hit, to_light))
+//			color = color_add(color, v4(0,0,0,1));
+//		else
+		color = color_add(color, get_b_phong_l(light, hit, to_light));
 		i++;
 	}
-	if (hit.intersection)
-		hit.point = get_point_on_ray_at((hit.t - RAY_T_MIN), ray);
-	return (hit);
-}
-
-t_color	get_object_hit_color(t_scene *scene, t_hit *hit, double max_time)
-{
-	t_color		color;
-
-	if (hit->type == e_hit_sphere)
-		hit->normal = get_sphere_contact_surf_norm(hit);
-	else if (hit->type == e_hit_plane)
-		hit->normal = get_plan_contact_surf_norm(hit);
-	else if (hit->type == e_hit_cylinder)
-		hit->normal = get_cylinder_contact_surf_norm(hit);
-	(void)max_time;
-	color = shading_light(hit, scene);
 	return (color);
 }
 
@@ -73,14 +71,19 @@ t_color	get_object_hit_color(t_scene *scene, t_hit *hit, double max_time)
  * min if ray is normalized can be far_clp_plane
  * Return a color vector (s_vector4) clamped between (0-1)
 */
-t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time)
+t_color do_tracing(t_scene *scene, t_ray *ray, double max_time)
 {
-	t_hit	first_hit;
 	t_color	color;
+	t_array	*records;
+	t_hit	*first;
 
-	color = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-	first_hit = do_intersect_objects(scene, ray, max_time);
-	if (first_hit.intersection)
-		color = get_object_hit_color(scene, &first_hit, max_time);
+	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	records = do_intersect_objs(scene, ray, false);
+	first = get_first_obj_hit(records, max_time);
+	if (first != NULL)
+	{
+		color = shade_hit(scene, first);
+	}
+	ft_free_d_array(records);
 	return (color);
 }

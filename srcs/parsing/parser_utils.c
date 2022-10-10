@@ -12,6 +12,27 @@
 
 #include "parser.h"
 
+// check if is only digit, if decimal '-' in front is false
+static inline bool	ft_is_a_number(char *str, bool is_decimal)
+{
+	size_t	i;
+
+	i = 0;
+	if (!str)
+		return (false);
+	if (str[0] == '-' && (!is_decimal))
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	if (i > 10)
+		return (false);
+	return (true);
+}
+
 // return a double formed from two strings "12"."34"
 static double	ft_parse_double(char *str1, char *str2)
 {
@@ -53,7 +74,7 @@ bool	parse_double_from_str(char *str, double *result)
 	return (status);
 }
 
-bool	parse_a_vector(char *token, t_vector *vector)
+bool	parse_a_vector(char *token, t_v3 *vector)
 {
 	char	**values;
 	size_t	i;
@@ -91,14 +112,3 @@ inline bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr)
 	return (true);
 }
 
-// check if vector parameters are in [min, max]
-inline bool	all_vector_coord_are_in_range(double min, double max, t_vector *v)
-{
-	if (v->x < min || v->x > max)
-		return (false);
-	if (v->y < min || v->y > max)
-		return (false);
-	if (v->z < min || v->z > max)
-		return (false);
-	return (true);
-}

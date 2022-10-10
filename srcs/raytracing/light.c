@@ -12,30 +12,50 @@
 
 #include "raytrace.h"
 
-static inline t_color	ambiant_light(t_hit *hit, t_scene *scene)
+static inline t_color	diffuse_light(t_light *light, t_hit *hit, double dot)
 {
-	t_color		surface_color;
-	t_color		light_color;
-	t_color		ambiant_light;
-	double		reflexion_const;
+	t_color color;
+	double	k;
 
-	light_color = color_multi(scene->ambiant.intensity, &scene->ambiant.color);
-	reflexion_const = hit->object->const_reflex[0];
-	surface_color = hit->object->color;
-	if (reflexion_const != 1)
-		surface_color = color_multi(reflexion_const, &surface_color);
-	ambiant_light = color_multi2(&light_color, &surface_color);
-	return (ambiant_light);
+	if (dot == 0)
+		return (v4(0,0,0,1));
+	k = hit->object->material->diffuse;
+	color = color_multi(dot * k, hit->object->color);
+	color = hadamar_prod(light->color, color);
+	return (color);
 }
 
-t_color	shading_light(t_hit *hit, t_scene *scene)
+static inline t_color spec_light(t_light *light, t_hit *hit, t_v3 to_l)
 {
-	t_color		color;
-	t_color		amb_l;
-	t_color		sources_l;
+	t_v3	h;
+	double	cos_theta;
+	double  specular_factor;
+	t_color	color;
 
-	amb_l = ambiant_light(hit, scene);
-	sources_l = light_from_sources(hit, scene);
-	color = color_add(&amb_l, &sources_l);
-	return (color);
+	h = normalize(v3_add(v3_multi(-1, hit->ray->dir), to_l));
+	cos_theta = ft_dot(h, hit->normal);
+	specular_factor = pow(cos_theta, hit->object->material->shininess);
+	color = color_multi(specular_factor, hit->object->color);
+	return (hadamar_prod(light->color, color));
+}
+
+inline t_color get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light)
+{
+	t_color	diffuse;
+	t_color	specular;
+	double	dist;
+	double	lambertian;
+
+	dist = v3_norm_2(to_light);
+	to_light = normalize(to_light);
+	lambertian = ft_dot(hit->normal, to_light);
+	specular = v4(0,0,0,1);
+	if (lambertian < 0)
+		lambertian = 0;
+	if (lambertian > 0)
+		specular = spec_light(light, hit, to_light);
+	diffuse = diffuse_light(light, hit, lambertian);
+	if (dist > 0)
+		color_multi((1.f / dist), diffuse);
+	return (color_add(diffuse, specular));
 }

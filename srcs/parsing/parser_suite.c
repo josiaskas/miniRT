@@ -12,106 +12,96 @@
 
 #include "parser.h"
 
-// check if is only digit, if decimal '-' in front is false
-bool	ft_is_a_number(char *str, bool is_decimal)
-{
-	size_t	i;
-
-	i = 0;
-	if (!str)
-		return (false);
-	if (str[0] == '-' && (!is_decimal))
-		i++;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (false);
-		i++;
-	}
-	if (i > 10)
-		return (false);
-	return (true);
-}
-
 bool	parse_sphere(char **tokens, t_app *app)
 {
-	t_hittable	*sphere;
-	t_vector	v_color;
+	t_v3		v_color;
+	t_point		origin;
+	double		radius;
 
 	app->error_message = "Error during parsing, On a sphere";
-	sphere = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
-	ft_push(app->scene->hittable, sphere);
-	sphere->type = e_hit_sphere;
 	if (!tokens_has_valid_params_nbr(tokens, 4))
 		return (false);
-	if (!parse_a_vector(tokens[1], &sphere->origin))
+	if (!parse_a_vector(tokens[1], &origin))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &sphere->conf_data_1))
+	if (!parse_double_from_str(tokens[2], &radius))
 		return (false);
 	if (!parse_a_vector(tokens[3], &v_color))
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
-	sphere->color = make_color_vector(&v_color, 1);
-	init_hittable_info(sphere, e_metallic);
-	return (true);
+	return (build_sphere(app->scene, origin, radius, v_color));
 }
 
 bool	parse_plan(char **tokens, t_app *app)
 {
-	t_hittable	*plan;
-	t_vector	v_color;
+	t_v3	normal;
+	t_point	p;
+	t_v3	v_color;
 
 	app->error_message = "Error during parsing, On a plan";
-	plan = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
-	ft_push(app->scene->hittable, plan);
-	plan->type = e_hit_plane;
 	if (!tokens_has_valid_params_nbr(tokens, 4))
 		return (false);
-	if (!parse_a_vector(tokens[1], &plan->origin))
+	if (!parse_a_vector(tokens[1], &p))
 		return (false);
-	if (!parse_a_vector(tokens[2], &plan->conf_vector))
+	if (!parse_a_vector(tokens[2], &normal))
 		return (false);
 	if (!parse_a_vector(tokens[3], &v_color))
 		return (false);
-	if (!all_vector_coord_are_in_range(-1, 1, &plan->conf_vector))
+	if (!all_vector_coord_are_in_range(-1, 1, &normal))
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
-	plan->color = make_color_vector(&v_color, 1);
-	init_hittable_info(plan, e_metallic);
-	return (true);
+	return (build_plan(app->scene, p, normal, v_color));
 }
 
 bool	parse_cylinder(char **tokens, t_app *app)
 {
-	t_hittable	*cylinder;
-	t_vector	v_color;
+	t_v3	dir;
+	t_point	p;
+	t_v3	v_color;
+	double	conf[2];
 
 	app->error_message = "Error during parsing, On a cylinder";
-	cylinder = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
-	ft_push(app->scene->hittable, cylinder);
-	cylinder->type = e_hit_cylinder;
 	if (!tokens_has_valid_params_nbr(tokens, 6))
 		return (false);
-	if (!parse_a_vector(tokens[1], &cylinder->origin))
+	if (!parse_a_vector(tokens[1], &p))
 		return (false);
-	if (!parse_a_vector(tokens[2], &cylinder->conf_vector))
+	if (!parse_a_vector(tokens[2], &dir))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &cylinder->conf_data_1))
+	if (!parse_double_from_str(tokens[3], &conf[0]))
 		return (false);
-	if (!parse_double_from_str(tokens[4], &cylinder->conf_data_2))
+	if (!parse_double_from_str(tokens[4], &conf[1]))
 		return (false);
 	if (!parse_a_vector(tokens[5], &v_color))
 		return (false);
-	if (!all_vector_coord_are_in_range(-1, 1, &cylinder->conf_vector))
+	if (!all_vector_coord_are_in_range(-1, 1, &dir))
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
-	cylinder->conf_data_1 = cylinder->conf_data_1 / 2;
-	cylinder->conf_vector = normalize(&cylinder->conf_vector);
-	cylinder->color = make_color_vector(&v_color, 1);
-	init_hittable_info(cylinder, e_metallic);
-	return (true);
+	conf[0] = conf[0] / 2;
+	dir = normalize(dir);
+	return (build_cy(app->scene, p, dir, v_color, conf));
 }
 
+bool	parse_triangle(char **tokens, t_app *app)
+{
+	t_point	p1;
+	t_point	p2;
+	t_point	p3;
+	t_v3	v_color;
+
+	app->error_message = "Error during parsing, On a triangle";
+	if (!tokens_has_valid_params_nbr(tokens, 4))
+		return (false);
+	if (!parse_a_vector(tokens[1], &p1))
+		return (false);
+	if (!parse_a_vector(tokens[2], &p2))
+		return (false);
+	if (!parse_a_vector(tokens[3], &p3))
+		return (false);
+	if (!parse_a_vector(tokens[4], &v_color))
+		return (false);
+	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+		return (false);
+	return (bld_t(app->scene, p1, p2, p3, v_color));
+}

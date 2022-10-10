@@ -49,10 +49,6 @@ int	mouse_moved(int x, int y, t_app *app)
 		{
 			app->mouse->x = x;
 			app->mouse->y = y;
-			if (app->mouse->b_pressed)
-			{
-
-			}
 		}
 	}
 	return (0);

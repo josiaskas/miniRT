@@ -11,78 +11,81 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
-#include <math.h>
 
-inline static bool is_on_the_right_side(t_ray *ray, double *t, t_hittable *c)
+inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
 {
-	t_vector from_top;
-	t_vector from_bottom;
-	t_point contact_p;
-	t_point top_p;
+	double 	dot[3];
+	t_point	p_ray;
+	//t_v3	p;
 
-	top_p = multiply_vector(c->conf_data_2, &c->conf_vector);
-	top_p = add_vector(&top_p, &c->origin);
-	contact_p = get_point_on_ray_at(*t, ray);
-	from_bottom = substract_vector(&contact_p, &c->origin);
-	from_top = substract_vector(&contact_p, &top_p);
-	if (ft_dot(&from_bottom, &c->conf_vector) >= 0)
+	p_ray = get_point_on_ray_at(hit->t, hit->ray);
+	dot[0] = ft_dot(v3_sub(p_ray, c->o), c->dir);
+	dot[1] = ft_dot(v3_sub(p_ray, c->p2), c->dir);
+	hit->h_point = p_ray;
+	if (dot[0] > 0 && dot[1]< 0)
 	{
-		if (ft_dot(&from_top, &c->conf_vector) <= 0)
-			return (true);
+
 	}
-	return (false);
-}
-
-inline static bool	check_e_lim(t_ray *r, double *t, double *tx, t_hittable *c)
-{
-	if ((*tx > 0.f) && is_on_the_right_side(r, tx, c))
+	if ((dot[0] > 0) && (dot[1] < 0))
 	{
-		*t = *tx;
+		hit->intersection = true;
+		//p = v3_multi(ft_dot(v3_sub(p_ray, c->o), c->dir), c->dir);
+		hit->normal= normalize(v3_add(v[0],v3_multi(hit->t, v[1])));
+		dot[2] = 2 * ft_dot(v3_multi(-1, hit->ray->dir), hit->normal);
+		hit->r = v3_add(hit->ray->dir, v3_multi(dot[2], hit->normal));
+		hit->r = normalize(hit->r);
 		return (true);
 	}
 	return (false);
 }
-bool intersect_cylinder_ray(t_ray *ray, t_hittable *cylinder, double *t)
-{
-	double ter[4];
-	t_vector v[3];
-	double t0;
-	double t1;
 
-	v[0] = substract_vector(&ray->origin, &cylinder->origin);
-	v[0] = ft_cross(&v[0], &cylinder->conf_vector);
-	v[0] = ft_cross(&v[0], &cylinder->conf_vector);
-	v[1] = ft_cross(&cylinder->conf_vector, &ray->dir);
-	v[1] = ft_cross(&cylinder->conf_vector, &v[1]);
-	v[2] = multiply_vector(2, &v[0]);
-	ter[0] = ft_dot(&v[1], &v[1]);
-	ter[1] = ft_dot(&v[2], &v[1]);
-	ter[2] = ft_dot(&v[0], &v[0]) - pow(cylinder->conf_data_1, 2);
-	if (!solve_quad(ter, &t0, &t1))
-		return (false);
-	if (check_e_lim(ray, t, &t0, cylinder))
+void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
+{
+	t_v3	v[2];
+	double	terms[4];
+	double	t[2];
+
+	t[0] = RAY_T_MAX;
+	hit->type = e_hit_cylinder;
+	hit->intersection = false;
+	hit->ray = ray;
+	v[0] = ft_cross(ft_cross(cyl->dir, v3_sub(ray->o, cyl->p1)), cyl->dir);
+	v[1] = ft_cross(ft_cross(cyl->dir, ray->dir), cyl->dir);
+	terms[0] = ft_dot(v[1], v[1]);
+	terms[1] = ft_dot(v3_multi(2, v[0]), v[1]);
+	terms[2] = ft_dot(v[0], v[0]) - (cyl->radius * cyl->radius);
+	if (solve_quad(terms, &t[0], &t[1]))
+	{
+		hit->t = t[0];
+		if (t[0] < 0)
+			hit->t = t[1];
+		check_end_of_cylinder(cyl, hit, v);
+	}
+}
+
+bool build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[])
+{
+	t_hittable	*cylinder;
+	t_v4		m;
+	t_v3		v;
+
+	cylinder = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	if (cylinder)
+	{
+		cylinder->type = e_hit_cylinder;
+		cylinder->o = p;
+		//m = rotation_x((90 * M_PI / 180), v3_to_v4(dir));
+		v = normalize(v3(m.r,m.g,m.b));
+		cylinder->p1 = v3_add(p, v3_multi(t[0], v));
+		cylinder->p2 = v3_add(cylinder->p1, v3_multi(t[1], dir));
+		cylinder->p3 = v;
+		cylinder->dir = dir;
+		cylinder->radius = t[0];
+		cylinder->h = t[1];
+		cylinder->color = make_color_vector(v_color, 1);
+		cylinder->material = ft_get_elem(scene->materials, 0);
+		ft_push(scene->hittable, cylinder);
 		return (true);
+	}
 	return (false);
 }
-
-t_vector get_cylinder_contact_surf_norm(t_hit *hit)
-{
-	t_hittable *c;
-	t_vector v;
-	t_vector n;
-
-	c = (t_hittable *)hit->object;
-	v = get_vector_between(&c->origin, &hit->point);
-	n = multiply_vector(ft_dot(&v, &c->conf_vector), &c->conf_vector);
-	n = substract_vector(&v, &n);
-	n = normalize(&n);
-	return (n);
-}
-
-//t_hittable	*make_cylinder(t_point origin, t_vector dir, double conf[])
-//{
-//	t_hittable	*cylinder;
-//
-//
-//	return (cylinder);
-//}

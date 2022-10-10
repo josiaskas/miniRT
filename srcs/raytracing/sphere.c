@@ -11,40 +11,82 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
-#include <math.h>
 
-bool	intersect_sphere_ray(t_ray *ray, t_hittable *sphere, double *t)
+t_v3	get_normal_in_world_space(t_v3 normal_o, t_hittable *obj)
 {
-	t_vector	l;
-	double		terms[4];
-	double		t0;
-	double		t1;
+	t_v4	n_world;
+	t_v4	o_world;
+	t_v3	n;
 
-	t0 = RAY_T_MAX;
-	l = get_vector_between(&sphere->origin, &ray->origin);
-	terms[0] = ft_dot(&ray->dir, &ray->dir);
-	terms[1] = 2 * ft_dot(&ray->dir, &l);
-	terms[3] = sphere->conf_data_1 * sphere->conf_data_1;
-	terms[2] = ft_dot(&l, &l) - terms[3];
-	if (!solve_quad(terms, &t0, &t1))
-		return (false);
-	if (t0 < 0)
-	{
-		t0 = t1;
-		if (t0 < 0)
-			return (false);
-	}
-	*t = t0;
-	return (true);
+	n_world = v3_to_v4(normalize(normal_o));
+	o_world = multiply_m4_v4(obj->tr, v4(0,0,0,0));
+	n_world =  multiply_m4_v4(obj->tr, n_world);
+	n_world = v4_sub(n_world, o_world);
+	n = v3(n_world.r,n_world.g,n_world.b);
+	return (n);
 }
 
-inline t_vector	get_sphere_contact_surf_norm(t_hit *hit)
+static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
 {
-	t_vector	n;
 	t_hittable	*sphere;
+	t_v3		hit_p_obj;
 
+	hit->intersection = true;
+	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
+	hit_p_obj = get_point_on_ray_at(hit->t, obj_r);
 	sphere = (t_hittable *)hit->object;
-	n = get_vector_between(&sphere->origin, &hit->point);
-	n = normalize(&n);
-	return (n);
+	hit->normal = get_normal_in_world_space(hit_p_obj, sphere);
+}
+
+
+void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
+{
+	t_ray	*ray_o;
+	double	terms[4];
+	double	t0;
+	double	t1;
+
+	hit->t = RAY_T_MAX;
+	hit->type = e_hit_sphere;
+	hit->intersection = false;
+	hit->ray = ray;
+	hit->object = sphere;
+	ray_o = get_obj_space_ray(ray, sphere);
+	terms[0] = ft_dot(ray_o->dir, ray_o->dir);
+	terms[1] = 2 * ft_dot(ray_o->dir, ray_o->o);
+	terms[3] = sphere->radius * sphere->radius;
+	terms[2] = ft_dot(ray_o->o, ray_o->o) - terms[3];
+	if (solve_quad(terms, &t0, &t1))
+	{
+		hit->t = t0;
+		if (t0 < 0)
+			hit->t = t1;
+		if (hit->t > 0)
+			set_point_and_normal(hit, ray_o);
+	}
+	free(ray_o);
+}
+
+bool	build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color)
+{
+	t_hittable	*sphere;
+	t_v3		size;
+	t_v3		angles;
+
+	sphere = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	if (sphere)
+	{
+		sphere->type = e_hit_sphere;
+		sphere->o = origin;
+		sphere->radius = r;
+		sphere->color = make_color_vector(v_color, 1);
+		sphere->material = ft_get_elem(scene->materials, 0);
+		size = v3(1,1,1);
+		angles = v3(0,0,0);
+		sphere->tr = get_tr_matrix(sphere->o, angles, size, false);
+		sphere->inv_tr = get_tr_matrix(sphere->o, angles, size, true);
+		ft_push(scene->hittable, sphere);
+		return (true);
+	}
+	return (false);
 }

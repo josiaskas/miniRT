@@ -16,14 +16,14 @@
 bool	parse_light(char **tokens, t_app *app)
 {
 	t_light		*light;
-	t_vector	v_color;
+	t_v3		v_color;
 
 	app->error_message = "Error during parsing, On a light";
 	light = (t_light *)ft_calloc(1, sizeof(t_light));
 	ft_push(app->scene->lights, light);
 	if (!tokens_has_valid_params_nbr(tokens, 4))
 		return (false);
-	if (!parse_a_vector(tokens[1], &light->origin))
+	if (!parse_a_vector(tokens[1], &light->o))
 		return (false);
 	if (!parse_double_from_str(tokens[2], &light->cd))
 		return (false);
@@ -33,15 +33,17 @@ bool	parse_light(char **tokens, t_app *app)
 		return (false);
 	if (light->cd < 0 || light->cd > 1.0f)
 		return (false);
-	light->color = make_color_vector(&v_color, 1);
-	light->color = color_multi(light->cd, &light->color);
+	if (light->cd < 0.01)
+		light->cd = 0.1;
+	light->color = make_color_vector(v_color, 1);
+	light->color = color_multi(light->cd, light->color);
 	return (true);
 }
 
 bool	parse_ambiant_light(char **tokens, t_app *app)
 {
 	t_ambiant	ambiant;
-	t_vector	v_color;
+	t_v3		v_color;
 
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
@@ -54,7 +56,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 		return (false);
 	if (ambiant.intensity < 0 || ambiant.intensity > 1.0f)
 		return (false);
-	ambiant.color = make_color_vector(&v_color, 1);
+	ambiant.color = make_color_vector(v_color, 1);
 	if (app->scene->ambiant.intensity != 0)
 	{
 		app->error_message = "Error during parsing, 2 ambiant light value";
