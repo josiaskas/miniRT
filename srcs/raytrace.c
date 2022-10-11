@@ -30,52 +30,64 @@ void	init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-//t_color	get_pixel_data(t_scene *scene, double x, double y)
-//{
-//	t_color	color;
-//	t_cam	*camera;
-//	t_ray	*ray;
-//
-//	camera = scene->selected_camera;
-//	ray = get_viewport_ray(640, 319, camera);
-//	printf("orgin: (%lf, %lf, %lf) dir: (%lf, %lf, %lf)\n",
-//		   ray->o.x,ray->o.y,ray->o.z,
-//		   ray->dir.x,ray->dir.y,ray->dir.z);
-//	//color = do_tracing(scene, ray, RAY_T_MAX);
-//	(void)x;
-//	(void)y;
-//	color = v4(1,0,0,1);
-//	free(ray);
-//	return (color);
-//}
+/*
+ * Return a color vector (s_vector4) clamped between (0-1)
+*/
+inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep)
+{
+	t_color	color;
+	t_array	*records;
+	t_hit	*first;
+
+	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	records = do_intersect_objs(scene, ray, false);
+	first = get_first_obj_hit(records, max_time);
+	(void)deep;
+	if (first != NULL)
+	{
+		if (first->intersection == true)
+			color = first->object->color;
+	}
+	ft_free_d_array(records);
+	return (color);
+}
+
+static inline t_color	get_pixel_data(t_scene *scene, double x, double y)
+{
+	t_color	color;
+	t_cam	*camera;
+	t_ray	*ray;
+
+	camera = scene->selected_camera;
+	ray = get_viewport_ray(x, y, camera);
+	color = do_tracing(scene, ray, RAY_T_MAX, 0);
+	free(ray);
+	return (color);
+}
 
 bool	render(t_app *app)
 {
+	int		x;
+	int		y;
+	double	x_pixel;
+	double	y_pixel;
+
 	init_raytracing(app);
-
-	t_ray	*a = NULL;
-	t_ray	*b = NULL;
-	t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
-	if (sphere != NULL)
+//	t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
+//	if (sphere != NULL)
+//		transform_sphere(sphere, v3(0,0,3), v3(0,0,0), v3(1,1,1));
+	y = 0;
+	while (y < (W_HEIGHT))
 	{
-		a = build_ray(v3(0,0,-5), v3(0,0,1));
-		transform_sphere(sphere, v3(0,0,-1), v3(0,0,0), v3(2,2,2));
-		t_hit *hit = do_intersect(a, sphere);
-		if (hit)
+		x = 0;
+		while (x < (W_WIDTH))
 		{
-			printf("ray O:(%lf, %lf, %lf) V:(%lf, %lf, %lf)\n",
-				   a->o.x,a->o.y,a->o.z,
-				   a->dir.x,a->dir.y,a->dir.z);
-			if (hit->intersection)
-			{
-				printf("intersected smallest t is %lf of [%lf, %lf]\n",
-					   hit->t, hit->t_trace[0], hit->t_trace[1]);
-			}
+			x_pixel = x + 0.5;
+			y_pixel = y + 0.5;
+			app->data[y][x] = get_pixel_data(app->scene, x_pixel, y_pixel);
+			x++;
 		}
-		free(hit);
+		y++;
 	}
-	free(a);
-	free(b);
-
 	return (true);
 }

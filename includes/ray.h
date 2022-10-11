@@ -76,6 +76,8 @@ typedef struct s_camera
 	double		aspect_ratio;
 	double		near_clp_plane;
 	double		far_clp_plane;
+	t_v3		trans;
+	t_v3		angles;
 	double		v_w;
 	double		v_h;
 	t_v3		u1;
@@ -113,31 +115,20 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 	return (ray);
 }
 
-// return the position vector of the pixel on the viewport
-static inline t_point	get_pixel_position_p(double x, double y, t_cam *cam)
-{
-	t_v3	on_screen;
-	t_v3	v;
-	t_v3	cam_to_screen;
-	t_point	p_view;
-
-	v = v3_add(v3_multi((x + 0.5), cam->u1), v3_multi((y + 0.5), cam->u2));
-	on_screen = v3_add(v, cam->r_init);
-	cam_to_screen = v3_multi(cam->near_clp_plane, cam->dir);
-	p_view = v3_add(cam->origin, v3_add(cam_to_screen, on_screen));
-	return (p_view);
-}
-
 /*
  * return a ray p_view (distance of n from the point) to the scene
  * ray dir is normalized
 */
 static inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 {
-	t_point	p_view;
 	t_v3	dir;
+	t_v3	p_view;
+	double	cam_sz;
 
-	p_view = get_pixel_position_p(x, y, cam);
+	cam_sz = cam->near_clp_plane;
+	p_view = v3_add(v3_multi(x, cam->u1), v3_multi(y , cam->u2));
+	p_view = v3_add(p_view, cam->r_init);
+	p_view = v3_add(cam->origin, v3_add(v3_multi(cam_sz, cam->dir), p_view));
 	dir = normalize(v3_sub(p_view, cam->origin));
 	return (build_ray(p_view, dir));
 }

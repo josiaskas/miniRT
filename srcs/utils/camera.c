@@ -67,6 +67,27 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov, double n)
 	return (cam);
 }
 
+bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles)
+{
+	t_m4	transform;
+	t_v4	o;
+	t_v4	dir;
+	t_v4	oo;
 
+	if (cam)
+	{
+		transform = get_tr_matrix(translate, angles, v3(1,1,1), false);
+
+		o = multiply_m4_v4(transform, v3_to_v4(cam->origin));
+		oo	= multiply_m4_v4(transform, v4(0,0,0,0));
+		dir = multiply_m4_v4(transform, v3_to_v4(cam->dir));
+		dir = v4_sub(dir, oo);
+		cam->origin = v3(o.r,o.g,o.b);
+		cam->dir =  normalize(v3(dir.r,dir.g,dir.b));
+		build_camera_viewport_vectors(cam);
+		return (true);
+	}
+	return (false);
+}
 
 

@@ -67,24 +67,4 @@
 //	return (color);
 //}
 
-/*
- * min if ray is normalized can be far_clp_plane
- * Return a color vector (s_vector4) clamped between (0-1)
-*/
-t_color do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep)
-{
-	t_color	color;
-	t_array	*records;
-	t_hit	*first;
 
-	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
-	records = do_intersect_objs(scene, ray, false);
-	first = get_first_obj_hit(records, max_time);
-	(void)deep;
-	if (first != NULL)
-	{
-		color = first->object->color;
-	}
-	ft_free_d_array(records);
-	return (color);
-}
