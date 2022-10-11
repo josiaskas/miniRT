@@ -12,6 +12,28 @@
 
 #include "raytrace.h"
 
+static inline void	build_camera_viewport_vectors(t_cam *cam)
+{
+	t_v3	x;
+	t_v3	y;
+	t_v3	v;
+
+	v = cam->dir;
+	if (cam->dir.x != 0)
+		cam->dir_ort = normalize(v3(((-v.y) / v.x), 1, 0));
+	else if (cam->dir.z != 0)
+		cam->dir_ort = normalize(v3(0, 1, (-v.y) / v.z));
+	else
+		cam->dir_ort = v3(1, 0, 0);
+	x = normalize(ft_cross(cam->dir, cam->dir_ort));
+	cam->u1 = v3_multi((cam->v_w / (double)W_WIDTH), x);
+	y = normalize(ft_cross(cam->dir, cam->u1));
+	cam->u2 = v3_multi((cam->v_h / (double)W_HEIGHT), y);
+	x = v3_multi(((double)W_WIDTH / -2), cam->u1);
+	y = v3_multi(((double)W_HEIGHT) / -2, cam->u2);
+	cam->r_init = v3_add(x , y);
+}
+
 /*
  * Build a camera with certains characteristic
  * origin, direction vector, fov angle, n near clipping plane distance
@@ -45,47 +67,6 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov, double n)
 	return (cam);
 }
 
-inline bool	rotate_camera(t_cam *cam, t_rotation_type type, double angle)
-{
-	bool	status;
-//	t_v4	dir;
-
-	status = false;
-//	if (cam)
-//	{
-//		if (type == e_rot_on_x)
-//			dir = rotation_x(angle, v3_to_v4(cam->dir));
-//		else if (type == e_rot_on_y)
-//			dir = rotation_y(angle, v3_to_v4(cam->dir));
-//		else
-//			dir = rotation_z(angle, v3_to_v4(cam->dir));
-//		cam->dir  = normalize(v3(dir.r, dir.g, dir.b));
-//		build_camera_viewport_vectors(cam);
-//		status = true;
-//	}
-	(void)cam;
-	(void)type;
-	(void)angle;
-	return (status);
-}
-
-inline bool	translate_camera(t_cam *cam, t_v3 destination)
-{
-	bool	status;
-	//t_v4	dir;
-
-	status = false;
-//	if (cam)
-//	{
-//		dir = translate_m(v3_to_v4(destination), v3_to_v4(cam->dir));
-//		cam->dir  = normalize(v3(dir.r, dir.g, dir.b));
-//		build_camera_viewport_vectors(cam);
-//		status = true;
-//	}
-	(void)cam;
-	(void)destination;
-	return (status);
-}
 
 
 

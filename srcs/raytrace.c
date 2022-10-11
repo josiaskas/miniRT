@@ -30,35 +30,52 @@ void	init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-t_color	get_pixel_data(t_scene *scene, double x, double y)
-{
-	t_color	color;
-	t_cam	*camera;
-	t_ray	*ray;
-
-	camera = scene->selected_camera;
-	ray = get_viewport_ray(x, y, camera);
-	color = do_tracing(scene, ray, RAY_T_MAX);
-	free(ray);
-	return (color);
-}
+//t_color	get_pixel_data(t_scene *scene, double x, double y)
+//{
+//	t_color	color;
+//	t_cam	*camera;
+//	t_ray	*ray;
+//
+//	camera = scene->selected_camera;
+//	ray = get_viewport_ray(640, 319, camera);
+//	printf("orgin: (%lf, %lf, %lf) dir: (%lf, %lf, %lf)\n",
+//		   ray->o.x,ray->o.y,ray->o.z,
+//		   ray->dir.x,ray->dir.y,ray->dir.z);
+//	//color = do_tracing(scene, ray, RAY_T_MAX);
+//	(void)x;
+//	(void)y;
+//	color = v4(1,0,0,1);
+//	free(ray);
+//	return (color);
+//}
 
 bool	render(t_app *app)
 {
-	int		x;
-	int		y;
-
-	y = 0;
 	init_raytracing(app);
-	while (y < W_HEIGHT)
+
+	t_ray	*a = NULL;
+	t_ray	*b = NULL;
+	t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
+	if (sphere != NULL)
 	{
-		x = 0;
-		while (x < W_WIDTH)
+		a = build_ray(v3(0,0,-5), v3(0,0,1));
+		transform_sphere(sphere, v3(0,0,-1), v3(0,0,0), v3(2,2,2));
+		t_hit *hit = do_intersect(a, sphere);
+		if (hit)
 		{
-			app->data[y][x] = get_pixel_data(app->scene, (double)x, (double)y);
-			x++;
+			printf("ray O:(%lf, %lf, %lf) V:(%lf, %lf, %lf)\n",
+				   a->o.x,a->o.y,a->o.z,
+				   a->dir.x,a->dir.y,a->dir.z);
+			if (hit->intersection)
+			{
+				printf("intersected smallest t is %lf of [%lf, %lf]\n",
+					   hit->t, hit->t_trace[0], hit->t_trace[1]);
+			}
 		}
-		y++;
+		free(hit);
 	}
+	free(a);
+	free(b);
+
 	return (true);
 }

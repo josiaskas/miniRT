@@ -44,34 +44,34 @@
 //	return (color);
 //}
 
-static inline t_color shade_hit(t_scene *scn, t_hit *hit)
-{
-	t_color	color;
-	size_t	i;
-	t_light	*light;
-	t_v3	to_light;
-
-	i = 0;
-	color = color_multi(scn->ambiant.intensity, scn->ambiant.color);
-	color = hadamar_prod(color, hit->object->color);
-	while (i < scn->lights->length)
-	{
-		light = (t_light *)ft_get_elem(scn->lights, i);
-		to_light = v3_sub(light->o, hit->h_point);
+//static inline t_color shade_hit(t_scene *scn, t_hit *hit)
+//{
+//	t_color	color;
+//	size_t	i;
+//	t_light	*light;
+//	t_v3	to_light;
+//
+//	i = 0;
+//	color = color_multi(scn->ambiant.intensity, scn->ambiant.color);
+//	color = hadamar_prod(color, hit->object->color);
+//	while (i < scn->lights->length)
+//	{
+//		light = (t_light *)ft_get_elem(scn->lights, i);
+//		to_light = v3_sub(light->o, hit->h_point);
 //		if (is_in_shadow(scn, hit, to_light))
 //			color = color_add(color, v4(0,0,0,1));
 //		else
-		color = color_add(color, get_b_phong_l(light, hit, to_light));
-		i++;
-	}
-	return (color);
-}
+//		color = color_add(color, get_b_phong_l(light, hit, to_light));
+//		i++;
+//	}
+//	return (color);
+//}
 
 /*
  * min if ray is normalized can be far_clp_plane
  * Return a color vector (s_vector4) clamped between (0-1)
 */
-t_color do_tracing(t_scene *scene, t_ray *ray, double max_time)
+t_color do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep)
 {
 	t_color	color;
 	t_array	*records;
@@ -80,9 +80,10 @@ t_color do_tracing(t_scene *scene, t_ray *ray, double max_time)
 	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
 	records = do_intersect_objs(scene, ray, false);
 	first = get_first_obj_hit(records, max_time);
+	(void)deep;
 	if (first != NULL)
 	{
-		color = shade_hit(scene, first);
+		color = first->object->color;
 	}
 	ft_free_d_array(records);
 	return (color);

@@ -47,8 +47,6 @@ typedef struct s_scene
 t_scene	*init_scene(void);
 void	free_scene(t_scene *scene);
 t_cam	*build_camera(t_point origin, t_v3 dir, double angle, double n);
-bool	rotate_camera(t_cam *cam, t_rotation_type type, double angle);
-bool	translate_camera(t_cam *cam, t_v3 destination);
 
 bool	build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color);
 bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
@@ -56,28 +54,33 @@ bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[]);
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
 t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time);
-t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time);
+t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep);
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
+bool	transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc);
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
 t_color	get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light);
+
 //t_v3	get_plan_contact_surf_norm(t_hit *hit);
 //t_v3	get_sphere_contact_surf_norm(t_hit *hit);
 //t_v3	get_cylinder_contact_surf_norm(t_hit *hit);
 //t_color	light_from_sources(t_hit *hit, t_scene *scene);
 //t_color	shading_light(t_hit *hit, t_scene *scene);
 
+void	ft_swap(double *t0, double *t1);
 inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 {
 	double	discriminant;
 	double	q;
-	double	temp;
 
 	discriminant = (terms[1] * terms[1]) - (4 * terms[0] * terms[2]);
 	if (discriminant < 0)
 		return (false);
 	else if (discriminant == 0)
+	{
 		*t0 = -0.5f * (terms[1] / terms[0]);
+		*t1 = *t0;
+	}
 	else
 	{
 		if (terms[1] > 0.0f)
@@ -88,34 +91,8 @@ inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 		*t1 = terms[2] / q;
 	}
 	if (*t0 > *t1)
-	{
-		temp = *t1;
-		*t1 = *t0;
-		*t0 = temp;
-	}
+		ft_swap(t0, t1);
 	return (true);
-}
-
-static inline void	build_camera_viewport_vectors(t_cam *cam)
-{
-	t_v3	x;
-	t_v3	y;
-	t_v3	v;
-
-	v = cam->dir;
-	if (cam->dir.x != 0)
-		cam->dir_ort = normalize(v3(((-v.y) / v.x), 1, 0));
-	else if (cam->dir.z != 0)
-		cam->dir_ort = normalize(v3(0, 1, (-v.y) / v.z));
-	else
-		cam->dir_ort = v3(1, 0, 0);
-	x = normalize(ft_cross(cam->dir, cam->dir_ort));
-	cam->u1 = v3_multi((cam->v_w / (double)W_WIDTH), x);
-	y = normalize(ft_cross(cam->dir, cam->u1));
-	cam->u2 = v3_multi((cam->v_h / (double)W_HEIGHT), y);
-	x = v3_multi(((double)W_WIDTH / -2), cam->u1);
-	y = v3_multi(((double)W_HEIGHT) / -2, cam->u2);
-	cam->r_init = v3_add(x , y);
 }
 
 static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
@@ -127,12 +104,16 @@ static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 	{
 		hit->object = obj;
 		hit->intersection = false;
+		hit->t = RAY_T_MAX;
+		hit->type = obj->type;
+		hit->ray = ray;
+		hit->normal = v3(0,0,0);
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
-		else if (obj->type == e_hit_plane)
-			intersect_plane(hit, obj, ray);
-		else if (obj->type == e_hit_cylinder)
-			intersect_cylinder(hit, obj, ray);
+//		else if (obj->type == e_hit_plane)
+//			intersect_plane(hit, obj, ray);
+//		else if (obj->type == e_hit_cylinder)
+//			intersect_cylinder(hit, obj, ray);
 	}
 	return (hit);
 }

@@ -50,6 +50,9 @@ typedef struct s_hittable
 	t_point		p3;
 	t_m4		tr;
 	t_m4		inv_tr;
+	t_v3		trans;
+	t_v3		scale;
+	t_v3		angles;
 	double		radius;
 	double		h;
 	t_v3		dir;
@@ -86,6 +89,7 @@ typedef struct s_hit_record
 	t_hit_type	type;
 	t_hittable	*object;
 	double		t;
+	double		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
 	t_v3		normal;
@@ -117,7 +121,7 @@ static inline t_point	get_pixel_position_p(double x, double y, t_cam *cam)
 	t_v3	cam_to_screen;
 	t_point	p_view;
 
-	v = v3_add(v3_multi(x, cam->u1), v3_multi(y, cam->u2));
+	v = v3_add(v3_multi((x + 0.5), cam->u1), v3_multi((y + 0.5), cam->u2));
 	on_screen = v3_add(v, cam->r_init);
 	cam_to_screen = v3_multi(cam->near_clp_plane, cam->dir);
 	p_view = v3_add(cam->origin, v3_add(cam_to_screen, on_screen));
@@ -135,7 +139,7 @@ static inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
 
 	p_view = get_pixel_position_p(x, y, cam);
 	dir = normalize(v3_sub(p_view, cam->origin));
-	return (build_ray(cam->origin, dir));
+	return (build_ray(p_view, dir));
 }
 
 /*
@@ -153,20 +157,19 @@ static inline t_point	get_point_on_ray_at(double t, t_ray *ray)
 	return (a);
 }
 
-// new ray to be freed in the object space
-static inline t_ray	*get_obj_space_ray(t_ray *ray, t_hittable *obj)
+static inline t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o)
 {
-	t_v4	ro;
-	t_v4	o_in_obj;
+	t_ray	*tr_ray;
+	t_v4	o;
 	t_v4	dir;
-	t_ray	*ray_obj;
+	t_v4	oo;
 
-	ro = multiply_m4_v4(obj->inv_tr, v3_to_v4(ray->o));
-	o_in_obj = multiply_m4_v4(obj->inv_tr, v4(0,0,0,0));
-	dir = multiply_m4_v4(obj->inv_tr, v3_to_v4(ray->dir));
-	dir = v4_sub(dir, o_in_obj);
-	ray_obj = build_ray(v3(ro.r,ro.g,ro.b), v3(dir.r,dir.g,dir.b));
-	return (ray_obj);
+	o = multiply_m4_v4(transform, v3_to_v4(ray->o));
+	oo	= multiply_m4_v4(transform, v3_to_v4(sp_o));
+	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
+	dir = v4_sub(dir, oo);
+	tr_ray = build_ray(v3(o.r,o.g,o.b), v3(dir.r,dir.g,dir.b));
+	return (tr_ray);
 }
 
 
