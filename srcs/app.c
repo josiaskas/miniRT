@@ -13,7 +13,7 @@
 #include "minirt.h"
 #include "window.h"
 
-static void	draw_scene(t_image *img, t_color **colors)
+void	draw_scene(t_image *img, t_color **colors)
 {
 	int		x;
 	int		y;
@@ -37,7 +37,19 @@ static void	draw_scene(t_image *img, t_color **colors)
 
 int	rerender(t_app *app)
 {
-	printf("refreshed with %ld objects\n", app->scene->hittable->length);
+	t_image	*img;
+	//t_scene	*scene;
+
+	img = app->img;
+	//scene = app->scene;
+	if (app->re_render)
+	{
+		//printf("refreshed with %ld objects\n", scene->hittable->length);
+//		render(app);
+		draw_scene(app->img, app->data);
+		mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
+		app->re_render = false;
+	}
 	return (0);
 }
 
@@ -64,7 +76,7 @@ void	app_loop(t_app *app)
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
-	//mlx_loop_hook(app->mlx, rerender, app);
+	mlx_loop_hook(app->mlx, rerender, app);
 	mlx_hook(app->window, 2, 1L << 0, key_pressed_hook, app);
 	mlx_hook(app->window, 17, 0, close_window, app);
 	mlx_loop(app->mlx);

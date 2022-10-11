@@ -56,6 +56,7 @@ typedef struct s_app
 	t_color		**data;
 	t_mouse		*mouse;
 	t_scene		*scene;
+	bool		re_render;
 }	t_app;
 
 int		write_image_to_file(t_app *app);

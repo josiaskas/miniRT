@@ -73,9 +73,6 @@ bool	render(t_app *app)
 	double	y_pixel;
 
 	init_raytracing(app);
-//	t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
-//	if (sphere != NULL)
-//		transform_sphere(sphere, v3(0,0,3), v3(0,0,0), v3(1,1,1));
 	y = 0;
 	while (y < (W_HEIGHT))
 	{

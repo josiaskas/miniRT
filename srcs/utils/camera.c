@@ -36,11 +36,11 @@ static inline void	build_camera_viewport_vectors(t_cam *cam)
 
 /*
  * Build a camera with certains characteristic
- * origin, direction vector, fov angle, n near clipping plane distance
- * build also the two vector discribing the viewport plane
+ * origin, direction vector, fov angle
+ * build also the two vector describing the viewport plane
  * far_clp_plane by default 300
 */
-t_cam	*build_camera(t_point origin, t_v3 dir, double fov, double n)
+t_cam	*build_camera(t_point origin, t_v3 dir, double fov)
 {
 	t_cam	*cam;
 	double	aspect_ratio;
@@ -56,9 +56,7 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov, double n)
 			cam->fov = 179.99f;
 		else
 			cam->fov = fov;
-		if (n <= 0)
-			n = 1.0f;
-		cam->near_clp_plane = n;
+		cam->near_clp_plane = 1.0f;
 		cam->far_clp_plane = 3000;
 		cam->v_h = 2 * (cam->near_clp_plane) * tan((cam->fov * M_PI / 180) / 2);
 		cam->v_w = aspect_ratio * cam->v_h;
@@ -67,7 +65,7 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov, double n)
 	return (cam);
 }
 
-bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles)
+bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles, bool only_v)
 {
 	t_m4	transform;
 	t_v4	o;
@@ -77,12 +75,14 @@ bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles)
 	if (cam)
 	{
 		transform = get_tr_matrix(translate, angles, v3(1,1,1), false);
-
-		o = multiply_m4_v4(transform, v3_to_v4(cam->origin));
+		if (!only_v)
+		{
+			o = multiply_m4_v4(transform, v3_to_v4(cam->origin));
+			cam->origin = v3(o.r,o.g,o.b);
+		}
 		oo	= multiply_m4_v4(transform, v4(0,0,0,0));
 		dir = multiply_m4_v4(transform, v3_to_v4(cam->dir));
 		dir = v4_sub(dir, oo);
-		cam->origin = v3(o.r,o.g,o.b);
 		cam->dir =  normalize(v3(dir.r,dir.g,dir.b));
 		build_camera_viewport_vectors(cam);
 		return (true);

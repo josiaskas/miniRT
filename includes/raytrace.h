@@ -46,8 +46,8 @@ typedef struct s_scene
 
 t_scene	*init_scene(void);
 void	free_scene(t_scene *scene);
-t_cam	*build_camera(t_point origin, t_v3 dir, double angle, double n);
-bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles);
+t_cam	*build_camera(t_point origin, t_v3 dir, double angle);
+bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles, bool only_v);
 
 bool	build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color);
 bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
