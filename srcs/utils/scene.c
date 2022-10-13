@@ -71,6 +71,7 @@ void free_scene(t_scene *scene)
 		ft_free_d_array(scene->lights);
 		ft_free_d_array(scene->cameras);
 		ft_free_d_array(scene->materials);
+		ft_free_d_array(scene->names);
 		free(scene);
 	}
 }

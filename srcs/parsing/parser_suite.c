@@ -51,7 +51,7 @@ bool	parse_plan(char **tokens, t_app *app)
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
-	return (build_plan(app->scene, p, normal, v_color));
+	return (build_plane(app->scene, p, normal, v_color));
 }
 
 bool	parse_cylinder(char **tokens, t_app *app)

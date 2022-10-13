@@ -14,7 +14,7 @@
 # define MULTITHREAD_H
 
 # ifndef THREAD_NUMBER
-#  define THREAD_NUMBER 2
+#  define THREAD_NUMBER 3
 # endif
 
 # include <pthread.h>

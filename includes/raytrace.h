@@ -42,6 +42,7 @@ typedef struct s_scene
 	t_cam		*selected_camera;
 	t_ambiant	ambiant;
 	t_array		*materials;
+	t_array		*names;
 }	t_scene;
 
 t_scene	*init_scene(void);
@@ -49,17 +50,25 @@ void	free_scene(t_scene *scene);
 t_cam	*build_camera(t_point origin, t_v3 dir, double angle);
 bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles, bool only_v);
 
-bool	build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color);
-bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
+bool	build_sphere(t_scene *scn, t_point o, double r, t_v3 v_clr);
+bool	build_plane(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
 bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[]);
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
-t_hit	do_intersect_objects(t_scene *scene, t_ray *ray, double max_time);
 t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep);
+t_color	get_pixel_clr(t_scene *scene, double x, double y);
+//plan
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
+bool	transform_plane(t_hittable *plan, t_v3 tr, t_v3 ang, t_v3 sc);
+
+//sphere
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
 bool	transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc);
+
+//cylinder
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
+bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc);
+
 t_color	get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light);
 
 //t_v3	get_plan_contact_surf_norm(t_hit *hit);

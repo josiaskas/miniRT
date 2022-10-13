@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
+#include "parser.h"
 
 //t_v3	get_normal_in_world_space(t_v3 normal_o, t_hittable *obj)
 //{
@@ -75,7 +76,7 @@ void intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 	free(s_ray);
 }
 
-bool build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color)
+bool build_sphere(t_scene *scn, t_point o, double r, t_v3 v_clr)
 {
 	t_hittable	*sphere;
 	t_v3		scale;
@@ -85,10 +86,10 @@ bool build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color)
 	if (sphere)
 	{
 		sphere->type = e_hit_sphere;
-		sphere->o = origin;
+		sphere->o = o;
 		sphere->radius = r;
-		sphere->color = make_color_vector(v_color, 1);
-		sphere->material = ft_get_elem(scene->materials, 0);
+		sphere->color = make_color_vector(v_clr, 1);
+		sphere->material = ft_get_elem(scn->materials, 0);
 		scale = v3_multi(r, v3(1.0, 1.0, 1.0));
 		angles = v3(0, 0, 0);
 		sphere->scale = scale;
@@ -96,7 +97,8 @@ bool build_sphere(t_scene *scene, t_point origin, double r, t_v3 v_color)
 		sphere->trans = sphere->o;
 		sphere->tr = get_tr_matrix(sphere->o, angles, scale, false);
 		sphere->inv_tr = get_tr_matrix(sphere->o, angles, scale, true);
-		ft_push(scene->hittable, sphere);
+		sphere->name = add_name(scn, "Sphere parsed o_n_", true);
+		ft_push(scn->hittable, sphere);
 		return (true);
 	}
 	return (false);

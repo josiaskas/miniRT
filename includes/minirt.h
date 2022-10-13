@@ -43,7 +43,24 @@ typedef struct s_image {
 	int		endian;
 }	t_image;
 
-typedef struct s_app
+typedef enum e_app_mode
+{
+	e_normal_mode,
+	e_select_mode,
+	e_insert_mode,
+	e_rotation_mode,
+}	t_mode;
+
+typedef struct config_status
+{
+	t_mode		c_mode;
+	t_hittable	*selected_obj;
+	int			status;
+	char		*message;
+	bool		rerender;
+}	t_config;
+
+typedef struct	s_app
 {
 	void		*mlx;
 	void		*window;
@@ -56,7 +73,7 @@ typedef struct s_app
 	t_color		**data;
 	t_mouse		*mouse;
 	t_scene		*scene;
-	bool		re_render;
+	t_config	conf;
 }	t_app;
 
 int		write_image_to_file(t_app *app);
@@ -65,7 +82,7 @@ int		open_rt_file(char *filename, t_app *app);
 int		open_out_file(char *file, t_app *app);
 bool	parse_rt_file(t_app *app);
 void	exit_app(t_app *app, bool error);
-
+void	draw_scene(t_image *img, t_color **colors);
 bool	init_window(t_app *app);
 int		close_window(t_app *app);
 void	app_loop(t_app *app);

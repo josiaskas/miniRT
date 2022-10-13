@@ -57,6 +57,7 @@ typedef struct s_hittable
 	double		h;
 	t_v3		dir;
 	t_color		color;
+	char		*name;
 	t_material	*material;
 }	t_hittable;
 

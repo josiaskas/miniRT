@@ -23,6 +23,7 @@ bool	parse_sphere(char **tokens, t_app *app);
 bool	parse_plan(char **tokens, t_app *app);
 bool	parse_cylinder(char **tokens, t_app *app);
 bool	parse_triangle(char **tokens, t_app *app);
+char	*add_name(t_scene *scene, char *name, bool parsed);
 
 // check if vector parameters are in [min, max]
 static inline bool	all_vector_coord_are_in_range(double min, double max, t_v3 *v)

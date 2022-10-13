@@ -21,7 +21,8 @@ int	mouse_pressed(int button, int x, int y, t_app *app)
 		app->mouse->b_pressed = true;
 		app->mouse->start_x = x;
 		app->mouse->start_y = y;
-
+		if (app->conf.c_mode == e_select_mode)
+			start_selecting_mode(app, x, y);
 	}
 	return(0);
 }

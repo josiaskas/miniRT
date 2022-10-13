@@ -12,16 +12,15 @@
 
 #include "../includes/minirt.h"
 #include "../includes/multithread.h"
-#include <stdio.h>
 
-void	init_raytracing(t_app *app)
+// clear all data stored to prepare a new frame
+inline void	init_raytracing(t_app *app)
 {
 	size_t	i;
 	t_scene	*scene;
 
 	app->error_code = 0;
 	app->error_message = NULL;
-	printf("Start ray tracing\n");
 	scene = app->scene;
 	if (app->data)
 		free_array((void **)app->data, W_HEIGHT);
@@ -33,7 +32,29 @@ void	init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-t_color	get_pixel_data(t_scene *scene, int x, int y)
+/*
+ * Return a color vector (s_vector4) clamped between (0-1)
+*/
+inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep)
+{
+	t_color	color;
+	t_array	*records;
+	t_hit	*first;
+
+	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	records = do_intersect_objs(scene, ray, false);
+	first = get_first_obj_hit(records, max_time);
+	(void)deep;
+	if (first != NULL)
+	{
+		if (first->intersection == true)
+			color = first->object->color;
+	}
+	ft_free_d_array(records);
+	return (color);
+}
+
+inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
 {
 	t_color	color;
 	t_cam	*camera;
@@ -41,28 +62,27 @@ t_color	get_pixel_data(t_scene *scene, int x, int y)
 
 	camera = scene->selected_camera;
 	ray = get_viewport_ray(x, y, camera);
-	color = do_tracing(scene, ray, RAY_T_MAX);
+	color = do_tracing(scene, ray, RAY_T_MAX, 0);
 	free(ray);
 	return (color);
 }
 
 void	*run_thread_pixel(void *thread_info)
 {
-	t_thread	*data;
-	int			x;
-	int			y;
+	t_thread	*t;
+	double		x_pixel;
+	double		y_pixel;
 
-	data = (t_thread *)thread_info;
-	x = data->x;
-	y = data->y;
-	data->data[y][x] = get_pixel_data(data->scene, (double)x, (double)y);
-	return (data);
+	t = (t_thread *)thread_info;
+	x_pixel = t->x + 0.5;
+	y_pixel = t->y + 0.5;
+	t->data[t->y][t->x] = get_pixel_clr(t->scene, x_pixel, y_pixel);
+	return (t);
 }
 
 bool	render(t_app *app)
 {
 	init_raytracing(app);
 	run_threads(run_thread_pixel, app->scene, app->data);
-	printf("finished raytracing\n");
 	return (true);
 }

@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
+#include "parser.h"
 
 inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
 {
@@ -63,28 +64,43 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 	}
 }
 
-bool build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[])
+bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, double t[])
 {
-	t_hittable	*cylinder;
-	t_v4		m;
-	t_v3		v;
+	t_hittable	*cy;
+	t_v3		scale;
+	t_v3		angles;
 
-	cylinder = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	cy = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
+	if (cy)
+	{
+		cy->type = e_hit_cylinder;
+		cy->o = p;
+		cy->p1 = v3_add(p, v3_multi( t[1], dir));
+		cy->dir = dir;
+		cy->radius = t[0];
+		cy->h = t[1];
+		cy->color = make_color_vector(v_color, 1);
+		cy->material = ft_get_elem(scn->materials, 0);
+		scale = v3(1.0, 1.0, 1.0);
+		angles = v3(0, 0, 0);
+		cy->tr = get_tr_matrix(cy->o, angles, scale, false);
+		cy->inv_tr = get_tr_matrix(cy->o, angles, scale, true);
+		cy->name = add_name(scn, "Cylinder parsed o_n_", true);
+		ft_push(scn->hittable, cy);
+		return (true);
+	}
+	return (false);
+}
+
+bool transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc)
+{
 	if (cylinder)
 	{
-		cylinder->type = e_hit_cylinder;
-		cylinder->o = p;
-		//m = rotation_x((90 * M_PI / 180), v3_to_v4(dir));
-		v = normalize(v3(m.r,m.g,m.b));
-		cylinder->p1 = v3_add(p, v3_multi(t[0], v));
-		cylinder->p2 = v3_add(cylinder->p1, v3_multi(t[1], dir));
-		cylinder->p3 = v;
-		cylinder->dir = dir;
-		cylinder->radius = t[0];
-		cylinder->h = t[1];
-		cylinder->color = make_color_vector(v_color, 1);
-		cylinder->material = ft_get_elem(scene->materials, 0);
-		ft_push(scene->hittable, cylinder);
+		cylinder->trans = tr;
+		cylinder->angles = ang;
+		cylinder->scale = sc;
+		cylinder->tr = get_tr_matrix(tr, ang, sc, false);
+		cylinder->inv_tr = get_tr_matrix(tr, ang, sc, true);
 		return (true);
 	}
 	return (false);

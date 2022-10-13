@@ -35,7 +35,7 @@ UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
 PARSER_DIR = parsing/
-PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c object_creation.c
+PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c object_creation.c edit.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #raytracing sources
@@ -45,7 +45,7 @@ RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #config sources
 CONFIG_DIR = config/
-CONFIG_SRCS = key_hooks.c mouse_hooks.c
+CONFIG_SRCS = key_hooks.c mouse_hooks.c screen.c select_mode.c
 CONFIG_SRCS_PREFIXED = $(addprefix $(CONFIG_DIR), $(CONFIG_SRCS))
 
 #multithreading sources

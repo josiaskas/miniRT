@@ -12,7 +12,8 @@
 
 #include "minirt.h"
 
-void	init_raytracing(t_app *app)
+// clear all data stored to prepare a new frame
+inline void	init_raytracing(t_app *app)
 {
 	size_t	i;
 	t_scene	*scene;
@@ -52,7 +53,7 @@ inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double de
 	return (color);
 }
 
-static inline t_color	get_pixel_data(t_scene *scene, double x, double y)
+inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
 {
 	t_color	color;
 	t_cam	*camera;
@@ -65,6 +66,8 @@ static inline t_color	get_pixel_data(t_scene *scene, double x, double y)
 	return (color);
 }
 
+
+
 bool	render(t_app *app)
 {
 	int		x;
@@ -74,6 +77,7 @@ bool	render(t_app *app)
 
 	init_raytracing(app);
 	y = 0;
+	printf("\033[0;32m\n Raytracing\033[0m ");
 	while (y < (W_HEIGHT))
 	{
 		x = 0;
@@ -81,7 +85,7 @@ bool	render(t_app *app)
 		{
 			x_pixel = x + 0.5;
 			y_pixel = y + 0.5;
-			app->data[y][x] = get_pixel_data(app->scene, x_pixel, y_pixel);
+			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
 			x++;
 		}
 		y++;

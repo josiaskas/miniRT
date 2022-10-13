@@ -11,17 +11,16 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
+#include "parser.h"
 
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
 {
 	double	nv;
 	double	dot2;
+	t_ray	*s_ray;
 
-	hit->t = RAY_T_MAX;
-	hit->type = e_hit_plane;
-	hit->intersection = false;
-	hit->ray = ray;
-	nv = ft_dot(plan->dir, ray->dir);
+	s_ray = get_transformed_ray(ray, plan->inv_tr, v3(0, 0, 0));
+	nv = ft_dot(plan->dir, s_ray->dir);
 	if (nv != 0)
 	{
 		hit->intersection = true;
@@ -32,11 +31,14 @@ void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
 		hit->r = v3_add(hit->ray->dir, v3_multi(dot2, hit->normal));
 		hit->r = normalize(hit->r);
 	}
+	free(s_ray);
 }
 
-bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color)
+bool	build_plane(t_scene *scn, t_point p, t_v3 normal, t_v3 v_color)
 {
 	t_hittable	*plan;
+	t_v3		scale;
+	t_v3		angles;
 
 	plan = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (plan)
@@ -45,8 +47,30 @@ bool	build_plan(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color)
 		plan->o = p;
 		plan->dir = normal;
 		plan->color = make_color_vector(v_color, 1);
-		plan->material = ft_get_elem(scene->materials, 0);
-		ft_push(scene->hittable, plan);
+		plan->material = ft_get_elem(scn->materials, 0);
+		plan->trans = plan->o;
+		scale = v3(1.0, 1.0, 1.0);
+		angles = v3(0, 0, 0);
+		plan->scale = scale;
+		plan->angles = angles;
+		plan->tr = get_tr_matrix(plan->o, angles, scale, false);
+		plan->inv_tr = get_tr_matrix(plan->o, angles, scale, true);
+		plan->name = add_name(scn, "Plan parsed o_n_", true);
+		ft_push(scn->hittable, plan);
+		return (true);
+	}
+	return (false);
+}
+
+bool	transform_plane(t_hittable *plan, t_v3 tr, t_v3 ang, t_v3 sc)
+{
+	if (plan)
+	{
+		plan->trans = tr;
+		plan->angles = ang;
+		plan->scale = sc;
+		plan->tr = get_tr_matrix(tr, ang, sc, false);
+		plan->inv_tr = get_tr_matrix(tr, ang, sc, true);
 		return (true);
 	}
 	return (false);
