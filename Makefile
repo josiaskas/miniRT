@@ -12,7 +12,7 @@
 
 NAME = miniRT
 CC = clang
-CFLAGS = -O2 -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -Ofast
 INCLUDES_DIR = ./includes
 OBJS_DIR = ./objs
 OBJS_BONUS_DIR = ./objs_bonus
