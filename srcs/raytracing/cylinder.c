@@ -13,28 +13,47 @@
 #include "raytrace.h"
 #include "parser.h"
 
-inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
+//inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
+//{
+//	double 	dot[3];
+//	t_point	p_ray;
+//	//t_v3	p;
+//
+//	p_ray = get_point_on_ray_at(hit->t, hit->ray);
+//	dot[0] = ft_dot(v3_sub(p_ray, c->o), c->dir);
+//	dot[1] = ft_dot(v3_sub(p_ray, c->p2), c->dir);
+//	hit->h_point = p_ray;
+//	if (dot[0] > 0 && dot[1]< 0)
+//	{
+//
+//	}
+//	if ((dot[0] > 0) && (dot[1] < 0))
+//	{
+//		hit->intersection = true;
+//		//p = v3_multi(ft_dot(v3_sub(p_ray, c->o), c->dir), c->dir);
+//		hit->normal= normalize(v3_add(v[0],v3_multi(hit->t, v[1])));
+//		dot[2] = 2 * ft_dot(v3_multi(-1, hit->ray->dir), hit->normal);
+//		hit->r = v3_add(hit->ray->dir, v3_multi(dot[2], hit->normal));
+//		hit->r = normalize(hit->r);
+//		return (true);
+//	}
+//	return (false);
+//}
+
+bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
 {
-	double 	dot[3];
-	t_point	p_ray;
-	//t_v3	p;
+	double	y[2];
 
-	p_ray = get_point_on_ray_at(hit->t, hit->ray);
-	dot[0] = ft_dot(v3_sub(p_ray, c->o), c->dir);
-	dot[1] = ft_dot(v3_sub(p_ray, c->p2), c->dir);
-	hit->h_point = p_ray;
-	if (dot[0] > 0 && dot[1]< 0)
+	y[0] = ray->o.y + hit->t_trace[0] * ray->dir.y;
+	y[1] = ray->o.y + hit->t_trace[1] * ray->dir.y;
+	if ((0 < y[0]) && (y[0] < cy->h))
 	{
-
+		hit->t = hit->t_trace[0];
+		return (true);
 	}
-	if ((dot[0] > 0) && (dot[1] < 0))
+	if ((0 < y[1]) && (y[1] < cy->h))
 	{
-		hit->intersection = true;
-		//p = v3_multi(ft_dot(v3_sub(p_ray, c->o), c->dir), c->dir);
-		hit->normal= normalize(v3_add(v[0],v3_multi(hit->t, v[1])));
-		dot[2] = 2 * ft_dot(v3_multi(-1, hit->ray->dir), hit->normal);
-		hit->r = v3_add(hit->ray->dir, v3_multi(dot[2], hit->normal));
-		hit->r = normalize(hit->r);
+		hit->t = hit->t_trace[1];
 		return (true);
 	}
 	return (false);
@@ -42,26 +61,26 @@ inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
 
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 {
-	t_v3	v[2];
-	double	terms[4];
+	double	terms[3];
 	double	t[2];
+	t_ray	*s_ray;
 
+	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	hit->type = e_hit_cylinder;
-	hit->intersection = false;
-	hit->ray = ray;
-	v[0] = ft_cross(ft_cross(cyl->dir, v3_sub(ray->o, cyl->p1)), cyl->dir);
-	v[1] = ft_cross(ft_cross(cyl->dir, ray->dir), cyl->dir);
-	terms[0] = ft_dot(v[1], v[1]);
-	terms[1] = ft_dot(v3_multi(2, v[0]), v[1]);
-	terms[2] = ft_dot(v[0], v[0]) - (cyl->radius * cyl->radius);
-	if (solve_quad(terms, &t[0], &t[1]))
+	s_ray = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
+	terms[0] = (s_ray->dir.x * s_ray->dir.x) + (s_ray->dir.z * s_ray->dir.z);
+	if ((terms[0] <= 0.00005) || (terms[0] >= -0.00005))
 	{
-		hit->t = t[0];
-		if (t[0] < 0)
-			hit->t = t[1];
-		check_end_of_cylinder(cyl, hit, v);
+		terms[1] = (2 * s_ray->o.x * s_ray->dir.x) + (2 * s_ray->o.z * s_ray->dir.z);
+		terms[2] = (s_ray->o.x * s_ray->o.x) + (s_ray->o.z * s_ray->o.z) - 1.0;
+		if (solve_quad(terms, &t[0], &t[1]))
+		{
+			hit->t_trace[0] = t[0];
+			hit->t_trace[1] = t[1];
+			hit->intersection = check_cylinder_cap(hit, s_ray, cyl);
+		}
 	}
+	free(s_ray);
 }
 
 bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, double t[])

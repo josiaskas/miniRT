@@ -57,10 +57,13 @@ bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
 t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep);
 t_color	get_pixel_clr(t_scene *scene, double x, double y);
+
 //plan
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
 bool	transform_plane(t_hittable *plan, t_v3 tr, t_v3 ang, t_v3 sc);
 
+//cylinder
+void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
 //sphere
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
 bool	transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc);
@@ -78,6 +81,7 @@ t_color	get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light);
 //t_color	shading_light(t_hit *hit, t_scene *scene);
 
 void	ft_swap(double *t0, double *t1);
+
 inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 {
 	double	discriminant;
@@ -120,10 +124,10 @@ static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 		hit->normal = v3(0,0,0);
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
+		else if (obj->type == e_hit_cylinder)
+			intersect_cylinder(hit, obj, ray);
 //		else if (obj->type == e_hit_plane)
 //			intersect_plane(hit, obj, ray);
-//		else if (obj->type == e_hit_cylinder)
-//			intersect_cylinder(hit, obj, ray);
 	}
 	return (hit);
 }
