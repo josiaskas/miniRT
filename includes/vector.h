@@ -102,4 +102,9 @@ static inline t_v3	ft_cross(t_v3 a, t_v3 b)
 	return (vector);
 }
 
+static inline t_v3	reflect(t_v3 *normal, t_v3 *in)
+{
+	return (v3_sub(*in, v3_multi(2 * ft_dot(*in, *normal), *normal)));
+}
+
 #endif //VECTOR_H

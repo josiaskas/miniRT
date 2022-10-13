@@ -27,18 +27,21 @@
 //	return (n);
 //}
 //
-//static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
-//{
-//	t_hittable	*sphere;
-//	t_v3		hit_p_obj;
-//
-//	hit->intersection = true;
-//	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
-//	hit_p_obj = get_point_on_ray_at(hit->t, obj_r);
-//	sphere = (t_hittable *)hit->object;
-//	hit->normal = get_normal_in_world_space(hit_p_obj, sphere);
-//}
-//
+static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
+{
+	t_point	obj_p;
+	t_v4	v;
+	t_m4	transpose;
+
+	hit->intersection = true;
+	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
+	obj_p = get_point_on_ray_at(hit->t, obj_r);
+	v = v4_sub(v3_to_v4(obj_p), v4(0,0,0,0));
+	transpose = get_transposed(&hit->object->inv_tr);
+	v = multiply_m4_v4(transpose, v);
+	hit->normal = normalize(v3(v.r, v.g, v.b));
+	hit->r = reflect(&hit->normal, &hit->ray->dir);
+}
 
 inline void ft_swap(double *t0, double *t1)
 {
@@ -71,7 +74,7 @@ void intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 		if (t[0] < 0)
 			hit->t = t[1];
 		if (hit->t > 0)
-			hit->intersection = true;
+			set_point_and_normal(hit, s_ray);
 	}
 	free(s_ray);
 }

@@ -66,8 +66,6 @@ inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
 	return (color);
 }
 
-
-
 bool	render(t_app *app)
 {
 	int		x;

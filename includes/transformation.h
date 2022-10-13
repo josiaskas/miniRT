@@ -129,5 +129,24 @@ static inline t_v4	multiply_m4_v4(t_m4 m, t_v4 c)
 	return (r);
 }
 
+static inline t_m4	get_transposed(t_m4 *matrix)
+{
+	int		i;
+	int		j;
+	t_m4	transpose;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			transpose.data[i][j] = matrix->data[j][i];
+			j++;
+		}
+		i++;
+	}
+	return (transpose);
+}
 
 #endif //TRANSFORMATION_H
