@@ -22,22 +22,6 @@ typedef t_v4	t_color;
 */
 t_color	make_color_vector(t_v3	v, double alpha);
 
-static inline t_color	color_add(t_color a, t_color b)
-{
-	t_color	color;
-
-	color = v4_add(a, b);
-	return (color);
-}
-
-static inline t_color	color_multi(double k, t_color c)
-{
-	t_color	color;
-
-	color = v4_multi(k, c);
-	color.a = c.a;
-	return (color);
-}
 
 static inline t_color	hadamar_prod(t_color a, t_color b)
 {

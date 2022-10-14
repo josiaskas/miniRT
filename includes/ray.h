@@ -38,6 +38,7 @@ typedef struct	s_material
 	t_composition	type;
 	double			reflexive;
 	double			diffuse;
+	double			specular;
 	char			*name;
 }	t_material;
 

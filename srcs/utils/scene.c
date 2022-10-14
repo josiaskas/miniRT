@@ -22,7 +22,8 @@ static inline void	add_plastic_materials(t_array *m_list)
 		plastic->name = "PLASTIC";
 		plastic->shininess = 200;
 		plastic->reflexive = 0;
-		plastic->diffuse = 1;
+		plastic->diffuse = 0.9;
+		plastic->specular = 0.9;
 		ft_push(m_list, plastic);
 	}
 }
@@ -39,6 +40,7 @@ static inline void add_metallic_materials(t_array *m_list)
 		metallic->shininess = 200;
 		metallic->reflexive = 0.5;
 		metallic->diffuse = 0.9;
+		metallic->specular = 0.8;
 		ft_push(m_list, metallic);
 	}
 }

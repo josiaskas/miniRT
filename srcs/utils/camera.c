@@ -16,15 +16,8 @@ static inline void	build_camera_viewport_vectors(t_cam *cam)
 {
 	t_v3	x;
 	t_v3	y;
-	t_v3	v;
 
-	v = cam->dir;
-	if (cam->dir.x != 0)
-		cam->dir_ort = normalize(v3(((-v.y) / v.x), 1, 0));
-	else if (cam->dir.z != 0)
-		cam->dir_ort = normalize(v3(0, 1, (-v.y) / v.z));
-	else
-		cam->dir_ort = v3(1, 0, 0);
+	cam->dir_ort = v3(0, 1, 0);
 	x = normalize(ft_cross(cam->dir, cam->dir_ort));
 	cam->u1 = v3_multi((cam->v_w / (double)W_WIDTH), x);
 	y = normalize(ft_cross(cam->dir, cam->u1));

@@ -12,32 +12,33 @@
 
 #include "raytrace.h"
 
-//static inline t_color	diffuse_light(t_light *light, t_hit *hit, double dot)
-//{
-//	t_color color;
-//	double	k;
-//
-//	if (dot == 0)
-//		return (v4(0,0,0,1));
-//	k = hit->object->material->diffuse;
-//	color = color_multi(dot * k, hit->object->color);
-//	color = hadamar_prod(light->color, color);
-//	return (color);
-//}
-//
-//static inline t_color spec_light(t_light *light, t_hit *hit, t_v3 to_l)
-//{
-//	t_v3	h;
-//	double	cos_theta;
-//	double  specular_factor;
-//	t_color	color;
-//
-//	h = normalize(v3_add(v3_multi(-1, hit->ray->dir), to_l));
-//	cos_theta = ft_dot(h, hit->normal);
-//	specular_factor = pow(cos_theta, hit->object->material->shininess);
-//	color = color_multi(specular_factor, hit->object->color);
-//	return (hadamar_prod(light->color, color));
-//}
+static inline t_color	diffuse_light(t_light *l, t_hit *hit, double val[2])
+{
+	t_color color;
+	double	k;
+
+	k = hit->object->material->diffuse;
+	color = v4_multi(val[0] * k, hit->object->color);
+	color = hadamar_prod(l->color, color);
+	return (color);
+}
+
+static inline t_color spec_light(t_light *light, t_hit *hit, t_v3 light_v)
+{
+	t_v3	reflect_v;
+	t_v3	v;
+	double	reflect_dot_eye;
+	double	factor;
+
+	v = v3_multi(-1, light_v);
+	reflect_v = reflect(&hit->normal, &v);
+	reflect_dot_eye = ft_dot(reflect_v, normalize(hit->ray->o));
+	if (reflect_dot_eye <= 0)
+		return (v4(0,0,0,1));
+	factor = pow(reflect_dot_eye, hit->object->material->shininess);
+	factor = factor * hit->object->material->specular;
+	return (v4_multi(factor, light->color));
+}
 //
 //static inline t_color get_b_phong_l(t_light *light, t_hit *hit, t_v3 to_light)
 //{
@@ -60,14 +61,26 @@
 //	return (color_add(diffuse, specular));
 //}
 
-t_color	shade_hit(t_scene *scn, t_hit *hit)
+t_color	lighting(t_scene *scn, t_hit *hit, t_light *light)
 {
-	t_color	color;
+	t_color	phong[3];
+	t_color color;
+	t_v3	to_light;
+	double	val[2];
 
-	color = v4(0,0,0,1);
-	if (scn != 0 && hit != 0)
+	to_light = v3_sub(light->o, hit->h_point);
+	val[1] = v3_norm_2(to_light);
+	to_light = normalize(to_light);
+	phong[0] = hadamar_prod(hit->object->color, scn->ambiant.color);
+	val[0] = ft_dot(to_light, hit->normal);
+	phong[1] = v4(0,0,0,1);
+	phong[2] = v4(0,0,0,1);
+	if (val[0] >= 0)
 	{
-
+		phong[1] = diffuse_light(light, hit, val);
+		phong[2] = spec_light(light, hit, to_light);
 	}
+	color = v4_add(v4_add(phong[1], phong[2]), phong[0]);
 	return (color);
 }
+

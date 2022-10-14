@@ -39,6 +39,7 @@ inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double de
 	t_color	color;
 	t_array	*records;
 	t_hit	*first;
+	t_light *light;
 
 	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
 	records = do_intersect_objs(scene, ray, false);
@@ -46,8 +47,9 @@ inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double de
 	(void)deep;
 	if (first != NULL)
 	{
+		light = (t_light *)ft_get_elem(scene->lights, 0);
 		if (first->intersection == true)
-			color = first->object->color;
+			color = lighting(scene, first, light);
 	}
 	ft_free_d_array(records);
 	return (color);

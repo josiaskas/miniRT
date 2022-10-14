@@ -36,7 +36,7 @@ bool	parse_light(char **tokens, t_app *app)
 	if (light->cd < 0.01)
 		light->cd = 0.1;
 	light->color = make_color_vector(v_color, 1);
-	light->color = color_multi(light->cd, light->color);
+	light->color = v4_multi(light->cd, light->color);
 	return (true);
 }
 
@@ -64,6 +64,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 	}
 	if (ambiant.intensity == 0)
 		ambiant.intensity = 0.1;
+	ambiant.color = v4_multi(ambiant.intensity, ambiant.color);
 	app->scene->ambiant = ambiant;
 	return (true);
 }

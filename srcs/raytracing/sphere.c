@@ -13,20 +13,6 @@
 #include "raytrace.h"
 #include "parser.h"
 
-//t_v3	get_normal_in_world_space(t_v3 normal_o, t_hittable *obj)
-//{
-//	t_v4	n_world;
-//	t_v4	o_world;
-//	t_v3	n;
-//
-//	n_world = v3_to_v4(normalize(normal_o));
-//	o_world = multiply_m4_v4(obj->tr, v4(0,0,0,0));
-//	n_world =  multiply_m4_v4(obj->tr, n_world);
-//	n_world = v4_sub(n_world, o_world);
-//	n = v3(n_world.r,n_world.g,n_world.b);
-//	return (n);
-//}
-//
 static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
 {
 	t_point	obj_p;
@@ -121,83 +107,3 @@ bool transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc)
 	}
 	return (false);
 }
-
-
-/*
- *	Ray sphere simple intersection code test
- * 	with transform implemented
- *  t_ray	*a = NULL;
- *	t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
-		if (sphere != NULL)
-		{
-			a = build_ray(v3(0,0,-5), v3(0,0,1));
-			transform_sphere(sphere, v3(0,0,-1), v3(0,0,0), v3(2,2,2));
-			t_hit *hit = do_intersect(a, sphere);
-			if (hit)
-			{
-				printf("ray O:(%lf, %lf, %lf) V:(%lf, %lf, %lf)\n",
-					   a->o.x,a->o.y,a->o.z,
-					   a->dir.x,a->dir.y,a->dir.z);
-				if (hit->intersection)
-				{
-					printf("intersected smallest t is %lf of [%lf, %lf]\n",
-						   hit->t, hit->t_trace[0], hit->t_trace[1]);
-				}
-			}
-			free(hit);
-		}
-*/
-
-/*
- * Ray sphere simple intersection code test
- *
- * t_ray	*a = NULL;
- * t_hittable *sphere = ft_get_elem(app->scene->hittable, 0);
-	if (sphere != NULL)
-	{
-		a = build_ray(v3(0,0,-5.0), v3(0,0,1));
-		t_hit *hit = do_intersect(a, sphere);
-		if (hit)
-		{
-			printf("ray O:(%lf, %lf, %lf) V:(%lf, %lf, %lf)\n",
-				   a->o.x,a->o.y,a->o.z,
-				   a->dir.x,a->dir.y,a->dir.z);
-			if (hit->intersection)
-			{
-				printf("intersected smallest t is %lf of [%lf, %lf]\n",
-					   hit->t, hit->t_trace[0], hit->t_trace[1]);
-			}
-		}
-		free(hit);
-	}
-	free(a);
- *
- *
-*/
-
-/* ray transformation testing
- *	t_ray	*a;
- *	t_ray	*b;
-	t_m4	tr1;
-
-	t_v3 translation = v3(0,0,0);
-	t_v3 angles = v3(0,0,0);
-	t_v3 scales = v3(2,3,4);
-
-	a = build_ray(v3(1,2,3), v3(0,1,0));
-	tr1 = get_tr_matrix(translation, angles, scales, false);
-
-	b = get_transformed_ray(a, tr1, angles);
-	printf("origin: (%lf, %lf, %lf) direction: (%lf, %lf, %lf)\n",
-		   b->o.x,b->o.y,b->o.z,
-		   b->dir.x,b->dir.y,b->dir.z);
-	free(a);
-
-	tr1 = get_tr_matrix(translation, angles, scales, true);
-	a = get_transformed_ray(b, tr1, angles);
-	free(b);
-	printf("origin: (%lf, %lf, %lf) direction: (%lf, %lf, %lf)\n",
-		   a->o.x,a->o.y,a->o.z,
-		   a->dir.x,a->dir.y,a->dir.z);
-free(a);
-*/
