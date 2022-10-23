@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/06 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/23 14:43:54 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ typedef t_v4	t_color;
  * you need to make sure v as no negative
 */
 t_color	make_color_vector(t_v3	v, double alpha);
-
 
 static inline t_color	hadamar_prod(t_color a, t_color b)
 {
@@ -47,6 +46,8 @@ static inline unsigned int	get_trgb(t_color color)
 		color.g = 1.0f;
 	if (color.b > 1.0f)
 		color.b = 1.0f;
+	if (color.a > 1.0f)
+		color.a = 1.0f;
 	r = (unsigned int)(color.r * 255);
 	g = (unsigned int)(color.g * 255);
 	b = (unsigned int)(color.b * 255);
@@ -54,4 +55,4 @@ static inline unsigned int	get_trgb(t_color color)
 	return ((a << 24) | (r << 16) | (g << 8) | b);
 }
 
-#endif //COLOR_H
+#endif

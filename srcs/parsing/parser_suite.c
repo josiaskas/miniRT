@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:37:45 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:50:59 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:51:00 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	parse_sphere(char **tokens, t_app *app)
 {
-	t_v3		v_color;
 	t_point		origin;
+	t_v3		data[3];
 	double		radius;
 
 	app->error_message = "Error during parsing, On a sphere";
@@ -25,11 +25,13 @@ bool	parse_sphere(char **tokens, t_app *app)
 		return (false);
 	if (!parse_double_from_str(tokens[2], &radius))
 		return (false);
-	if (!parse_a_vector(tokens[3], &v_color))
+	if (!parse_a_vector(tokens[3], &data[2]))
 		return (false);
-	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
-	return (build_sphere(app->scene, origin, radius, v_color));
+	data[0] = v3_multi(radius, v3(1, 1, 1));
+	data[1] = v3(0, 0, 0);
+	return (build_sphere(app->scene, origin, data));
 }
 
 bool	parse_plan(char **tokens, t_app *app)

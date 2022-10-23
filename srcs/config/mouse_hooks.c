@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mouse_hooks.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/24 18:56:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/23 14:48:51 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	mouse_pressed(int button, int x, int y, t_app *app)
 		if (app->conf.c_mode == e_select_mode)
 			start_selecting_mode(app, x, y);
 	}
-	return(0);
+	return (0);
 }
 
 int	mouse_release(int button, int x, int y, t_app *app)
@@ -34,7 +34,6 @@ int	mouse_release(int button, int x, int y, t_app *app)
 		app->mouse->b_pressed = false;
 		app->mouse->x = x;
 		app->mouse->y = y;
-
 	}
 	return (0);
 }
@@ -54,4 +53,3 @@ int	mouse_moved(int x, int y, t_app *app)
 	}
 	return (0);
 }
-

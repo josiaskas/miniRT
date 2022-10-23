@@ -1,18 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   edit.h                                             :+:      :+:    :+:   */
+/*   edit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 13:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/12 13:56:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 16:42:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "window.h"
 #include "parser.h"
-
 
 void	get_line_vector(char *title, t_v3 *v)
 {
@@ -24,8 +23,8 @@ void	get_line_vector(char *title, t_v3 *v)
 	while (!is_valid)
 	{
 		printf("\033[0;32m\n-%s:\033[0m ", title);
-		get_next_line(STDIN_FILENO,&line);
-		trim_l =  ft_strtrim(line, " \v\r\t");
+		get_next_line(STDIN_FILENO, &line);
+		trim_l = ft_strtrim(line, " \v\r\t");
 		is_valid = parse_a_vector(line, v);
 		free(trim_l);
 	}
@@ -44,8 +43,8 @@ void	get_line_color(t_color *color)
 	while (!is_valid)
 	{
 		printf("\033[0;32m\n color [0-255]:\033[0m ");
-		get_next_line(STDIN_FILENO,&line);
-		trim_l =  ft_strtrim(line, " \v\r\t");
+		get_next_line(STDIN_FILENO, &line);
+		trim_l = ft_strtrim(line, " \v\r\t");
 		is_valid = parse_a_vector(line, &v);
 		free(trim_l);
 		if (is_valid)
@@ -70,8 +69,8 @@ void	get_line_double(char *title, double *val)
 	while (!is_valid)
 	{
 		printf("\033[0;32m\n-%s:\033[0m ", title);
-		get_next_line(STDIN_FILENO,&line);
-		trim_l =  ft_strtrim(line, " \v\r\t");
+		get_next_line(STDIN_FILENO, &line);
+		trim_l = ft_strtrim(line, " \v\r\t");
 		is_valid = parse_double_from_str(trim_l, val);
 		free(trim_l);
 	}

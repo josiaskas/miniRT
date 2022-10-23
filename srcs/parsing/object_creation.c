@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   object_creation.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/27 11:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/27 11:54:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:52:10 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:52:11 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

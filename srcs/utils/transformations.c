@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/09 14:30:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 15:31:05 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ inline t_m4	scale_m(t_v3 with)
 	return (homothetie);
 }
 
-inline t_m4 rotation_z(double ang)
+inline t_m4	rotation_z(double ang)
 {
 	t_m4	rot_matrix;
 	double	cos_val;
@@ -55,11 +55,11 @@ inline t_m4 rotation_z(double ang)
 	return (rot_matrix);
 }
 
-inline t_m4 rotation_x(double ang)
+inline t_m4	rotation_x(double ang)
 {
 	t_m4	rot_matrix;
-	double cos_val;
-	double sin_val;
+	double	cos_val;
+	double	sin_val;
 
 	if (ang == 0)
 		return (get_identity_matrix());
@@ -75,7 +75,7 @@ inline t_m4 rotation_x(double ang)
 	return (rot_matrix);
 }
 
-inline t_m4 rotation_y(double ang)
+inline t_m4	rotation_y(double ang)
 {
 	t_m4	rot_matrix;
 	double	cos_val;

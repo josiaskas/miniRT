@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   transformation.h                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/04 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/06 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 15:00:24 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 15:00:25 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,14 @@ t_m4	rotation_z(double ang);
 t_m4	rotation_x(double ang);
 t_m4	rotation_y(double ang);
 t_m4	get_identity_matrix(void);
+t_m4	get_transposed(t_m4	*matrix);
+t_m4	*get_inverse(t_m4 matrix);
+t_m4	copy_matrix(t_m4 *matrix);
 
 static inline void	init_m4(t_m4 *a)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	while (i < 4)
@@ -87,7 +90,7 @@ static inline t_m4	translate_m(t_v3 with)
  * return the transformation matrix or the inverse transformation matrix
  * trans:translation vector, angles: vector, scaling vector, is inverse check
 */
-static inline t_m4 get_tr_matrix(t_v3 trans, t_v3 angles, t_v3 sc, bool inv)
+static inline t_m4	get_tr_matrix(t_v3 trans, t_v3 angles, t_v3 sc, bool inv)
 {
 	t_m4	tr;
 
@@ -118,35 +121,15 @@ static inline t_v4	multiply_m4_v4(t_m4 m, t_v4 c)
 {
 	t_v4	r;
 
-	r.r = (m.data[0][0] * c.r) + (m.data[0][1] * c.g) + (m.data[0][2] * c.b) +
-		  (m.data[0][3] * c.a);
-	r.g = (m.data[1][0] * c.r) + (m.data[1][1] * c.g) + (m.data[1][2] * c.b) +
-		  (m.data[1][3] * c.a);
-	r.b = (m.data[2][0] * c.r) + (m.data[2][1] * c.g) + (m.data[2][2] * c.b) +
-		  (m.data[2][3] * c.a);
-	r.a = (m.data[3][0] * c.r) + (m.data[3][1] * c.g) + (m.data[3][2] * c.b) +
-		  (m.data[3][3] * c.a);
+	r.r = (m.data[0][0] * c.r) + (m.data[0][1] * c.g) + (m.data[0][2] * c.b)
+		+ (m.data[0][3] * c.a);
+	r.g = (m.data[1][0] * c.r) + (m.data[1][1] * c.g) + (m.data[1][2] * c.b)
+		+ (m.data[1][3] * c.a);
+	r.b = (m.data[2][0] * c.r) + (m.data[2][1] * c.g) + (m.data[2][2] * c.b)
+		+ (m.data[2][3] * c.a);
+	r.a = (m.data[3][0] * c.r) + (m.data[3][1] * c.g) + (m.data[3][2] * c.b)
+		+ (m.data[3][3] * c.a);
 	return (r);
 }
 
-static inline t_m4	get_transposed(t_m4 *matrix)
-{
-	int		i;
-	int		j;
-	t_m4	transpose;
-
-	i = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			transpose.data[i][j] = matrix->data[j][i];
-			j++;
-		}
-		i++;
-	}
-	return (transpose);
-}
-
-#endif //TRANSFORMATION_H
+#endif

@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 11:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:38:30 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:51:51 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:51:53 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int	open_rt_file(char *filename, t_app *app)
 	extension = ft_strnstr(filename, ".rt", ft_strlen(filename));
 	if (!extension)
 	{
-
 		app->error_message = "miniRT need a file format like *.rt";
 		app->error_code = 1;
 		return (-1);

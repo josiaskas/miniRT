@@ -6,7 +6,7 @@
 #    By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/14 18:37:04 by jkasongo          #+#    #+#              #
-#    Updated: 2022/08/30 17:19:07 by jkasongo         ###   ########.fr        #
+#    Updated: 2022/10/22 15:30:30 by jkasongo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,12 +30,12 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c vector_suite.c color.c camera.c scene.c transformations.c
+UTILS_SRCS = vector.c vector_suite.c color.c camera.c scene.c transformations.c matrix.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
 PARSER_DIR = parsing/
-PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c object_creation.c edit.c
+PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c parser_suite_bonus.c object_creation.c edit.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #raytracing sources

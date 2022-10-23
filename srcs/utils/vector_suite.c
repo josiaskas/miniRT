@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:28:51 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 16:41:12 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ inline t_v4	v4_add(t_v4 a, t_v4 b)
 	addition.g = a.g + b.g;
 	addition.b = a.b + b.b;
 	addition.a = a.a + b.a;
-
 	return (addition);
 }
 
@@ -32,7 +31,6 @@ inline t_v4	v4_sub(t_v4 a, t_v4 b)
 	sub.g = a.g - b.g;
 	sub.b = a.b - b.b;
 	sub.a = a.a - b.a;
-
 	return (sub);
 }
 
@@ -55,7 +53,6 @@ inline t_v4	v3_to_v4(t_v3 v)
 	t.g = v.y;
 	t.b = v.z;
 	t.a = 1;
-
 	return (t);
 }
 

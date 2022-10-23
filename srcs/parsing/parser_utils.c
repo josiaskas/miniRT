@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:37:36 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:51:21 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:51:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static double	ft_parse_double(char *str1, char *str2)
 
 	r = (double)ft_atoi(str1);
 	after_dot = (double)ft_strlen(str2) * -1.0f;
-	f = pow(10, after_dot) * (double)ft_atoi(str2) ;
+	f = pow(10, after_dot) * (double)ft_atoi(str2);
 	return (r + f);
 }
 
@@ -102,7 +102,7 @@ bool	parse_a_vector(char *token, t_v3 *vector)
 
 inline bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr)
 {
-	size_t		params_nbr;
+	size_t	params_nbr;
 
 	params_nbr = 0;
 	while (tokens[params_nbr] != 0)
@@ -111,4 +111,3 @@ inline bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr)
 		return (false);
 	return (true);
 }
-

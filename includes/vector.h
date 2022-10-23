@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/23 14:47:51 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ typedef struct s_vector4
 }	t_v4;
 
 typedef struct s_matrix4 {
-	double data[4][4];
+	double	data[4][4];
 }	t_m4;
 
 typedef t_v3	t_point;
@@ -107,4 +107,4 @@ static inline t_v3	reflect(t_v3 *normal, t_v3 *in)
 	return (v3_sub(*in, v3_multi(2.0 * ft_dot(*in, *normal), *normal)));
 }
 
-#endif //VECTOR_H
+#endif

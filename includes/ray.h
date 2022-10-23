@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ray.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 15:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/29 16:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/23 14:46:12 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef enum e_hittable_composition
 	e_glass
 }	t_composition;
 
-typedef struct	s_material
+typedef struct s_material
 {
 	double			shininess;
 	t_composition	type;
@@ -61,7 +61,6 @@ typedef struct s_hittable
 	char		*name;
 	t_material	*material;
 }	t_hittable;
-
 
 typedef struct s_ray
 {
@@ -98,6 +97,7 @@ typedef struct s_hit_record
 	t_point		h_point;
 	t_v3		normal;
 	t_v3		r;
+	bool		inside;
 }	t_hit;
 
 /*
@@ -121,14 +121,14 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
  * return a ray p_view (distance of n from the point) to the scene
  * ray dir is normalized
 */
-static inline t_ray	*get_viewport_ray(double x, double y, t_cam *cam)
+static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 {
 	t_v3	dir;
 	t_v3	p_view;
 	double	cam_sz;
 
 	cam_sz = cam->near_clp_plane;
-	p_view = v3_add(v3_multi(x, cam->u1), v3_multi(y , cam->u2));
+	p_view = v3_add(v3_multi(px, cam->u1), v3_multi(py, cam->u2));
 	p_view = v3_add(p_view, cam->r_init);
 	p_view = v3_add(cam->origin, v3_add(v3_multi(cam_sz, cam->dir), p_view));
 	dir = normalize(v3_sub(p_view, cam->origin));
@@ -158,12 +158,11 @@ static inline t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o)
 	t_v4	oo;
 
 	o = multiply_m4_v4(transform, v3_to_v4(ray->o));
-	oo	= multiply_m4_v4(transform, v3_to_v4(sp_o));
+	oo = multiply_m4_v4(transform, v3_to_v4(sp_o));
 	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
 	dir = v4_sub(dir, oo);
-	tr_ray = build_ray(v3(o.r,o.g,o.b), v3(dir.r,dir.g,dir.b));
+	tr_ray = build_ray(v3(o.r, o.g, o.b), v3(dir.r, dir.g, dir.b));
 	return (tr_ray);
 }
 
-
-#endif //RAY_H
+#endif

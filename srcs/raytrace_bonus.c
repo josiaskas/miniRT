@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 19:25:22 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:54:39 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:57:54 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,37 +32,49 @@ inline void	init_raytracing(t_app *app)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
 
-/*
- * Return a color vector (s_vector4) clamped between (0-1)
-*/
-inline t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep)
+inline t_color	shade_hit(t_scene *world, t_hit *hit)
 {
 	t_color	color;
-	t_array	*records;
-	t_hit	*first;
+	t_light	*light;
+	size_t	i;
 
 	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
-	records = do_intersect_objs(scene, ray, false);
-	first = get_first_obj_hit(records, max_time);
-	(void)deep;
-	if (first != NULL)
+	i = 0;
+	while (i < world->lights->length)
 	{
-		if (first->intersection == true)
-			color = first->object->color;
+		light = ft_get_elem(world->lights, i);
+		color = v4_add(color, lighting(world, hit, light));
+		i++;
 	}
+	return (color);
+}
+
+inline t_color	color_at(t_scene *world, t_ray *ray)
+{
+	t_array	*records;
+	t_hit	*first_hit;
+	t_color	color;
+
+	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	records = do_intersect_objs(world, ray, false);
+	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
+	if (first_hit != NULL)
+		color = shade_hit(world, first_hit);
 	ft_free_d_array(records);
 	return (color);
 }
 
-inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
+inline t_color get_pixel_clr(t_scene *scene, double x, double y)
 {
-	t_color	color;
-	t_cam	*camera;
-	t_ray	*ray;
+	t_color color;
+	t_cam *camera;
+	t_ray *ray;
 
 	camera = scene->selected_camera;
-	ray = get_viewport_ray(x, y, camera);
-	color = do_tracing(scene, ray, RAY_T_MAX, 0);
+	x = x + 0.5;
+	y = y + 0.5;
+	ray = ray_for_pixel(camera, x, y);
+	color = color_at(scene, ray);
 	free(ray);
 	return (color);
 }

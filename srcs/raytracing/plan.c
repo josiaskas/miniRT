@@ -16,22 +16,15 @@
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
 {
 	double	nv;
-	double	dot2;
-	t_ray	*s_ray;
 
-	s_ray = get_transformed_ray(ray, plan->inv_tr, v3(0, 0, 0));
-	nv = ft_dot(plan->dir, s_ray->dir);
+	nv = ft_dot(plan->dir, ray->dir);
 	if (nv != 0)
 	{
 		hit->intersection = true;
 		hit->normal = plan->dir;
-		hit->t = (ft_dot(plan->dir,v3_sub(plan->o, ray->o)) / nv);
+		hit->t = ft_dot(plan->dir,v3_sub(plan->o, ray->o)) / nv;
 		hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
-		dot2 = 2 * ft_dot(v3_multi(-1, hit->ray->dir), hit->normal);
-		hit->r = v3_add(hit->ray->dir, v3_multi(dot2, hit->normal));
-		hit->r = normalize(hit->r);
 	}
-	free(s_ray);
 }
 
 bool	build_plane(t_scene *scn, t_point p, t_v3 normal, t_v3 v_color)

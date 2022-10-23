@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/08 14:30:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 16:39:32 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static inline void	add_plastic_materials(t_array *m_list)
 {
 	t_material	*plastic;
+
 	plastic = (t_material *)ft_calloc(1, sizeof(t_material));
 	if (plastic)
 	{
@@ -22,13 +23,13 @@ static inline void	add_plastic_materials(t_array *m_list)
 		plastic->name = "PLASTIC";
 		plastic->shininess = 200;
 		plastic->reflexive = 0;
-		plastic->diffuse = 0.9;
-		plastic->specular = 0.9;
+		plastic->diffuse = 0.7;
+		plastic->specular = 0.3;
 		ft_push(m_list, plastic);
 	}
 }
 
-static inline void add_metallic_materials(t_array *m_list)
+static inline void	add_metallic_materials(t_array *m_list)
 {
 	t_material	*metallic;
 
@@ -39,8 +40,8 @@ static inline void add_metallic_materials(t_array *m_list)
 		metallic->name = "METAL";
 		metallic->shininess = 200;
 		metallic->reflexive = 0.5;
-		metallic->diffuse = 0.9;
-		metallic->specular = 0.8;
+		metallic->diffuse = 0.8;
+		metallic->specular = 0.2;
 		ft_push(m_list, metallic);
 	}
 }
@@ -65,7 +66,7 @@ inline t_scene	*init_scene(void)
 }
 
 // destroy hittable, lights and cameras on the scene
-void free_scene(t_scene *scene)
+void	free_scene(t_scene *scene)
 {
 	if (scene)
 	{

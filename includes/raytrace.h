@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raytrace.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/29 18:56:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 15:00:13 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 15:00:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,16 @@ typedef struct s_scene
 
 t_scene	*init_scene(void);
 void	free_scene(t_scene *scene);
-t_cam	*build_camera(t_point origin, t_v3 dir, double angle);
-bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles, bool only_v);
+t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
+bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles);
+t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
 
-bool	build_sphere(t_scene *scn, t_point o, double r, t_v3 v_clr);
+bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3]);
 bool	build_plane(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
 bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[]);
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
-t_color	do_tracing(t_scene *scene, t_ray *ray, double max_time, double deep);
+t_color	color_at(t_scene *world, t_ray *ray);
 t_color	get_pixel_clr(t_scene *scene, double x, double y);
 t_color	lighting(t_scene *scn, t_hit *hit, t_light *light);
 
@@ -74,6 +75,7 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
 bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc);
 
 void	ft_swap(double *t0, double *t1);
+void	swap_array_el(t_array_node *node_a, t_array_node *node_b);
 
 inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 {
@@ -117,17 +119,17 @@ static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 		hit->normal = v3(0,0,0);
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
-//		else if (obj->type == e_hit_cylinder)
+		else if (obj->type == e_hit_plane)
+			intersect_plane(hit, obj, ray);
+		//		else if (obj->type == e_hit_cylinder)
 //			intersect_cylinder(hit, obj, ray);
-//		else if (obj->type == e_hit_plane)
-//			intersect_plane(hit, obj, ray);
 	}
 	return (hit);
 }
 
 static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 {
-	t_array 	*records;
+	t_array		*records;
 	t_hittable	*obj;
 	t_hit		*hit;
 	size_t		i;
@@ -140,7 +142,7 @@ static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 		{
 			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
 			hit = do_intersect(ray, obj);
-			ft_push(records,hit);
+			ft_push(records, hit);
 			if ((l == true) && (hit->intersection == true))
 				return (records);
 			i++;
@@ -149,7 +151,7 @@ static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 	return (records);
 }
 
-static inline	t_hit	*get_first_obj_hit(t_array *records, double max)
+static inline t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
 {
 	size_t	i;
 	double	curr_min;
@@ -159,12 +161,12 @@ static inline	t_hit	*get_first_obj_hit(t_array *records, double max)
 	curr_min = max;
 	first_hit = NULL;
 	i = 0;
-	if (!records)
+	if (!rec)
 		return (NULL);
-	while (i < records->length)
+	while (i < rec->length)
 	{
-		hit = (t_hit *)ft_get_elem(records, i);
-		if (hit->intersection == true && (hit->t < curr_min))
+		hit = (t_hit *)ft_get_elem(rec, i);
+		if (hit->intersection && (hit->t < curr_min) && (hit->t > min))
 		{
 			first_hit = hit;
 			curr_min = hit->t;
@@ -174,4 +176,4 @@ static inline	t_hit	*get_first_obj_hit(t_array *records, double max)
 	return (first_hit);
 }
 
-#endif //RAYTRACE_H
+#endif

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/08 13:28:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 16:41:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ inline t_v3	v3_sub(t_v3 a, t_v3 b)
 }
 
 // return a vector with (1/x, 1/y, 1/z) by checking zeros
-inline t_v3 inverse_comp(t_v3 v)
+inline t_v3	inverse_comp(t_v3 v)
 {
 	t_v3	i;
 

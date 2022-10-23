@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 11:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:37:18 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:51:36 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:51:38 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ bool	parse_file_line(char *line, t_app *app)
 	tokens = ft_split_v(line, " \t\n\r\v");
 	if (ft_strncmp(tokens[0], "sp", 2) == 0)
 		status = parse_sphere(tokens, app);
+	else if (ft_strncmp(tokens[0], "bsp", 3) == 0)
+		status = parse_sphere_bonus(tokens, app);
 	else if (ft_strncmp(tokens[0], "C", 1) == 0)
 		status = parse_camera(tokens, app);
 	else if (ft_strncmp(tokens[0], "pl", 2) == 0)

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/25 22:22:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/08 13:42:31 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/22 16:38:56 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,5 @@ inline t_color	make_color_vector(t_v3	v, double alpha)
 	color.r = v.x / 255.0f;
 	color.g = v.y / 255.0f;
 	color.b = v.z / 255.0f;
-
 	return (color);
 }

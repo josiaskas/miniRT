@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   multithread.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:25:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/21 17:36:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/23 14:44:34 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,4 @@ typedef struct s_thread_v
 }	t_thread;
 
 void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs);
-#endif //MULTITHREAD_H
+#endif

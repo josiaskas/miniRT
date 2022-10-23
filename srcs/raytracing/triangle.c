@@ -5,14 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/10/05 22:18:16 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 22:18:17 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:53:55 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:53:59 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
-
-
 
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color)
 {
