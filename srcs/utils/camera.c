@@ -140,8 +140,7 @@ inline t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
 	t_m4	or;
 
 	forward = normalize(v3_sub(to, from));
-	up = normalize(up);
-	left = ft_cross(forward, up);
+	left = ft_cross(forward, normalize(up));
 	true_up = ft_cross(left, forward);
 	or = get_identity_matrix();
 	or.data[0][0] = left.x;
@@ -172,9 +171,17 @@ t_cam	*build_cam(double hsize, double vsize, double fov)
 			cam->fov = 179.99f;
 		else
 			cam->fov = fov;
-		half_view = tan((cam->fov * M_PI / 180) / 2);
-		cam->half_width = half_view * aspect;
-		cam->half_height = half_view;
+		half_view = tan(cam->fov * (M_PI / 180) / 2);
+		if (aspect >= 1)
+		{
+			cam->half_width = half_view;
+			cam->half_height = half_view / aspect;
+		}
+		else
+		{
+			cam->half_width = half_view * aspect;
+			cam->half_height = half_view;
+		}
 		cam->pixel_size = (cam->half_width * 2) / cam->hsize;
 		cam->inv_tr = get_identity_matrix();
 	}
