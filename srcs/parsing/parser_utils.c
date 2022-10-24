@@ -43,7 +43,10 @@ static double	ft_parse_double(char *str1, char *str2)
 	r = (double)ft_atoi(str1);
 	after_dot = (double)ft_strlen(str2) * -1.0f;
 	f = pow(10, after_dot) * (double)ft_atoi(str2);
-	return (r + f);
+	if (str1[0] != '-')
+		return (r + f);
+	else
+		return (r - f);
 }
 
 bool	parse_double_from_str(char *str, double *result)
