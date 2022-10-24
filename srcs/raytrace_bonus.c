@@ -82,13 +82,26 @@ inline t_color get_pixel_clr(t_scene *scene, double x, double y)
 void	*run_thread_pixel(void *thread_info)
 {
 	t_thread	*t;
-	double		x_pixel;
-	double		y_pixel;
+	int			y;
+	int			x;
+	t_color		color;
 
-	t = (t_thread *)thread_info;
-	x_pixel = t->x + 0.5;
-	y_pixel = t->y + 0.5;
-	t->data[t->y][t->x] = get_pixel_clr(t->scene, x_pixel, y_pixel);
+	t = thread_info;
+	y = t->start;
+	while (y < t->end)
+	{
+		x = 0;
+		while (x < (W_WIDTH))
+		{
+			color = get_pixel_clr(t->scene, (double)x, (double)y);
+			pthread_mutex_lock(t->write_mutex);
+			t->data[y][x] = color;
+			//printf("something\n");
+			pthread_mutex_unlock(t->write_mutex);
+			x++;
+		}
+		y++;
+	}
 	return (t);
 }
 

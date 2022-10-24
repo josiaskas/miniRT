@@ -13,47 +13,45 @@
 #include "../../includes/minirt.h"
 #include "../../includes/multithread.h"
 
-static int	run_thread_batch(int x, int y, t_thread	info[], void* (*apply)(void *))
+static void	run_thread_batch(t_thread	info[], void* (*apply)(void *))
 {
 	int			nb_t;
 
 	nb_t = 0;
-	while ((nb_t < THREAD_NUMBER) && (x < W_WIDTH))
+	while (nb_t < THREAD_NUMBER)
 	{
-		info[nb_t].x = x;
-		info[nb_t].y = y;
 		pthread_create(&info[nb_t].thread_id, NULL, apply, &info[nb_t]);
 		nb_t++;
-		x++;
 	}
 	while (nb_t >= 0)
 	{
 		pthread_join(info[nb_t].thread_id, NULL);
 		nb_t--;
 	}
-	return (x);
+	return ;
 }
 
 void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
 {
-	int			x;
-	int			y;
-	int			i;
-	t_thread	thread_list[THREAD_NUMBER];
+	int				i;
+	double			delta;
+	t_thread		thread_list[THREAD_NUMBER];
+	pthread_mutex_t	*write;
 
 	i = 0;
+
+	delta = (W_HEIGHT) / THREAD_NUMBER;
+	write = (pthread_mutex_t *)ft_calloc(1, sizeof(pthread_mutex_t));
 	while (i < THREAD_NUMBER)
 	{
 		thread_list[i].scene = scn;
 		thread_list[i].data = clrs;
+		thread_list[i].start = delta * i;
+		thread_list[i].end = thread_list[i].start + delta;
+		thread_list[i].write_mutex = write;
 		i++;
 	}
-	y = 0;
-	while (y < W_HEIGHT)
-	{
-		x = 0;
-		while (x < W_WIDTH)
-			x = run_thread_batch(x, y, thread_list, apply);
-		y++;
-	}
+	run_thread_batch(thread_list, apply);
+	pthread_mutex_destroy(write);
+	free(write);
 }

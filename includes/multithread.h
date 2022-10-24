@@ -14,7 +14,7 @@
 # define MULTITHREAD_H
 
 # ifndef THREAD_NUMBER
-#  define THREAD_NUMBER 3
+#  define THREAD_NUMBER 4
 # endif
 
 # include <pthread.h>
@@ -23,11 +23,12 @@
 
 typedef struct s_thread_v
 {
-	pthread_t	thread_id;
-	t_color		**data;
-	int			x;
-	int			y;
-	t_scene		*scene;
+	pthread_t		thread_id;
+	t_color			**data;
+	t_scene			*scene;
+	int 			start;
+	int				end;
+	pthread_mutex_t	*write_mutex;
 }	t_thread;
 
 void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs);
