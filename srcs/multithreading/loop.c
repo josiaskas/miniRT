@@ -38,10 +38,9 @@ void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
 	t_thread		thread_list[THREAD_NUMBER];
 	pthread_mutex_t	*write;
 
-	i = 0;
-
 	delta = (W_HEIGHT) / THREAD_NUMBER;
 	write = (pthread_mutex_t *)ft_calloc(1, sizeof(pthread_mutex_t));
+	i = 0;
 	while (i < THREAD_NUMBER)
 	{
 		thread_list[i].scene = scn;

@@ -85,18 +85,22 @@ bool	render(t_app *app)
 
 	init_raytracing(app);
 	y = 0;
-	printf("\033[0;32m\n Raytracing\033[0m ");
-	while (y < (W_HEIGHT))
+	printf("\033[0;32m\nRaytracing\033[0m\n");
+	while (y < W_HEIGHT)
 	{
 		x = 0;
-		while (x < (W_WIDTH))
+		while (x < W_WIDTH)
 		{
 			x_pixel = x;
 			y_pixel = y;
 			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
+			app->scene->pix_traced++;
+			printProgress(app->scene->pix_traced);
 			x++;
 		}
 		y++;
 	}
+	printf("\033[0;32m\nFinished\033[0m\n");
+	app->scene->pix_traced = 0;
 	return (true);
 }

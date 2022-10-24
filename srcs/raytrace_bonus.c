@@ -91,12 +91,14 @@ void	*run_thread_pixel(void *thread_info)
 	while (y < t->end)
 	{
 		x = 0;
-		while (x < (W_WIDTH))
+		while (x < W_WIDTH)
 		{
 			color = get_pixel_clr(t->scene, (double)x, (double)y);
-			pthread_mutex_lock(t->write_mutex);
 			t->data[y][x] = color;
-			//printf("something\n");
+			pthread_mutex_lock(t->write_mutex);
+			t->scene->pix_traced++;
+			printProgress(t->scene->pix_traced);
+			fflush(stdout);
 			pthread_mutex_unlock(t->write_mutex);
 			x++;
 		}
@@ -108,6 +110,10 @@ void	*run_thread_pixel(void *thread_info)
 bool	render(t_app *app)
 {
 	init_raytracing(app);
+	printf("\033[0;32m\nRaytracing\033[0m\n");
+	app->scene->pix_traced = 0;
 	run_threads(run_thread_pixel, app->scene, app->data);
+	app->scene->pix_traced = 0;
+	printf("\033[0;32m\nFinished\033[0m\n");
 	return (true);
 }

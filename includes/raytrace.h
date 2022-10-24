@@ -20,6 +20,8 @@
 # define RAY_T_MAX 1.0e30f
 # define W_HEIGHT 720
 # define W_WIDTH 1280
+#define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
+#define PBWIDTH 60
 
 typedef struct s_light
 {
@@ -43,10 +45,13 @@ typedef struct s_scene
 	t_ambiant	ambiant;
 	t_array		*materials;
 	t_array		*names;
+	int			pix_traced;
 }	t_scene;
 
 t_scene	*init_scene(void);
 void	free_scene(t_scene *scene);
+void	printProgress(int count);
+
 t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
 bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);

@@ -190,10 +190,12 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov)
 	cam = build_cam((double)W_HEIGHT,(double)W_WIDTH, fov);
 	if (cam)
 	{
-		(void)dir;
 		tr = view_transform(origin, dir, v3(0,1,0));
 		inv = get_inverse(tr);
-		cam->inv_tr = copy_matrix(inv);
+		if (inv)
+			cam->inv_tr = copy_matrix(inv);
+		else
+			cam->inv_tr = get_identity_matrix();
 		free(inv);
 	}
 	return (cam);
