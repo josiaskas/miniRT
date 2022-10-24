@@ -70,8 +70,6 @@ inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
 	t_ray	*ray;
 
 	camera = scene->selected_camera;
-	x = x + 0.5;
-	y = y + 0.5;
 	ray = ray_for_pixel(camera, x, y);
 	color = color_at(scene, ray);
 	free(ray);

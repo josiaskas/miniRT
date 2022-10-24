@@ -98,7 +98,7 @@ t_m4	copy_matrix(t_m4 *matrix)
 		j = 0;
 		while (j < 4)
 		{
-			matrix->data[i][j] = copy.data[i][j];
+			copy.data[i][j] = matrix->data[i][j];
 			j++;
 		}
 		i++;

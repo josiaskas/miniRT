@@ -12,6 +12,7 @@
 
 #include "raytrace.h"
 
+/*
 static inline void	build_camera_viewport_vectors(t_cam *cam)
 {
 	t_v3	x;
@@ -35,6 +36,7 @@ static inline void	build_camera_viewport_vectors(t_cam *cam)
 	y = v3_multi(((double)W_HEIGHT) / -2, cam->u2);
 	cam->r_init = v3_add(x , y);
 }
+*/
 
 /*
  * Build a camera with certains characteristic
@@ -42,6 +44,7 @@ static inline void	build_camera_viewport_vectors(t_cam *cam)
  * build also the two vector describing the viewport plane
  * far_clp_plane by default 300
 */
+/*
 t_cam	*build_camera(t_point origin, t_v3 dir, double fov)
 {
 	t_cam	*cam;
@@ -66,6 +69,7 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov)
 	}
 	return (cam);
 }
+*/
 
 /*
 bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles)
@@ -127,8 +131,8 @@ void test_inverse(void)
 }
 */
 
-/*
-t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
+
+inline t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
 {
 	t_v3	forward;
 	t_v3	left;
@@ -151,9 +155,7 @@ t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
 	or.data[2][2] = -1 * forward.z;
 	return (m4_multi(or, translate_m(v3_multi(-1, from))));
 }
-*/
 
-/*
 t_cam	*build_cam(double hsize, double vsize, double fov)
 {
 	double	half_view;
@@ -174,25 +176,27 @@ t_cam	*build_cam(double hsize, double vsize, double fov)
 		cam->half_width = half_view * aspect;
 		cam->half_height = half_view;
 		cam->pixel_size = (cam->half_width * 2) / cam->hsize;
-		cam->transform = get_identity_matrix();
 		cam->inv_tr = get_identity_matrix();
 	}
 	return (cam);
 }
-*/
 
-/*
-void	*cam_view_tr(t_cam *camera, t_v3 from, t_v3 to, t_v3 up)
+t_cam	*build_camera(t_point origin, t_v3 dir, double fov)
 {
 	t_m4	*inv;
-	t_m4	inv_m;
-	t_m4	transform;
+	t_m4	tr;
+	t_cam	*cam;
 
-	transform = view_transform(from, to, up);
-	inv = get_inverse(transform);
-	inv_m = copy_matrix(inv);
-	camera->
-	free(inv);
+	cam = build_cam((double)W_HEIGHT,(double)W_WIDTH, fov);
+	if (cam)
+	{
+		(void)dir;
+		tr = view_transform(origin, dir, v3(0,1,0));
+		inv = get_inverse(tr);
+		cam->inv_tr = copy_matrix(inv);
+		free(inv);
+	}
+	return (cam);
 }
-*/
+
 

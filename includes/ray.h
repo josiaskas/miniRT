@@ -70,20 +70,14 @@ typedef struct s_ray
 
 typedef struct s_camera
 {
-	t_point		origin;
-	t_v3		dir;
-	t_v3		dir_ort;
-	double		fov;
-	double		aspect_ratio;
-	double		near_clp_plane;
-	double		far_clp_plane;
-	t_v3		trans;
-	t_v3		angles;
-	double		v_w;
-	double		v_h;
-	t_v3		u1;
-	t_v3		u2;
-	t_v3		r_init;
+	double	fov;
+	double	hsize;
+	double	vsize;
+	double	half_view;
+	double	half_width;
+	double	half_height;
+	double	pixel_size;
+	t_m4	inv_tr;
 }	t_cam;
 
 typedef struct s_hit_record
@@ -123,16 +117,21 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 */
 static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 {
+	double	off[4];
+	t_v4	v[2];
+	t_v3	p[2];
 	t_v3	dir;
-	t_v3	p_view;
-	double	cam_sz;
 
-	cam_sz = cam->near_clp_plane;
-	p_view = v3_add(v3_multi(px, cam->u1), v3_multi(py, cam->u2));
-	p_view = v3_add(p_view, cam->r_init);
-	p_view = v3_add(cam->origin, v3_add(v3_multi(cam_sz, cam->dir), p_view));
-	dir = normalize(v3_sub(p_view, cam->origin));
-	return (build_ray(p_view, dir));
+	off[0] = (px + 0.5) * cam->pixel_size;
+	off[1] = (py + 0.5) * cam->pixel_size;
+	off[2] = cam->half_width - off[0];
+	off[3] = cam->half_height - off[1];
+	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[2], off[3], -1, 1));
+	v[0] = multiply_m4_v4(cam->inv_tr, v4(0, 0, 0, 1));
+	p[1] = v3(v[1].r, v[1].g, v[1].b);
+	p[0] = v3(v[0].r, v[0].g, v[0].b);
+	dir = normalize(v3_sub(p[1], p[0]));
+	return (build_ray(p[0], dir));
 }
 
 /*
