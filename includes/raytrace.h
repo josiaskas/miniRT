@@ -53,8 +53,8 @@ void	free_scene(t_scene *scene);
 void	printProgress(int count);
 
 t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
-bool	move_camera(t_cam *cam, t_v3 translate, t_v3 angles);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
+bool	update_cam(t_cam *cam, double hsize, double vsize, double fov);
 
 bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3]);
 bool	build_plane(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);

@@ -77,6 +77,7 @@ bool	parse_camera(char **tokens, t_app *app)
 	double		angle;
 
 	angle = 0;
+	app->error_message = "Error during parsing, On a camera";
 	if (!tokens_has_valid_params_nbr(tokens, 4))
 		return (false);
 	if (!parse_a_vector(tokens[1], &origin))

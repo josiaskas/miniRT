@@ -16,25 +16,27 @@
 
 int	mouse_pressed(int button, int x, int y, t_app *app)
 {
-	if (button == MOUSE_LEFT_BUTTON)
+	if (!app->mouse->b_pressed)
 	{
 		app->mouse->b_pressed = true;
 		app->mouse->start_x = x;
 		app->mouse->start_y = y;
-		if (app->conf.c_mode == e_select_mode)
-			start_selecting_mode(app, x, y);
 	}
+	if ((button == MOUSE_LEFT_BUTTON) && (app->conf.c_mode == e_select_mode))
+		start_selecting_mode(app, x, y);
+	else if (app->mouse->b_pressed && ((button == MOUSE_SCROLL_DOWN || button == MOUSE_SCROLL_UP)))
+		ft_zoom_hook(button, app);
 	return (0);
 }
 
 int	mouse_release(int button, int x, int y, t_app *app)
 {
+	app->mouse->x = x;
+	app->mouse->y = y;
 	if (button == MOUSE_LEFT_BUTTON)
-	{
 		app->mouse->b_pressed = false;
-		app->mouse->x = x;
-		app->mouse->y = y;
-	}
+//	else if (button == MOUSE_SCROLL_DOWN || button == MOUSE_SCROLL_UP)
+//		ft_zoom_hook(button, app);
 	return (0);
 }
 
@@ -51,5 +53,29 @@ int	mouse_moved(int x, int y, t_app *app)
 			app->mouse->y = y;
 		}
 	}
+	return (0);
+}
+
+int	ft_zoom_hook(int button, t_app *app)
+{
+//	double	fov;
+//	double	delta;
+//	t_cam	*cam;
+//
+//	cam = app->scene->selected_camera;
+//	fov = cam->fov;
+//	delta = app->mouse->start_y - app->mouse->y;
+//	if (button == MOUSE_SCROLL_UP){
+//		fov +=delta;
+//		printf("in up with delta: %lf and fov: %lf\n", delta, fov);
+//		app->conf.rerender = true;
+//	}
+//	else if (button == MOUSE_SCROLL_DOWN){
+//		fov -=delta;
+//		printf("down with delta: %lf and fov: %lf\n", delta, fov);
+//		app->conf.rerender = true;
+//	}
+	(void)button;
+	(void)app;
 	return (0);
 }

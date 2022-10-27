@@ -33,6 +33,7 @@ static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
 	hit->normal = normalize(v3(v.r, v.g, v.b));
 	if (hit->inside)
 		hit->normal = v3_multi(-1, hit->normal);
+	hit->over_p= v3_add(hit->h_point, v3_multi(RAY_T_MIN,hit->normal));
 }
 
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)

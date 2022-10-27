@@ -70,6 +70,7 @@ inline t_scene	*init_scene(void)
 		scene->cameras = ft_new_array();
 		scene->ambiant.intensity = 0;
 		scene->materials = ft_new_array();
+		scene->names = ft_new_array();
 		add_plastic_materials(scene->materials);
 		add_metallic_materials(scene->materials);
 	}

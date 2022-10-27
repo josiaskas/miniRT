@@ -41,8 +41,12 @@ static double	ft_parse_double(char *str1, char *str2)
 	double	after_dot;
 
 	r = (double)ft_atoi(str1);
-	after_dot = (double)ft_strlen(str2) * -1.0f;
-	f = pow(10, after_dot) * (double)ft_atoi(str2);
+	f = 0;
+	if (str2)
+	{
+		after_dot = (double)ft_strlen(str2) * -1.0f;
+		f = pow(10, after_dot) * (double)ft_atoi(str2);
+	}
 	if (str1[0] != '-')
 		return (r + f);
 	else

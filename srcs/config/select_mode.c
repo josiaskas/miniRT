@@ -37,7 +37,12 @@ static	inline void	sphere_edition(t_hittable *sphere)
 
 	scale = v3(1, 1, 1);
 	r = 1;
+	printf("\033[0;31m-- Sphere Edition --\033[0m\nName: %s", sphere->name);
+	printf("Current position: (%lf, %lf, %lf)\n",
+		   sphere->trans.x, sphere->trans.y, sphere->trans.z);
 	get_line_vector("translation", &translate);
+	printf("Current scale(equal for a perfect sphere): (%lf, %lf, %lf)\n",
+		   sphere->scale.x, sphere->scale.y, sphere->scale.z);
 	get_line_double("scale-radius", &r);
 	get_line_color(&color);
 	sphere->color = color;
@@ -50,7 +55,7 @@ static	inline void	start_edition(t_app *app)
 	t_hittable	*obj;
 
 	obj = app->conf.selected_obj;
-	printf("\033[0;31m-- Edition of %s --\033[0m\n", obj->name);
+	app->conf.status = 0;
 	if (obj->type == e_hit_sphere)
 		sphere_edition(obj);
 	app->conf.status = 0;
@@ -65,7 +70,6 @@ void	start_selecting_mode(t_app *app, int x, int y)
 {
 	t_hittable	*obj;
 
-	app->conf.status = 1;
 	if (app->conf.selected_obj != NULL)
 		start_edition(app);
 	else
@@ -73,7 +77,6 @@ void	start_selecting_mode(t_app *app, int x, int y)
 		obj = find_selected_object(app->scene, x, y);
 		if (obj)
 		{
-			app->conf.status = 0;
 			app->conf.selected_obj = obj;
 			start_edition(app);
 		}

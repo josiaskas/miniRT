@@ -73,10 +73,13 @@ typedef struct s_camera
 	double	fov;
 	double	hsize;
 	double	vsize;
-	double	half_view;
-	double	half_width;
+	double	aspect;
+	double	pixel_dx;
+	double	pixel_dy;
 	double	half_height;
-	double	pixel_size;
+	double	half_width;
+	t_point	eye;
+	t_point	look_at;
 	t_m4	inv_tr;
 }	t_cam;
 
@@ -89,6 +92,7 @@ typedef struct s_hit_record
 	double		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
+	t_point		over_p;
 	t_v3		normal;
 	t_v3		r;
 	bool		inside;
@@ -112,7 +116,8 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 }
 
 /*
- * return a ray p_view (distance of n from the point) to the scene
+ * return a ray from camera eye to the pixel
+ * use a matrix to transform from camera to view world
  * ray dir is normalized
 */
 static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
@@ -122,8 +127,8 @@ static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 	t_v3	p[2];
 	t_v3	dir;
 
-	off[0] = (px + 0.5) * cam->pixel_size;
-	off[1] = (py + 0.5) * cam->pixel_size;
+	off[0] = (px + 0.5) * cam->pixel_dx;
+	off[1] = (py + 0.5) * cam->pixel_dy;
 	off[2] = cam->half_width - off[0];
 	off[3] = cam->half_height - off[1];
 	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[2], off[3], -1, 1));
