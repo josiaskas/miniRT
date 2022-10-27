@@ -60,9 +60,9 @@ t_color	lighting(t_scene *scn, t_hit *hit, t_light *light)
 	to_light = v3_sub(light->o, hit->h_point);
 	val[1] = v3_norm_2(to_light);
 	to_light = normalize(to_light);
-	if (is_shadowed(scn, to_light, hit->over_p, val[1]))
-		return (v4(0, 0, 0, 1));
 	phong[0] = hadamar_prod(hit->object->color, scn->ambiant.color);
+	if (is_shadowed(scn, to_light, hit->over_p, val[1]))
+		return (phong[0]);
 	val[0] = ft_dot(to_light, hit->normal);
 	phong[1] = v4(0, 0, 0, 1);
 	phong[2] = v4(0, 0, 0, 1);
