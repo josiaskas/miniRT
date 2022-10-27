@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minirt.h"
+#include "light.h"
 
 // clear all data stored to prepare a new frame
 inline void	init_raytracing(t_app *app)

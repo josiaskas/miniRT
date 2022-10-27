@@ -15,6 +15,7 @@
 # include "ray.h"
 # include "color.h"
 # include "transformation.h"
+# include "ray.h"
 # include <stdio.h>
 # define RAY_T_MIN 0.000001f
 # define RAY_T_MAX 1.0e30f
@@ -63,7 +64,6 @@ bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
 t_color	color_at(t_scene *world, t_ray *ray);
 t_color	get_pixel_clr(t_scene *scene, double x, double y);
-t_color	lighting(t_scene *scn, t_hit *hit, t_light *light);
 
 //plan
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
