@@ -17,40 +17,40 @@
 
 typedef struct s_vector
 {
-	double	x;
-	double	y;
-	double	z;
+	float	x;
+	float	y;
+	float	z;
 }	t_v3;
 
 typedef struct s_vector4
 {
-	double	r;
-	double	g;
-	double	b;
-	double	a;
+	float	r;
+	float	g;
+	float	b;
+	float	a;
 }	t_v4;
 
 typedef struct s_matrix4 {
-	double	data[4][4];
+	float	data[4][4];
 }	t_m4;
 
 typedef t_v3	t_point;
 
-double	v3_norm_2(t_v3 v);
-double	v3_norm(t_v3 v);
+float	v3_norm_2(t_v3 v);
+float	v3_norm(t_v3 v);
 t_v3	v3_add(t_v3 a, t_v3 b);
 t_v3	v3_sub(t_v3 a, t_v3 b);
 t_v3	inverse_comp(t_v3 v);
 t_v4	v3_to_v4(t_v3 v);
 t_v4	v4_add(t_v4 a, t_v4 b);
 t_v4	v4_sub(t_v4 a, t_v4 b);
-t_v4	v4_multi(double k, t_v4 v);
-t_v4	v4(double r, double g, double b, double a);
+t_v4	v4_multi(float k, t_v4 v);
+t_v4	v4(float r, float g, float b, float a);
 
 /*
  * Retourne un vecteur créer sur la stack avec (i, j, k)
 */
-static inline t_v3	v3(double i, double j, double k)
+static inline t_v3	v3(float i, float j, float k)
 {
 	t_v3	vector;
 
@@ -61,7 +61,7 @@ static inline t_v3	v3(double i, double j, double k)
 }
 
 // multiply a vector with a number
-static inline t_v3	v3_multi(double i, t_v3 v)
+static inline t_v3	v3_multi(float i, t_v3 v)
 {
 	t_v3	r;
 
@@ -74,9 +74,9 @@ static inline t_v3	v3_multi(double i, t_v3 v)
 /*
  * Retourne le résultat du produit scalaire (dot product)
  * |u| * |v|
- * double
+ * float
 */
-inline double	ft_dot(t_v3 u, t_v3 v)
+inline float	ft_dot(t_v3 u, t_v3 v)
 {
 	return ((u.x * v.x) + (u.y * v.y) + (u.z * v.z));
 }
@@ -84,7 +84,7 @@ inline double	ft_dot(t_v3 u, t_v3 v)
 // return normalized  t_v3
 static inline t_v3	normalize(t_v3 v)
 {
-	double	norm;
+	float	norm;
 
 	norm = sqrt(((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
 	if (norm != 0.f)

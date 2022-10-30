@@ -48,9 +48,9 @@ static void	add_metallic_materials(t_array *m_list)
 
 void	printProgress(int count)
 {
-	double			percentage;
+	float			percentage;
 
-	percentage = (double)count / (((double)W_HEIGHT - 1) * (double)W_WIDTH);
+	percentage = (float)count / (((float)W_HEIGHT - 1) * (float)W_WIDTH);
 	int val = (int) (percentage * 100);
 	int lpad = (int) (percentage * PBWIDTH);
 	int rpad = PBWIDTH - lpad;

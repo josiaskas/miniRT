@@ -15,7 +15,7 @@
 static int	prepare_camera_move(int key, t_app *app)
 {
 	t_cam	*cam;
-	double	step;
+	float	step;
 	t_v3	move;
 
 	cam = app->scene->selected_camera;

@@ -32,6 +32,6 @@ void	start_selecting_mode(t_app *app, int x, int y);
 int		key_pressed_hook(int key, t_app *app);
 void	get_line_vector(char *title, t_v3 *v);
 void	get_line_color(t_color *color);
-void	get_line_double(char *title, double *val);
+void	get_line_float(char *title, float *val);
 
 #endif

@@ -124,6 +124,8 @@ fclean : clean
 
 re : fclean all
 
+test : clean all
+
 help	:
 	@echo "all $(NAME) clean fclean re"
 

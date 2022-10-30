@@ -15,7 +15,7 @@
 
 //inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
 //{
-//	double 	dot[3];
+//	float 	dot[3];
 //	t_point	p_ray;
 //	//t_v3	p;
 //
@@ -42,7 +42,7 @@
 
 bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
 {
-	double	y[2];
+	float	y[2];
 
 	y[0] = ray->o.y + hit->t_trace[0] * ray->dir.y;
 	y[1] = ray->o.y + hit->t_trace[1] * ray->dir.y;
@@ -61,8 +61,8 @@ bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
 
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 {
-	double	terms[3];
-	double	t[2];
+	float	terms[3];
+	float	t[2];
 	t_ray	*s_ray;
 
 	t[1] = RAY_T_MAX;
@@ -83,7 +83,7 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 	free(s_ray);
 }
 
-bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, double t[])
+bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, float t[])
 {
 	t_hittable	*cy;
 	t_v3		scale;

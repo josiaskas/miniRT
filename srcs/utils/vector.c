@@ -13,13 +13,13 @@
 #include "vector.h"
 
 // retourne la norme au carré du vecteur
-inline double	v3_norm_2(t_v3 v)
+inline float	v3_norm_2(t_v3 v)
 {
 	return ((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 }
 
 // retourne la norme du vecteur
-inline double	v3_norm(t_v3 v)
+inline float	v3_norm(t_v3 v)
 {
 	return (sqrt(v3_norm_2(v)));
 }

@@ -25,7 +25,7 @@ bool	parse_light(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[1], &light->o))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &light->cd))
+	if (!parse_float_from_str(tokens[2], &light->cd))
 		return (false);
 	if (!parse_a_vector(tokens[3], &v_color))
 		return (false);
@@ -48,7 +48,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
 		return (false);
-	if (!parse_double_from_str(tokens[1], &ambiant.intensity))
+	if (!parse_float_from_str(tokens[1], &ambiant.intensity))
 		return (false);
 	if (!parse_a_vector(tokens[2], &v_color))
 		return (false);
@@ -74,7 +74,7 @@ bool	parse_camera(char **tokens, t_app *app)
 	t_cam		*camera;
 	t_point		origin;
 	t_point		orientation;
-	double		angle;
+	float		angle;
 
 	angle = 0;
 	app->error_message = "Error during parsing, On a camera";
@@ -84,7 +84,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &orientation))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &angle))
+	if (!parse_float_from_str(tokens[3], &angle))
 		return (false);
 	if (!all_vector_coord_are_in_range(-1, 1, &orientation))
 		return (false);

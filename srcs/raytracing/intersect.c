@@ -12,9 +12,9 @@
 
 #include "raytrace.h"
 
-inline void	ft_swap(double *t0, double *t1)
+inline void	ft_swap(float *t0, float *t1)
 {
-	double	temp;
+	float	temp;
 
 	temp = *t1;
 	*t1 = *t0;

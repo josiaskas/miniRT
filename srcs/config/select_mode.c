@@ -33,7 +33,7 @@ static	inline void	sphere_edition(t_hittable *sphere)
 	t_color	color;
 	t_v3	translate;
 	t_v3	scale;
-	double	r;
+	float	r;
 
 	scale = v3(1, 1, 1);
 	r = 1;
@@ -43,7 +43,7 @@ static	inline void	sphere_edition(t_hittable *sphere)
 	get_line_vector("translation", &translate);
 	printf("Current scale(equal for a perfect sphere): (%lf, %lf, %lf)\n",
 		   sphere->scale.x, sphere->scale.y, sphere->scale.z);
-	get_line_double("scale-radius", &r);
+	get_line_float("scale-radius", &r);
 	get_line_color(&color);
 	sphere->color = color;
 	scale = v3_multi(r, scale);

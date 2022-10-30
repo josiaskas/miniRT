@@ -17,8 +17,8 @@
 # include "transformation.h"
 # include "ray.h"
 # include <stdio.h>
-# define RAY_T_MIN 0.000001f
-# define RAY_T_MAX 1.0e30f
+# define RAY_T_MIN 0.001f
+# define RAY_T_MAX 100000000.0f
 # define W_HEIGHT 720
 # define W_WIDTH 1280
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
@@ -27,13 +27,13 @@
 typedef struct s_light
 {
 	t_point	o;
-	double	cd;
+	float	cd;
 	t_color	color;
 }	t_light;
 
 typedef struct s_ambiant_light
 {
-	double		intensity;
+	float		intensity;
 	t_color		color;
 }	t_ambiant;
 
@@ -53,17 +53,17 @@ t_scene	*init_scene(void);
 void	free_scene(t_scene *scene);
 void	printProgress(int count);
 
-t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
+t_cam	*build_camera(t_point origin, t_v3 dir, float fov);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
-bool	update_cam(t_cam *cam, double hsize, double vsize, double fov);
+bool	update_cam(t_cam *cam, float hsize, float vsize, float fov);
 
 bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3]);
 bool	build_plane(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
-bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, double t[]);
+bool	build_cy(t_scene *scene, t_point p, t_v3 dir, t_v3 v_color, float t[]);
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
 t_color	color_at(t_scene *world, t_ray *ray);
-t_color	get_pixel_clr(t_scene *scene, double x, double y);
+t_color	get_pixel_clr(t_scene *scene, float x, float y);
 
 //plan
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
@@ -79,13 +79,13 @@ bool	transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc);
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray);
 bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc);
 
-void	ft_swap(double *t0, double *t1);
+void	ft_swap(float *t0, float *t1);
 void	swap_array_el(t_array_node *node_a, t_array_node *node_b);
 
-inline static bool	solve_quad(const double terms[], double *t0, double *t1)
+inline static bool	solve_quad(const float terms[], float *t0, float *t1)
 {
-	double	discriminant;
-	double	q;
+	float	discriminant;
+	float	q;
 
 	discriminant = (terms[1] * terms[1]) - (4 * terms[0] * terms[2]);
 	if (discriminant < 0)
@@ -147,7 +147,7 @@ static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 		{
 			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
 			hit = do_intersect(ray, obj);
-			if (hit->intersection)
+			if (hit->intersection == true)
 			{
 				ft_push(records, hit);
 				if ((l == true) && (hit->intersection == true))
@@ -161,10 +161,10 @@ static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 	return (records);
 }
 
-static inline t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
+static inline t_hit	*get_first_obj_hit(t_array *rec, float max, float min)
 {
 	size_t	i;
-	double	curr_min;
+	float	curr_min;
 	t_hit	*first_hit;
 	t_hit	*hit;
 

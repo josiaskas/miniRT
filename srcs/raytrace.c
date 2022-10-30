@@ -58,14 +58,14 @@ inline t_color	color_at(t_scene *world, t_ray *ray)
 
 	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
 	records = do_intersect_objs(world, ray, false);
-	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
+	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0.0f);
 	if (first_hit != NULL)
 		color = shade_hit(world, first_hit);
 	ft_free_d_array(records);
 	return (color);
 }
 
-inline t_color	get_pixel_clr(t_scene *scene, double x, double y)
+inline t_color	get_pixel_clr(t_scene *scene, float x, float y)
 {
 	t_color	color;
 	t_cam	*camera;
@@ -82,8 +82,8 @@ bool	render(t_app *app)
 {
 	int		x;
 	int		y;
-	double	x_pixel;
-	double	y_pixel;
+	float	x_pixel;
+	float	y_pixel;
 
 	init_raytracing(app);
 	y = 0;

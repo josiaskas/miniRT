@@ -35,17 +35,17 @@ inline t_m4	scale_m(t_v3 with)
 	return (homothetie);
 }
 
-inline t_m4	rotation_z(double ang)
+inline t_m4	rotation_z(float ang)
 {
 	t_m4	rot_matrix;
-	double	cos_val;
-	double	sin_val;
+	float	cos_val;
+	float	sin_val;
 
 	if (ang == 0)
 		return (get_identity_matrix());
 	init_m4(&rot_matrix);
-	cos_val = cos(ang);
-	sin_val = sin(ang);
+	cos_val = cosf(ang);
+	sin_val = sinf(ang);
 	rot_matrix.data[0][0] = cos_val;
 	rot_matrix.data[0][1] = -sin_val;
 	rot_matrix.data[1][0] = sin_val;
@@ -55,17 +55,17 @@ inline t_m4	rotation_z(double ang)
 	return (rot_matrix);
 }
 
-inline t_m4	rotation_x(double ang)
+inline t_m4	rotation_x(float ang)
 {
 	t_m4	rot_matrix;
-	double	cos_val;
-	double	sin_val;
+	float	cos_val;
+	float	sin_val;
 
 	if (ang == 0)
 		return (get_identity_matrix());
 	init_m4(&rot_matrix);
-	cos_val = cos(ang);
-	sin_val = sin(ang);
+	cos_val = cosf(ang);
+	sin_val = sinf(ang);
 	rot_matrix.data[0][0] = 1;
 	rot_matrix.data[1][1] = cos_val;
 	rot_matrix.data[1][2] = -sin_val;
@@ -75,17 +75,17 @@ inline t_m4	rotation_x(double ang)
 	return (rot_matrix);
 }
 
-inline t_m4	rotation_y(double ang)
+inline t_m4	rotation_y(float ang)
 {
 	t_m4	rot_matrix;
-	double	cos_val;
-	double	sin_val;
+	float	cos_val;
+	float	sin_val;
 
 	if (ang == 0)
 		return (get_identity_matrix());
 	init_m4(&rot_matrix);
-	cos_val = cos(ang);
-	sin_val = sin(ang);
+	cos_val = cosf(ang);
+	sin_val = sinf(ang);
 	rot_matrix.data[0][0] = cos_val;
 	rot_matrix.data[0][2] = sin_val;
 	rot_matrix.data[1][1] = 1;

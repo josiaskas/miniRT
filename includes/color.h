@@ -20,7 +20,7 @@ typedef t_v4	t_color;
  * return with an alpha and range for all canals (0-1)
  * you need to make sure v as no negative
 */
-t_color	make_color_vector(t_v3	v, double alpha);
+t_color	make_color_vector(t_v3	v, float alpha);
 
 static inline t_color	hadamar_prod(t_color a, t_color b)
 {
@@ -29,7 +29,7 @@ static inline t_color	hadamar_prod(t_color a, t_color b)
 	color.r = a.r * b.r;
 	color.g = a.g * b.g;
 	color.b = a.b * b.b;
-	color.a = 1;
+	color.a = 1.0f;
 	return (color);
 }
 

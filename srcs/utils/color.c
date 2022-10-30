@@ -12,7 +12,7 @@
 
 #include "color.h"
 
-inline t_color	make_color_vector(t_v3	v, double alpha)
+inline t_color	make_color_vector(t_v3	v, float alpha)
 {
 	t_color	color;
 

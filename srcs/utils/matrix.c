@@ -13,7 +13,7 @@
 #include "transformation.h"
 #include <stdio.h>
 
-static inline t_m4	*inv_s(double a[4][4], double s[6], double c[6], double d)
+static inline t_m4	*inv_s(float a[4][4], float s[6], float c[6], float d)
 {
 	t_m4	*i;
 
@@ -60,11 +60,11 @@ inline t_m4	get_transposed(t_m4	*matrix)
 	return (transpose);
 }
 
-inline t_m4	*get_inverse(t_m4 m)
+static inline t_m4	*inverse(t_m4 m)
 {
-	double	s[6];
-	double	c[6];
-	double	det;
+	float	s[6];
+	float	c[6];
+	float	det;
 
 	s[1] = m.data[0][0] * m.data[1][2] - m.data[1][0] * m.data[0][2];
 	s[0] = m.data[0][0] * m.data[1][1] - m.data[1][0] * m.data[0][1];
@@ -104,4 +104,18 @@ t_m4	copy_matrix(t_m4 *matrix)
 		i++;
 	}
 	return (copy);
+}
+
+inline t_m4	get_inverse(t_m4 matrix)
+{
+	t_m4	inv;
+	t_m4	*m;
+
+	m = inverse(matrix);
+	if (m != NULL)
+		inv = copy_matrix(m);
+	else
+		inv = get_identity_matrix();
+	free(m);
+	return (inv);
 }

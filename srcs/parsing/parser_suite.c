@@ -16,14 +16,14 @@ bool	parse_sphere(char **tokens, t_app *app)
 {
 	t_point		origin;
 	t_v3		data[3];
-	double		radius;
+	float		radius;
 
 	app->error_message = "Error during parsing, On a sphere";
 	if (!tokens_has_valid_params_nbr(tokens, 4))
 		return (false);
 	if (!parse_a_vector(tokens[1], &origin))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &radius))
+	if (!parse_float_from_str(tokens[2], &radius))
 		return (false);
 	if (!parse_a_vector(tokens[3], &data[2]))
 		return (false);
@@ -61,7 +61,7 @@ bool	parse_cylinder(char **tokens, t_app *app)
 	t_v3	dir;
 	t_point	p;
 	t_v3	v_color;
-	double	conf[2];
+	float	conf[2];
 
 	app->error_message = "Error during parsing, On a cylinder";
 	if (!tokens_has_valid_params_nbr(tokens, 6))
@@ -70,9 +70,9 @@ bool	parse_cylinder(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &dir))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &conf[0]))
+	if (!parse_float_from_str(tokens[3], &conf[0]))
 		return (false);
-	if (!parse_double_from_str(tokens[4], &conf[1]))
+	if (!parse_float_from_str(tokens[4], &conf[1]))
 		return (false);
 	if (!parse_a_vector(tokens[5], &v_color))
 		return (false);

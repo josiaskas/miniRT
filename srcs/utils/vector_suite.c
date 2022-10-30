@@ -34,7 +34,7 @@ inline t_v4	v4_sub(t_v4 a, t_v4 b)
 	return (sub);
 }
 
-inline	t_v4	v4_multi(double k, t_v4 v)
+inline	t_v4	v4_multi(float k, t_v4 v)
 {
 	t_v4	multiplication;
 
@@ -56,7 +56,7 @@ inline t_v4	v3_to_v4(t_v3 v)
 	return (t);
 }
 
-inline t_v4	v4(double r, double g, double b, double a)
+inline t_v4	v4(float r, float g, float b, float a)
 {
 	t_v4	v;
 

@@ -22,12 +22,12 @@ typedef enum e_rotation_type
 }	t_rotation_type;
 
 t_m4	scale_m(t_v3 with);
-t_m4	rotation_z(double ang);
-t_m4	rotation_x(double ang);
-t_m4	rotation_y(double ang);
+t_m4	rotation_z(float ang);
+t_m4	rotation_x(float ang);
+t_m4	rotation_y(float ang);
 t_m4	get_identity_matrix(void);
 t_m4	get_transposed(t_m4	*matrix);
-t_m4	*get_inverse(t_m4 matrix);
+t_m4	get_inverse(t_m4 matrix);
 t_m4	copy_matrix(t_m4 *matrix);
 
 static inline void	init_m4(t_m4 *a)

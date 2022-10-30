@@ -59,7 +59,7 @@ dkms.conf
 ##### MacOS
 # General
 .DS_Store
-.AppleDouble
+.Applefloat
 .LSOverride
 
 #minilibx

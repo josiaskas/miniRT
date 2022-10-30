@@ -12,10 +12,10 @@
 //
 //#include "raytrace.h"
 //
-//static inline t_color	diffuse_light(t_light *l, t_hit *hit, double val[2])
+//static inline t_color	diffuse_light(t_light *l, t_hit *hit, float val[2])
 //{
 //	t_color	color;
-//	double	k;
+//	float	k;
 //
 //	k = hit->object->material->diffuse;
 //	color = v4_multi(val[0] * k, hit->object->color);
@@ -27,8 +27,8 @@
 //{
 //	t_v3	reflect_v;
 //	t_v3	v;
-//	double	reflect_dot_eye;
-//	double	factor;
+//	float	reflect_dot_eye;
+//	float	factor;
 //
 //	v = v3_multi(-1, light_v);
 //	reflect_v = reflect(&hit->normal, &v);
@@ -40,7 +40,7 @@
 //	return (v4_multi(factor, light->color));
 //}
 //
-//static inline bool	is_shadowed(t_scene *world, t_v3 to_l, t_point p, double d)
+//static inline bool	is_shadowed(t_scene *world, t_v3 to_l, t_point p, float d)
 //{
 //	t_ray	*shadow_ray;
 //	t_array	*records;
@@ -64,7 +64,7 @@
 //	t_color	phong[3];
 //	t_color	color;
 //	t_v3	to_light;
-//	double	val[2];
+//	float	val[2];
 //
 //	to_light = v3_sub(light->o, hit->h_point);
 //	val[1] = v3_norm_2(to_light);

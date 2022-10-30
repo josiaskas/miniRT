@@ -34,11 +34,11 @@ typedef enum e_hittable_composition
 
 typedef struct s_material
 {
-	double			shininess;
+	float			shininess;
 	t_composition	type;
-	double			reflexive;
-	double			diffuse;
-	double			specular;
+	float			reflexive;
+	float			diffuse;
+	float			specular;
 	char			*name;
 }	t_material;
 
@@ -54,8 +54,8 @@ typedef struct s_hittable
 	t_v3		trans;
 	t_v3		scale;
 	t_v3		angles;
-	double		radius;
-	double		h;
+	float		radius;
+	float		h;
 	t_v3		dir;
 	t_color		color;
 	char		*name;
@@ -70,16 +70,17 @@ typedef struct s_ray
 
 typedef struct s_camera
 {
-	double	fov;
-	double	hsize;
-	double	vsize;
-	double	aspect;
-	double	pixel_dx;
-	double	pixel_dy;
-	double	half_height;
-	double	half_width;
+	float	fov;
+	float	hsize;
+	float	vsize;
+	float	aspect;
+	float	pixel_dx;
+	float	pixel_dy;
+	float	half_height;
+	float	half_width;
 	t_point	eye;
 	t_point	look_at;
+	t_m4	transform;
 	t_m4	inv_tr;
 }	t_cam;
 
@@ -88,8 +89,8 @@ typedef struct s_hit_record
 	bool		intersection;
 	t_hit_type	type;
 	t_hittable	*object;
-	double		t;
-	double		t_trace[2];
+	float		t;
+	float		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
 	t_point		over_p;
@@ -120,19 +121,19 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
  * use a matrix to transform from camera to view world
  * ray dir is normalized
 */
-static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
+static inline t_ray	*ray_for_pixel(t_cam *cam, float px, float py)
 {
-	double	off[4];
+	float	off[4];
 	t_v4	v[2];
 	t_v3	p[2];
 	t_v3	dir;
 
-	off[0] = (px + 0.5) * cam->pixel_dx;
-	off[1] = (py + 0.5) * cam->pixel_dy;
+	off[0] = (px + 0.5f) * cam->pixel_dx;
+	off[1] = (py + 0.5f) * cam->pixel_dy;
 	off[2] = cam->half_width - off[0];
 	off[3] = cam->half_height - off[1];
-	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[2], off[3], -1, 1));
-	v[0] = multiply_m4_v4(cam->inv_tr, v4(0, 0, 0, 1));
+	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[2], off[3], -1.0f, 1.0f));
+	v[0] = multiply_m4_v4(cam->inv_tr, v4(0.0f, 0.0f, 0.0f, 1.0f));
 	p[1] = v3(v[1].r, v[1].g, v[1].b);
 	p[0] = v3(v[0].r, v[0].g, v[0].b);
 	dir = normalize(v3_sub(p[1], p[0]));
@@ -144,7 +145,7 @@ static inline t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
  * equation is point = ray_origin + (t * ray_dir)
  * ray dir vector need to be normalized to be correct
 */
-static inline t_point	get_point_on_ray_at(double t, t_ray *ray)
+static inline t_point	get_point_on_ray_at(float t, t_ray *ray)
 {
 	t_point	a;
 

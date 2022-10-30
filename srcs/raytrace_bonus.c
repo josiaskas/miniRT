@@ -65,15 +65,13 @@ inline t_color	color_at(t_scene *world, t_ray *ray)
 	return (color);
 }
 
-inline t_color get_pixel_clr(t_scene *scene, double x, double y)
+inline t_color get_pixel_clr(t_scene *scene, float x, float y)
 {
 	t_color color;
 	t_cam *camera;
 	t_ray *ray;
 
 	camera = scene->selected_camera;
-	x = x + 0.5;
-	y = y + 0.5;
 	ray = ray_for_pixel(camera, x, y);
 	color = color_at(scene, ray);
 	free(ray);
@@ -94,7 +92,7 @@ void	*run_thread_pixel(void *thread_info)
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			color = get_pixel_clr(t->scene, (double)x, (double)y);
+			color = get_pixel_clr(t->scene, (float)x, (float)y);
 			t->data[y][x] = color;
 			pthread_mutex_lock(t->write_mutex);
 			t->scene->pix_traced++;

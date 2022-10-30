@@ -30,24 +30,24 @@ inline t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
 	or.data[1][0] = true_up.x;
 	or.data[1][1] = true_up.y;
 	or.data[1][2] = true_up.z;
-	or.data[2][0] = -1 * forward.x;
-	or.data[2][1] = -1 * forward.y;
-	or.data[2][2] = -1 * forward.z;
+	or.data[2][0] = -forward.x;
+	or.data[2][1] = -forward.y;
+	or.data[2][2] = -forward.z;
 	return (m4_multi(or, translate_m(v3_multi(-1, from))));
 }
 
-inline bool	update_cam(t_cam *cam, double hsize, double vsize, double fov)
+inline bool	update_cam(t_cam *cam, float hsize, float vsize, float fov)
 {
-	double	half_view;
+	float	half_view;
 
 	if (cam)
 	{
 		cam->aspect = vsize / hsize;
-		if (fov >= 180)
-			cam->fov = 179.99;
+		if (fov >= 180.0f)
+			cam->fov = 179.99f;
 		else
 			cam->fov = fov;
-		half_view = tan((cam->fov * (M_PI / 180)) / 2.0);
+		half_view = tanf((cam->fov * 0.01745329251) / 2.0);
 		cam->hsize = 2 * half_view;
 		cam->vsize = cam->aspect * cam->hsize;
 		cam->half_height = half_view;
@@ -59,24 +59,18 @@ inline bool	update_cam(t_cam *cam, double hsize, double vsize, double fov)
 	return (false);
 }
 
-t_cam	*build_camera(t_point origin, t_point look_at, double fov)
+t_cam	*build_camera(t_point origin, t_point look_at, float fov)
 {
-	t_m4	*inv;
-	t_m4	tr;
 	t_cam	*cam;
 
 	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
 	if (cam)
 	{
-		cam->inv_tr = get_identity_matrix();
-		update_cam(cam, (double)W_HEIGHT,(double)W_WIDTH, fov);
+		update_cam(cam, (float)W_HEIGHT,(float)W_WIDTH, fov);
 		cam->eye = origin;
 		cam->look_at = look_at;
-		tr = view_transform(origin, look_at, v3(0,1,0));
-		inv = get_inverse(tr);
-		if (inv != NULL)
-			cam->inv_tr = copy_matrix(inv);
-		free(inv);
+		cam->transform = view_transform(origin, look_at, v3(0,1.0f,0));
+		cam->inv_tr = get_inverse(cam->transform);
 	}
 	return (cam);
 }

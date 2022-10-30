@@ -27,19 +27,19 @@ static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
 	hit->intersection = true;
 	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
 	obj_p = get_point_on_ray_at(hit->t, obj_r);
-	v = v4_sub(v3_to_v4(obj_p), v4(0,0,0,0));
+	v = v4_sub(v3_to_v4(obj_p), v4(0.0f,0.0f,0.0f,0.0f));
 	transpose = get_transposed(&hit->object->inv_tr);
 	v = multiply_m4_v4(transpose, v);
 	hit->normal = normalize(v3(v.r, v.g, v.b));
 	if (hit->inside)
-		hit->normal = v3_multi(-1, hit->normal);
-	hit->over_p= v3_add(hit->h_point, v3_multi(RAY_T_MIN,hit->normal));
+		hit->normal = v3_multi(-1.0f, hit->normal);
+	hit->over_p= v3_add(hit->h_point, v3_multi(0.0015f, hit->normal));
 }
 
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 {
-	double	terms[3];
-	double	t[2];
+	float	terms[3];
+	float	t[2];
 	t_v3	sphere_to_ray;
 	t_ray	*s_ray;
 
@@ -48,8 +48,8 @@ void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 	s_ray = get_transformed_ray(ray, sphere->inv_tr, v3(0, 0, 0));
 	sphere_to_ray = v3_sub(s_ray->o, v3(0, 0, 0));
 	terms[0] = ft_dot(s_ray->dir, s_ray->dir);
-	terms[1] = 2.0 * ft_dot(s_ray->dir, sphere_to_ray);
-	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray) - 1.0;
+	terms[1] = 2.0f * ft_dot(s_ray->dir, sphere_to_ray);
+	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray) - 1.0f;
 	if (solve_quad(terms, &t[0], &t[1]))
 	{
 		hit->t_trace[0] = t[0];
