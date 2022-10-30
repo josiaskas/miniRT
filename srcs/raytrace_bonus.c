@@ -12,6 +12,7 @@
 
 #include "../includes/minirt.h"
 #include "../includes/multithread.h"
+#include "../includes/light.h"
 
 // clear all data stored to prepare a new frame
 inline void	init_raytracing(t_app *app)
@@ -115,5 +116,6 @@ bool	render(t_app *app)
 	run_threads(run_thread_pixel, app->scene, app->data);
 	app->scene->pix_traced = 0;
 	printf("\033[0;32m\nFinished\033[0m\n");
+	app->conf.rerender = true;
 	return (true);
 }

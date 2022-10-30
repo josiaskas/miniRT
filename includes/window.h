@@ -27,8 +27,6 @@
 int		write_info_section(t_app *app, void *mlx, void *win);
 int		mouse_pressed(int button, int x, int y, t_app *app);
 int		mouse_release(int button, int x, int y, t_app *app);
-int		mouse_moved(int x, int y, t_app *app);
-int		ft_zoom_hook(int button, t_app *app);
 
 void	start_selecting_mode(t_app *app, int x, int y);
 int		key_pressed_hook(int key, t_app *app);

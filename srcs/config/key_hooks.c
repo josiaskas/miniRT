@@ -12,7 +12,7 @@
 
 #include "window.h"
 
-static inline int	prepare_camera_move(int key, t_app *app)
+static int	prepare_camera_move(int key, t_app *app)
 {
 	t_cam	*cam;
 	double	step;
@@ -33,7 +33,7 @@ static inline int	prepare_camera_move(int key, t_app *app)
 
 int	key_pressed_hook(int key, t_app *app)
 {
-	if (key == MAIN_PAD_ESC)
+	if ((key == MAIN_PAD_ESC) || (key == MAIN_PAD_Q))
 		close_window(app);
 	else if ((key == ARROW_UP) || (key == ARROW_DOWN)
 		|| (key == ARROW_LEFT) || (key == ARROW_RIGHT))

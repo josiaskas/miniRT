@@ -12,7 +12,7 @@
 
 #include "raytrace.h"
 
-static inline void	add_plastic_materials(t_array *m_list)
+static void	add_plastic_materials(t_array *m_list)
 {
 	t_material	*plastic;
 
@@ -29,7 +29,7 @@ static inline void	add_plastic_materials(t_array *m_list)
 	}
 }
 
-static inline void	add_metallic_materials(t_array *m_list)
+static void	add_metallic_materials(t_array *m_list)
 {
 	t_material	*metallic;
 

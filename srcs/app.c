@@ -54,19 +54,6 @@ int	watcher(t_app *app)
 	return (0);
 }
 
-//int	no_event_hook(t_app	*app)
-//{
-//	int	x;
-//	int	y;
-//
-//	if (app->mouse->b_pressed)
-//	{
-//		mlx_mouse_get_pos(app->window, &x, &y);
-//		return (mouse_moved(x, y, app));
-//	}
-//	return (0);
-//}
-
 // loop and call hooks function on event
 void	app_loop(t_app *app)
 {

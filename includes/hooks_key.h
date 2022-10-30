@@ -17,6 +17,7 @@
 # define MAIN_PAD_D 2
 # define MAIN_PAD_U 32
 # define MAIN_PAD_T 17
+# define MAIN_PAD_Q 12
 # define MAIN_PAD_R 15
 # define MAIN_PAD_F 3
 # define MAIN_PAD_V 9

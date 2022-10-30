@@ -109,7 +109,7 @@ inline static bool	solve_quad(const double terms[], double *t0, double *t1)
 	return (true);
 }
 
-static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
+static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 {
 	t_hit	*hit;
 
@@ -121,7 +121,7 @@ static t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 		hit->t = RAY_T_MAX;
 		hit->type = obj->type;
 		hit->ray = ray;
-		hit->normal = v3(0,0,0);
+		hit->normal = v3(0.0f,0.0f,0.0f);
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
 		else if (obj->type == e_hit_plane)
@@ -147,9 +147,14 @@ static inline	t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 		{
 			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
 			hit = do_intersect(ray, obj);
-			ft_push(records, hit);
-			if ((l == true) && (hit->intersection == true))
-				return (records);
+			if (hit->intersection)
+			{
+				ft_push(records, hit);
+				if ((l == true) && (hit->intersection == true))
+					return (records);
+			}
+			else
+				free(hit);
 			i++;
 		}
 	}

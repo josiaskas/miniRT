@@ -22,12 +22,13 @@ inline void	init_raytracing(t_app *app)
 	app->error_code = 0;
 	app->error_message = NULL;
 	scene = app->scene;
-	if (app->data)
-		free_array((void **)app->data, W_HEIGHT);
-	app->data = (t_color **)ft_calloc((W_HEIGHT), sizeof(t_color *));
-	i = 0;
-	while (i < W_HEIGHT)
-		app->data[i++] = ft_calloc(W_WIDTH, sizeof (t_color));
+	if (!app->data)
+	{
+		app->data = (t_color **)ft_calloc((W_HEIGHT), sizeof(t_color *));
+		i = 0;
+		while (i < W_HEIGHT)
+			app->data[i++] = ft_calloc(W_WIDTH, sizeof (t_color));
+	}
 	if (!scene->selected_camera)
 		scene->selected_camera = ft_get_elem(scene->cameras, 0);
 }
@@ -103,5 +104,6 @@ bool	render(t_app *app)
 	}
 	printf("\033[0;32m\nFinished\033[0m\n");
 	app->scene->pix_traced = 0;
+	app->conf.rerender = true;
 	return (true);
 }
