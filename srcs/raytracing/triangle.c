@@ -11,10 +11,12 @@
 /* ************************************************************************** */
 
 #include "raytrace.h"
+#include "parser.h"
 
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color)
 {
 	t_hittable	*triangle;
+	t_color		color;
 
 	triangle = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (triangle)
@@ -23,8 +25,10 @@ bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color)
 		triangle->p1 = p1;
 		triangle->p2 = p2;
 		triangle->p3 = p3;
-		triangle->color = make_color_vector(v_color, 1);
-		triangle->material = ft_get_elem(scene->materials, 0);
+		color = make_color_vector(v_color, 1);
+		triangle->material = build_default_material(color, 0.3f, 0.7f,200.0f);
+		triangle->tr = get_identity_matrix();
+		triangle->inv_tr = get_identity_matrix();
 		ft_push(scene->hittable, triangle);
 		return (true);
 	}

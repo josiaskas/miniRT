@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 15:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:46:12 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:40:40 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define RAY_H
 # include "vector.h"
 # include "color.h"
-# include "transformation.h"
 
 typedef enum e_hittable_type
 {
@@ -32,14 +31,26 @@ typedef enum e_hittable_composition
 	e_glass
 }	t_composition;
 
+typedef enum e_hittable_pattern
+{
+	e_normal_pattern,
+	e_stripped_pattern,
+	e_ring_pattern,
+	e_ring_gradient,
+	e_ring_image,
+}	t_pattern;
+
 typedef struct s_material
 {
 	float			shininess;
 	t_composition	type;
+	t_pattern		pattern;
 	float			reflexive;
 	float			diffuse;
 	float			specular;
-	char			*name;
+	t_color			main;
+	t_color			second;
+	t_color			third;
 }	t_material;
 
 typedef struct s_hittable
@@ -57,9 +68,8 @@ typedef struct s_hittable
 	float		radius;
 	float		h;
 	t_v3		dir;
-	t_color		color;
 	char		*name;
-	t_material	*material;
+	t_material	material;
 }	t_hittable;
 
 typedef struct s_ray
@@ -93,6 +103,7 @@ typedef struct s_hit_record
 	float		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
+	t_point		h_point_obj_coord;
 	t_point		over_p;
 	t_v3		normal;
 	t_v3		r;
@@ -105,7 +116,7 @@ typedef struct s_hit_record
 */
 static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 {
-	t_ray		*ray;
+	t_ray	*ray;
 
 	ray = (t_ray *)ft_calloc(1, sizeof(t_ray));
 	if (ray)
@@ -116,36 +127,15 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 	return (ray);
 }
 
-/*
- * return a ray from camera eye to the pixel
- * use a matrix to transform from camera to view world
- * ray dir is normalized
-*/
-static inline t_ray	*ray_for_pixel(t_cam *cam, float px, float py)
-{
-	float	off[4];
-	t_v4	v[2];
-	t_v3	p[2];
-	t_v3	dir;
-
-	off[0] = (px + 0.5f) * cam->pixel_dx;
-	off[1] = (py + 0.5f) * cam->pixel_dy;
-	off[2] = cam->half_width - off[0];
-	off[3] = cam->half_height - off[1];
-	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[2], off[3], -1.0f, 1.0f));
-	v[0] = multiply_m4_v4(cam->inv_tr, v4(0.0f, 0.0f, 0.0f, 1.0f));
-	p[1] = v3(v[1].r, v[1].g, v[1].b);
-	p[0] = v3(v[0].r, v[0].g, v[0].b);
-	dir = normalize(v3_sub(p[1], p[0]));
-	return (build_ray(p[0], dir));
-}
+t_ray	*ray_for_pixel(t_cam *cam, float px, float py);
+t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o);
 
 /*
  * Return a Point according to t with a ray, parametric equation.
  * equation is point = ray_origin + (t * ray_dir)
  * ray dir vector need to be normalized to be correct
 */
-static inline t_point	get_point_on_ray_at(float t, t_ray *ray)
+static inline t_point	get_point_on_ray_at(const float t, t_ray *ray)
 {
 	t_point	a;
 
@@ -153,21 +143,6 @@ static inline t_point	get_point_on_ray_at(float t, t_ray *ray)
 	a.y = ray->o.y + (t * ray->dir.y);
 	a.z = ray->o.z + (t * ray->dir.z);
 	return (a);
-}
-
-static inline t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o)
-{
-	t_ray	*tr_ray;
-	t_v4	o;
-	t_v4	dir;
-	t_v4	oo;
-
-	o = multiply_m4_v4(transform, v3_to_v4(ray->o));
-	oo = multiply_m4_v4(transform, v3_to_v4(sp_o));
-	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
-	dir = v4_sub(dir, oo);
-	tr_ray = build_ray(v3(o.r, o.g, o.b), v3(dir.r, dir.g, dir.b));
-	return (tr_ray);
 }
 
 #endif

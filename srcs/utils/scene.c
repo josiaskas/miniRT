@@ -6,54 +6,23 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 16:39:32 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:45:26 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 
-static void	add_plastic_materials(t_array *m_list)
-{
-	t_material	*plastic;
-
-	plastic = (t_material *)ft_calloc(1, sizeof(t_material));
-	if (plastic)
-	{
-		plastic->type = e_plastic;
-		plastic->name = "PLASTIC";
-		plastic->shininess = 200;
-		plastic->reflexive = 0;
-		plastic->diffuse = 0.7;
-		plastic->specular = 0.3;
-		ft_push(m_list, plastic);
-	}
-}
-
-static void	add_metallic_materials(t_array *m_list)
-{
-	t_material	*metallic;
-
-	metallic = (t_material *)ft_calloc(1, sizeof(t_material));
-	if (metallic)
-	{
-		metallic->type = e_metallic;
-		metallic->name = "METAL";
-		metallic->shininess = 200;
-		metallic->reflexive = 0.5;
-		metallic->diffuse = 0.8;
-		metallic->specular = 0.2;
-		ft_push(m_list, metallic);
-	}
-}
-
 void	printProgress(int count)
 {
-	float			percentage;
+	float	percentage;
+	int		val;
+	int		lpad;
+	int		rpad;
 
 	percentage = (float)count / (((float)W_HEIGHT - 1) * (float)W_WIDTH);
-	int val = (int) (percentage * 100);
-	int lpad = (int) (percentage * PBWIDTH);
-	int rpad = PBWIDTH - lpad;
+	val = (int)(percentage * 100);
+	lpad = (int)(percentage * PBWIDTH);
+	rpad = PBWIDTH - lpad;
 	printf("\r%3d%% [%.*s%*s]", val, lpad, PBSTR, rpad, "");
 }
 
@@ -69,10 +38,7 @@ inline t_scene	*init_scene(void)
 		scene->lights = ft_new_array();
 		scene->cameras = ft_new_array();
 		scene->ambiant.intensity = 0;
-		scene->materials = ft_new_array();
 		scene->names = ft_new_array();
-		add_plastic_materials(scene->materials);
-		add_metallic_materials(scene->materials);
 	}
 	return (scene);
 }
@@ -85,7 +51,6 @@ void	free_scene(t_scene *scene)
 		ft_free_d_array(scene->hittable);
 		ft_free_d_array(scene->lights);
 		ft_free_d_array(scene->cameras);
-		ft_free_d_array(scene->materials);
 		ft_free_d_array(scene->names);
 		free(scene);
 	}

@@ -29,8 +29,8 @@ bool	parse_sphere(char **tokens, t_app *app)
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
-	data[0] = v3_multi(radius, v3(1, 1, 1));
-	data[1] = v3(0, 0, 0);
+	data[0] = v3_multi(radius, v3(1.0f, 1.0f, 1.0f));
+	data[1] = v3(0.0f, 0.0f, 0.0f);
 	return (build_sphere(app->scene, origin, data));
 }
 
@@ -58,31 +58,32 @@ bool	parse_plan(char **tokens, t_app *app)
 
 bool	parse_cylinder(char **tokens, t_app *app)
 {
-	t_v3	dir;
-	t_point	p;
-	t_v3	v_color;
-	float	conf[2];
+	t_point		p;
+	t_v3		data[5];
+	float		conf[2];
 
 	app->error_message = "Error during parsing, On a cylinder";
 	if (!tokens_has_valid_params_nbr(tokens, 6))
 		return (false);
 	if (!parse_a_vector(tokens[1], &p))
 		return (false);
-	if (!parse_a_vector(tokens[2], &dir))
+	if (!parse_a_vector(tokens[2], &data[3]))
 		return (false);
 	if (!parse_float_from_str(tokens[3], &conf[0]))
 		return (false);
 	if (!parse_float_from_str(tokens[4], &conf[1]))
 		return (false);
-	if (!parse_a_vector(tokens[5], &v_color))
+	if (!parse_a_vector(tokens[5], &data[2]))
 		return (false);
-	if (!all_vector_coord_are_in_range(-1, 1, &dir))
+	if (!all_vector_coord_are_in_range(-1, 1, &data[3]))
 		return (false);
-	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
 	conf[0] = conf[0] / 2;
-	dir = normalize(dir);
-	return (build_cy(app->scene, p, dir, v_color, conf));
+	data[0] = v3_multi((conf[0] / 2.0f), v3(1.0f, 1.0f, 1.0f));
+	data[1] = v3(45.0f, 45.0f, 45.0f);
+	transform_to_rad_and_check(&data[1]);
+	return (build_cy(app->scene, p, data, conf[1]));
 }
 
 bool	parse_triangle(char **tokens, t_app *app)

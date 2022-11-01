@@ -6,13 +6,13 @@
 #    By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/14 18:37:04 by jkasongo          #+#    #+#              #
-#    Updated: 2022/10/22 15:30:30 by jkasongo         ###   ########.fr        #
+#    Updated: 2022/10/31 18:39:24 by jkasongo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = miniRT
 CC = clang
-CFLAGS = -Wall -Wextra -Werror -Ofast
+CFLAGS = -Wall -Wextra -Werror -Ofast -fno-strict-aliasing
 INCLUDES_DIR = ./includes
 OBJS_DIR = ./objs
 OBJS_BONUS_DIR = ./objs_bonus
@@ -30,7 +30,8 @@ RESET_COLOR = \033[0m
 
 #utils sources
 UTILS_DIR = utils/
-UTILS_SRCS = vector.c vector_suite.c color.c camera.c scene.c transformations.c matrix.c
+UTILS_SRCS = vector.c vector_suite.c vector_op.c color.c ray.c camera.c scene.c \
+			 transformations.c matrix.c matrix_op.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources

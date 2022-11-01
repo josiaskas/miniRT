@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 21:33:52 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:02:16 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ t_cam	*build_camera(t_point origin, t_point look_at, float fov)
 	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
 	if (cam)
 	{
-		update_cam(cam, (float)W_HEIGHT,(float)W_WIDTH, fov);
+		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
 		cam->eye = origin;
 		cam->look_at = look_at;
-		cam->transform = view_transform(origin, look_at, v3(0,1.0f,0));
+		cam->transform = view_transform(origin, look_at, v3(0.0f, 1.0f, 0.0f));
 		cam->inv_tr = get_inverse(cam->transform);
 	}
 	return (cam);

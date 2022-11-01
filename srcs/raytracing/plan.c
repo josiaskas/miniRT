@@ -3,15 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   plan.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 20:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/09/23 23:34:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:39:07 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 #include "parser.h"
+
+void	ft_compute_hit(t_hit *hit)
+{
+	if (hit->object->type == e_hit_sphere)
+		compute_sphere_hit(hit);
+	else if (hit->object->type == e_hit_cylinder)
+		compute_cylinder_hit(hit);
+}
 
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
 {
@@ -22,9 +30,10 @@ void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
 	{
 		hit->intersection = true;
 		hit->normal = plan->dir;
-		hit->t = ft_dot(plan->dir,v3_sub(plan->o, ray->o)) / nv;
+		hit->t = ft_dot(plan->dir, v3_sub(plan->o, ray->o)) / nv;
 		hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
-		hit->over_p= v3_add(hit->h_point, v3_multi(RAY_T_MIN,hit->normal));
+		hit->h_point_obj_coord = hit->h_point;
+		hit->over_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 	}
 }
 
@@ -33,6 +42,7 @@ bool	build_plane(t_scene *scn, t_point p, t_v3 normal, t_v3 v_color)
 	t_hittable	*plan;
 	t_v3		scale;
 	t_v3		angles;
+	t_color		color;
 
 	plan = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (plan)
@@ -40,8 +50,8 @@ bool	build_plane(t_scene *scn, t_point p, t_v3 normal, t_v3 v_color)
 		plan->type = e_hit_plane;
 		plan->o = p;
 		plan->dir = normal;
-		plan->color = make_color_vector(v_color, 1.0f);
-		plan->material = ft_get_elem(scn->materials, 0);
+		color = make_color_vector(v_color, 1.0f);
+		plan->material = build_default_material(color, 0.3f, 0.7f,200.0f);;
 		plan->trans = plan->o;
 		scale = v3(1.0f, 1.0f, 1.0f);
 		angles = v3(0, 0, 0);

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 17:25:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:44:34 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:56:44 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct s_thread_v
 	pthread_t		thread_id;
 	t_color			**data;
 	t_scene			*scene;
-	int 			start;
+	int				start;
 	int				end;
 	pthread_mutex_t	*write_mutex;
 }	t_thread;

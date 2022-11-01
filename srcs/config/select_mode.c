@@ -45,7 +45,7 @@ static	inline void	sphere_edition(t_hittable *sphere)
 		   sphere->scale.x, sphere->scale.y, sphere->scale.z);
 	get_line_float("scale-radius", &r);
 	get_line_color(&color);
-	sphere->color = color;
+	sphere->material.main = color;
 	scale = v3_multi(r, scale);
 	transform_sphere(sphere, translate, v3(0, 0, 0), scale);
 }

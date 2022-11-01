@@ -6,25 +6,25 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/09 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 15:31:05 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:53:44 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "transformation.h"
 
-inline t_m4	get_identity_matrix(void)
-{
-	t_m4	identity;
 
-	init_m4(&identity);
-	identity.data[0][0] = 1;
-	identity.data[1][1] = 1;
-	identity.data[2][2] = 1;
-	identity.data[3][3] = 1;
-	return (identity);
+t_m4	translate_m(t_v3 with)
+{
+	t_m4	tr_matrix;
+
+	tr_matrix = get_identity_matrix();
+	tr_matrix.data[0][3] = with.x;
+	tr_matrix.data[1][3] = with.y;
+	tr_matrix.data[2][3] = with.z;
+	return (tr_matrix);
 }
 
-inline t_m4	scale_m(t_v3 with)
+t_m4	scale_m(t_v3 with)
 {
 	t_m4	homothetie;
 
@@ -35,7 +35,7 @@ inline t_m4	scale_m(t_v3 with)
 	return (homothetie);
 }
 
-inline t_m4	rotation_z(float ang)
+t_m4	rotation_z(float ang)
 {
 	t_m4	rot_matrix;
 	float	cos_val;
@@ -55,7 +55,7 @@ inline t_m4	rotation_z(float ang)
 	return (rot_matrix);
 }
 
-inline t_m4	rotation_x(float ang)
+t_m4	rotation_x(float ang)
 {
 	t_m4	rot_matrix;
 	float	cos_val;
@@ -75,7 +75,7 @@ inline t_m4	rotation_x(float ang)
 	return (rot_matrix);
 }
 
-inline t_m4	rotation_y(float ang)
+t_m4	rotation_y(float ang)
 {
 	t_m4	rot_matrix;
 	float	cos_val;

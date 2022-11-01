@@ -45,24 +45,3 @@ inline	t_v4	v4_multi(float k, t_v4 v)
 	return (multiplication);
 }
 
-inline t_v4	v3_to_v4(t_v3 v)
-{
-	t_v4	t;
-
-	t.r = v.x;
-	t.g = v.y;
-	t.b = v.z;
-	t.a = 1;
-	return (t);
-}
-
-inline t_v4	v4(float r, float g, float b, float a)
-{
-	t_v4	v;
-
-	v.r = r;
-	v.g = g;
-	v.b = b;
-	v.a = a;
-	return (v);
-}

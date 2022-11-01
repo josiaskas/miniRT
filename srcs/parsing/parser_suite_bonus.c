@@ -6,22 +6,22 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:50:37 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:50:43 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:11:45 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-static inline bool	transform_to_rad_and_check(t_v3 *v)
+bool	transform_to_rad_and_check(t_v3 *v)
 {
 	if (!all_vector_coord_are_in_range(-360, 360, v))
 		return (false);
 	if (v->x != 0)
-		v->x = (v->x * M_PI) / 180;
+		v->x = v->x * 0.01745329251f;
 	if (v->y != 0)
-		v->y = (v->y * M_PI) / 180;
+		v->y = v->y * 0.01745329251f;
 	if (v->z != 0)
-		v->z = (v->z * M_PI) / 180;
+		v->z = v->z * 0.01745329251f;
 	return (true);
 }
 
@@ -46,4 +46,15 @@ bool	parse_sphere_bonus(char **tokens, t_app *app)
 	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
 	return (build_sphere(app->scene, origin, data));
+}
+
+bool	all_vector_coord_are_in_range(float min, const float max, const t_v3 *v)
+{
+	if (v->x < min || v->x > max)
+		return (false);
+	if (v->y < min || v->y > max)
+		return (false);
+	if (v->z < min || v->z > max)
+		return (false);
+	return (true);
 }

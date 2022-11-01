@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 22:17:56 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 22:17:57 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:34:10 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@
 //	return (false);
 //}
 
+/*
 bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
 {
 	float	y[2];
@@ -58,52 +59,93 @@ bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
 	}
 	return (false);
 }
+*/
+
+void	compute_cylinder_hit(t_hit *hit)
+{
+	t_v4	v;
+
+	if (hit->type != e_hit_cylinder)
+		return ;
+	v = v3_to_v4(hit->h_point_obj_coord);
+	v.b = 0.0f;
+	v.a = 0.0f;
+	v = multiply_m4_v4(get_transposed(&hit->object->inv_tr), v);
+	hit->normal = normalize(v3(v.r, v.g, v.b));
+	if (hit->inside)
+		hit->normal = v3_multi(-1.0f, hit->normal);
+	hit->over_p = v3_add(hit->h_point, v3_multi(0.0015f, hit->normal));
+}
+
+static inline void	set_point(t_hit *hit, t_ray *ray)
+{
+	float z[2];
+
+	z[0] = ray->o.z + (hit->t_trace[0] * ray->dir.z);
+	if ((0 < z[0]) && (z[0] < 1.0f))
+	{
+		hit->t = hit->t_trace[0];
+		hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
+		hit->h_point_obj_coord = get_point_on_ray_at(hit->t, ray);
+		hit->intersection = true;
+		return ;
+	}
+	z[1] = ray->o.z + (hit->t_trace[1] * ray->dir.z);
+	if ((0 < z[1]) && (z[1] < 1.0f))
+	{
+		hit->t = hit->t_trace[1];
+		hit->intersection = true;
+		hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
+		hit->h_point_obj_coord = get_point_on_ray_at(hit->t, ray);
+	}
+}
 
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 {
 	float	terms[3];
 	float	t[2];
-	t_ray	*s_ray;
+	t_ray	*o_r;
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	s_ray = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
-	terms[0] = (s_ray->dir.x * s_ray->dir.x) + (s_ray->dir.z * s_ray->dir.z);
-	if ((terms[0] <= 0.00005) || (terms[0] >= -0.00005))
+	o_r = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
+	terms[0] = (o_r->dir.x * o_r->dir.x) + (o_r->dir.y * o_r->dir.y);
+	if ((terms[0] <= 0.00005f) || (terms[0] >= -0.00005f))
 	{
-		terms[1] = (2 * s_ray->o.x * s_ray->dir.x) + (2 * s_ray->o.z * s_ray->dir.z);
-		terms[2] = (s_ray->o.x * s_ray->o.x) + (s_ray->o.z * s_ray->o.z) - 1.0;
+		terms[1] = 2.0f * (o_r->o.x * o_r->dir.x + o_r->o.y * o_r->dir.y);
+		terms[2] = (o_r->o.x * o_r->o.x) + (o_r->o.y * o_r->o.y) - 1.0f;
 		if (solve_quad(terms, &t[0], &t[1]))
 		{
 			hit->t_trace[0] = t[0];
 			hit->t_trace[1] = t[1];
-			hit->intersection = check_cylinder_cap(hit, s_ray, cyl);
+			if ((hit->t_trace[0] < 0) && (hit->t_trace[1] > 0))
+				hit->inside = true;
+			set_point(hit, o_r);
 		}
 	}
-	free(s_ray);
+	free(o_r);
 }
 
-bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, float t[])
+bool	build_cy(t_scene *scn, t_point o, t_v3 data[4], float h)
 {
 	t_hittable	*cy;
-	t_v3		scale;
-	t_v3		angles;
+	t_color		color;
 
 	cy = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (cy)
 	{
+		cy->o = o;
 		cy->type = e_hit_cylinder;
-		cy->o = p;
-		cy->p1 = v3_add(p, v3_multi( t[1], dir));
-		cy->dir = dir;
-		cy->radius = t[0];
-		cy->h = t[1];
-		cy->color = make_color_vector(v_color, 1);
-		cy->material = ft_get_elem(scn->materials, 0);
-		scale = v3(1.0, 1.0, 1.0);
-		angles = v3(0, 0, 0);
-		cy->tr = get_tr_matrix(cy->o, angles, scale, false);
-		cy->inv_tr = get_tr_matrix(cy->o, angles, scale, true);
+		cy->radius = 1.0f;
+		cy->scale = data[0];
+		cy->angles = data[1];
+		cy->trans = cy->o;
+		cy->dir = normalize(data[3]);
+		cy->h = h;
+		color = make_color_vector(data[2], 1);
+		cy->material = build_default_material(color, 0.3f, 0.7f,200.0f);
+		cy->tr = get_tr_matrix(o, data[1], data[0], false);
+		cy->inv_tr = get_tr_matrix(o, data[1], data[0], true);
 		cy->name = add_name(scn, "Cylinder parsed o_n_", true);
 		ft_push(scn->hittable, cy);
 		return (true);
@@ -111,7 +153,7 @@ bool build_cy(t_scene *scn, t_point p, t_v3 dir, t_v3 v_color, float t[])
 	return (false);
 }
 
-bool transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc)
+bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc)
 {
 	if (cylinder)
 	{

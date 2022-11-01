@@ -6,13 +6,12 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:54:39 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:57:54 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:36:20 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minirt.h"
 #include "../includes/multithread.h"
-#include "../includes/light.h"
 
 // clear all data stored to prepare a new frame
 inline void	init_raytracing(t_app *app)

@@ -6,13 +6,13 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:34:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 19:32:39 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 19:30:16 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 
-inline void	ft_swap(float *t0, float *t1)
+static void	ft_swap(float *t0, float *t1)
 {
 	float	temp;
 
@@ -21,15 +21,106 @@ inline void	ft_swap(float *t0, float *t1)
 	*t0 = temp;
 }
 
-inline	void	swap_array_el(t_array_node *node_a, t_array_node *node_b)
+bool	solve_quad(const float terms[], float *t0, float *t1)
 {
-	void	*temp_content;
+	float	discriminant;
+	float	q;
 
-	temp_content = node_a->content;
-	node_a->content = node_b->content;
-	node_b->content = temp_content;
+	discriminant = (terms[1] * terms[1]) - (4 * terms[0] * terms[2]);
+	if (discriminant < 0)
+		return (false);
+	else if (discriminant == 0)
+	{
+		*t0 = -0.5f * (terms[1] / terms[0]);
+		*t1 = *t0;
+	}
+	else
+	{
+		if (terms[1] > 0.0f)
+			q = -0.5f * (terms[1] + sqrtf(discriminant));
+		else
+			q = -0.5f * (terms[1] - sqrtf(discriminant));
+		*t0 = q / terms[0];
+		*t1 = terms[2] / q;
+	}
+	if (*t0 > *t1)
+		ft_swap(t0, t1);
+	return (true);
 }
 
+static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
+{
+	t_hit	*hit;
 
+	hit = (t_hit *)ft_calloc(1, sizeof(t_hit));
+	if (hit)
+	{
+		hit->object = obj;
+		hit->intersection = false;
+		hit->t = RAY_T_MAX;
+		hit->type = obj->type;
+		hit->ray = ray;
+		hit->normal = v3(0.0f, 0.0f, 0.0f);
+		if (obj->type == e_hit_sphere)
+			intersect_sphere(hit, obj, ray);
+		else if (obj->type == e_hit_plane)
+			intersect_plane(hit, obj, ray);
+		else if (obj->type == e_hit_cylinder)
+			intersect_cylinder(hit, obj, ray);
+	}
+	return (hit);
+}
 
+t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
+{
+	t_array		*records;
+	t_hittable	*obj;
+	t_hit		*hit;
+	size_t		i;
 
+	records = ft_new_array();
+	if (records)
+	{
+		i = 0;
+		while (i < scene->hittable->length)
+		{
+			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
+			hit = do_intersect(ray, obj);
+			if (hit->intersection == true)
+			{
+				ft_push(records, hit);
+				if ((l == true) && (hit->intersection == true))
+					return (records);
+			}
+			else
+				free(hit);
+			i++;
+		}
+	}
+	return (records);
+}
+
+t_hit	*get_first_obj_hit(t_array *rec, const float max, float min)
+{
+	size_t	i;
+	float	curr_min;
+	t_hit	*first_hit;
+	t_hit	*hit;
+
+	curr_min = max;
+	first_hit = NULL;
+	i = 0;
+	if (!rec)
+		return (NULL);
+	while (i < rec->length)
+	{
+		hit = (t_hit *)ft_get_elem(rec, i);
+		if (hit->intersection && (hit->t < curr_min) && (hit->t > min))
+		{
+			first_hit = hit;
+			curr_min = hit->t;
+		}
+		i++;
+	}
+	return (first_hit);
+}

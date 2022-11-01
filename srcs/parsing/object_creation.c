@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:52:10 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:52:11 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 20:32:53 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,41 @@ char	*change_obj_name(t_hittable *obj, char *new_name)
 	obj->name = new_name;
 	free(tmp);
 	return (new_name);
+}
+
+/*
+ * Build a normal object material with
+ * colors, specular coefficient , diffuse coefficient and phong shines
+ */
+t_material	build_default_material(t_color clr, float s, float d, float ph)
+{
+	t_material	m;
+
+	m.type = e_plastic;
+	m.specular = s;
+	m.diffuse = d;
+	m.shininess = ph;
+	m.reflexive = 1.0f;
+	m.main = clr;
+	m.pattern = e_normal_pattern;
+	return (m);
+}
+
+/*
+ * Build a stripped object material with
+ * colors, specular coefficient , diffuse coefficient and phong shines
+ */
+t_material	build_stripped(t_color clr[], float s, float d, float ph)
+{
+	t_material	m;
+
+	m.type = e_plastic;
+	m.specular = s;
+	m.diffuse = d;
+	m.shininess = ph;
+	m.reflexive = 1.0f;
+	m.main = clr[0];
+	m.second = clr[1];
+	m.pattern = e_stripped_pattern;
+	return (m);
 }

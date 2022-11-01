@@ -6,19 +6,29 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:52:30 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:53:34 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 22:34:20 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 #include "parser.h"
 
-static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
+void	compute_sphere_hit(t_hit *hit)
 {
-	t_point	obj_p;
 	t_v4	v;
-	t_m4	transpose;
 
+	if (hit->type != e_hit_sphere)
+		return ;
+	v = v4_sub(v3_to_v4(hit->h_point_obj_coord), v4(0.0f, 0.0f, 0.0f, 0.0f));
+	v = multiply_m4_v4(get_transposed(&hit->object->inv_tr), v);
+	hit->normal = normalize(v3(v.r, v.g, v.b));
+	if (hit->inside)
+		hit->normal = v3_multi(-1.0f, hit->normal);
+	hit->over_p = v3_add(hit->h_point, v3_multi(0.0015f, hit->normal));
+}
+
+static inline void	set_point(t_hit *hit, t_ray *obj_r)
+{
 	if (hit->t < 0)
 	{
 		hit->t = RAY_T_MAX;
@@ -26,14 +36,7 @@ static inline void	set_point_and_normal(t_hit *hit, t_ray *obj_r)
 	}
 	hit->intersection = true;
 	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
-	obj_p = get_point_on_ray_at(hit->t, obj_r);
-	v = v4_sub(v3_to_v4(obj_p), v4(0.0f,0.0f,0.0f,0.0f));
-	transpose = get_transposed(&hit->object->inv_tr);
-	v = multiply_m4_v4(transpose, v);
-	hit->normal = normalize(v3(v.r, v.g, v.b));
-	if (hit->inside)
-		hit->normal = v3_multi(-1.0f, hit->normal);
-	hit->over_p= v3_add(hit->h_point, v3_multi(0.0015f, hit->normal));
+	hit->h_point_obj_coord = get_point_on_ray_at(hit->t, obj_r);
 }
 
 void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
@@ -55,12 +58,12 @@ void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 		hit->t_trace[0] = t[0];
 		hit->t_trace[1] = t[1];
 		hit->t = t[0];
-		if ((hit->t_trace[0] < 0) && (hit->t_trace[1]  > 0))
+		if ((hit->t_trace[0] < 0) && (hit->t_trace[1] > 0))
 		{
 			hit->inside = true;
 			hit->t = t[1];
 		}
-		set_point_and_normal(hit, s_ray);
+		set_point(hit, s_ray);
 	}
 	free(s_ray);
 }
@@ -68,15 +71,16 @@ void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3])
 {
 	t_hittable	*sphere;
+	t_color		color;
 
 	sphere = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (sphere)
 	{
 		sphere->type = e_hit_sphere;
 		sphere->o = o;
-		sphere->radius = 1.0;
-		sphere->color = make_color_vector(data[2], 1);
-		sphere->material = ft_get_elem(scn->materials, 0);
+		sphere->radius = 1.0f;
+		color = make_color_vector(data[2], 1.0f);
+		sphere->material = build_default_material(color, 0.3f, 0.7f, 200.0f);
 		sphere->scale = data[0];
 		sphere->angles = data[1];
 		sphere->trans = sphere->o;

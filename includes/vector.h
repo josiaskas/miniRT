@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:47:51 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 18:16:24 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,15 @@ float	v3_norm(t_v3 v);
 t_v3	v3_add(t_v3 a, t_v3 b);
 t_v3	v3_sub(t_v3 a, t_v3 b);
 t_v3	inverse_comp(t_v3 v);
-t_v4	v3_to_v4(t_v3 v);
 t_v4	v4_add(t_v4 a, t_v4 b);
 t_v4	v4_sub(t_v4 a, t_v4 b);
 t_v4	v4_multi(float k, t_v4 v);
-t_v4	v4(float r, float g, float b, float a);
+t_v3	ft_cross(t_v3 a, t_v3 b);
+
+// multiply a vector with a number
+t_v3	v3_multi(float i, t_v3 v);
+// return normalized t_v3
+t_v3	normalize(t_v3 v);
 
 /*
  * Retourne un vecteur créer sur la stack avec (i, j, k)
@@ -60,15 +64,26 @@ static inline t_v3	v3(float i, float j, float k)
 	return (vector);
 }
 
-// multiply a vector with a number
-static inline t_v3	v3_multi(float i, t_v3 v)
+static inline t_v4	v4(float r, float g, float b, float a)
 {
-	t_v3	r;
+	t_v4	v;
 
-	r.x = (i * v.x);
-	r.y = (i * v.y);
-	r.z = (i * v.z);
-	return (r);
+	v.r = r;
+	v.g = g;
+	v.b = b;
+	v.a = a;
+	return (v);
+}
+
+static inline t_v4	v3_to_v4(t_v3 v)
+{
+	t_v4	t;
+
+	t.r = v.x;
+	t.g = v.y;
+	t.b = v.z;
+	t.a = 1;
+	return (t);
 }
 
 /*
@@ -76,35 +91,14 @@ static inline t_v3	v3_multi(float i, t_v3 v)
  * |u| * |v|
  * float
 */
-inline float	ft_dot(t_v3 u, t_v3 v)
+static inline float	ft_dot(t_v3 u, t_v3 v)
 {
 	return ((u.x * v.x) + (u.y * v.y) + (u.z * v.z));
 }
 
-// return normalized  t_v3
-static inline t_v3	normalize(t_v3 v)
-{
-	float	norm;
-
-	norm = sqrt(((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
-	if (norm != 0.f)
-		return (v3_multi((1 / norm), v));
-	return (v3_multi(0, v));
-}
-
-static inline t_v3	ft_cross(t_v3 a, t_v3 b)
-{
-	t_v3	vector;
-
-	vector.x = (a.y * b.z) - (a.z * b.y);
-	vector.y = (a.z * b.x) - (a.x * b.z);
-	vector.z = (a.x * b.y) - (a.y * b.x);
-	return (vector);
-}
-
 static inline t_v3	reflect(t_v3 *normal, t_v3 *in)
 {
-	return (v3_sub(*in, v3_multi(2.0 * ft_dot(*in, *normal), *normal)));
+	return (v3_sub(*in, v3_multi(2.0f * ft_dot(*in, *normal), *normal)));
 }
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 16:41:22 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/10/31 17:45:33 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,12 +50,12 @@ inline t_v3	inverse_comp(t_v3 v)
 {
 	t_v3	i;
 
-	i = v3(0,0,0);
+	i = v3(0.0f, 0.0f, 0.0f);
 	if (v.x != 0)
 		i.x = 1 / v.x;
 	if (v.y != 0)
-		i.y = 1 / v.y;
+		i.y = 1.0f / v.y;
 	if (v.z != 0)
-		i.z = 1 / v.z;
+		i.z = 1.0f / v.z;
 	return (i);
 }
