@@ -24,7 +24,7 @@ void	compute_sphere_hit(t_hit *hit)
 	hit->normal = normalize(v3(v.r, v.g, v.b));
 	if (hit->inside)
 		hit->normal = v3_multi(-1.0f, hit->normal);
-	hit->over_p = v3_add(hit->h_point, v3_multi(0.0015f, hit->normal));
+	hit->over_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN,hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray *obj_r)

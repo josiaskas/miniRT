@@ -33,7 +33,7 @@ t_m4	get_inverse(t_m4 matrix);
 t_m4	copy_matrix(t_m4 *matrix);
 t_v4	multiply_m4_v4(t_m4 m, t_v4 c);
 t_m4	m4_multi(t_m4 a, t_m4 b);
-
+t_m4	quaternion_z(float q0, float q1, float q2, float q3);
 /*
  * return the transformation matrix or the inverse transformation matrix
  * trans:translation vector, angles: vector, scaling vector, is inverse check

@@ -76,11 +76,8 @@ void	compute_cylinder_hit(t_hit *hit)
 	n_world = multiply_m4_v4(get_transposed(&hit->object->inv_tr), n_world);
 	hit->normal = normalize(v3(n_world.r, n_world.g, n_world.b));
 	if (hit->inside)
-	{
 		hit->normal = v3_multi(-1.0f, hit->normal);
-		printf("inside normal (%f, %f, %f)\n", hit->normal.x, hit->normal.y, hit->normal.z);
-	}
-	hit->over_p = v3_add(hit->h_point, v3_multi(0.015f, hit->normal));
+	hit->over_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
@@ -89,7 +86,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[0])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= 0) && (m <= hit->object->h))
+	if ((m >= -(hit->object->h / 2.0f)) && (m <= (hit->object->h / 2.0f)))
 	{
 		hit->t = hit->t_trace[0];
 		hit->intersection = true;
@@ -100,7 +97,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 	}
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[1])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= 0) && (m <= hit->object->h))
+	if ((m >= -(hit->object->h / 2.0f)) && (m <= (hit->object->h / 2.0f)))
 	{
 		hit->t = hit->t_trace[1];
 		hit->intersection = true;
@@ -120,7 +117,7 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	ray_o = get_transformed_ray(ray, cyl->inv_tr, cyl->o);
+	ray_o = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
 	cyl_ray = v3_sub(ray_o->o, cyl->o);
 	terms[0] = ft_dot(ray_o->dir, ray_o->dir)
 		- powf(ft_dot(ray_o->dir, cyl->dir), 2.0f);

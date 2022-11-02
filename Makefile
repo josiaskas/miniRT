@@ -31,7 +31,7 @@ RESET_COLOR = \033[0m
 #utils sources
 UTILS_DIR = utils/
 UTILS_SRCS = vector.c vector_suite.c vector_op.c color.c ray.c camera.c scene.c \
-			 transformations.c matrix.c matrix_op.c
+			 transformations.c matrix.c matrix_op.c quaternion.c
 UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources

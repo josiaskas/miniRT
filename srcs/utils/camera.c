@@ -12,14 +12,13 @@
 
 #include "raytrace.h"
 /*Get the look_at matrix with a translation away from the world*/
-inline t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
+inline t_m4	view_transform(t_v3 from, t_v3 forward, t_v3 up)
 {
-	t_v3	forward;
 	t_v3	left;
 	t_v3	true_up;
 	t_m4	or;
 
-	forward = normalize(v3_sub(to, from));
+	forward = normalize(forward);
 	left = ft_cross(forward, normalize(up));
 	true_up = ft_cross(left, forward);
 	or = get_identity_matrix();
@@ -35,55 +34,49 @@ inline t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up)
 	return (m4_multi(or, translate_m(v3_multi(-1, from))));
 }
 
-static void	build_camera_viewport_vectors(t_cam *cam, t_v3 forward)
+inline bool	update_cam(t_cam *cam, float hsize, float vsize, float fov)
 {
-	t_v3	left;
-	t_v3	true_up;
-	t_v3	v;
+	float	half_view;
 
-	forward = normalize(forward);
-	left = normalize(ft_cross(forward, v3(0.0f, 1.0f, 0.0f)));
-	true_up = normalize(ft_cross(left, forward));
-	cam->u1 = normalize(ft_cross(forward, true_up));
-	cam->u1 = v3_multi((cam->vsize / cam->pixel_x), cam->u1);
-	cam->u2 = normalize(ft_cross(forward, cam->u1));
-	cam->u2 = v3_multi((cam->hsize / cam->pixel_y), cam->u1);
-	cam->r_init = v3_multi((-0.5f * cam->pixel_x), cam->u1);
-	v = v3_multi((-0.5f * cam->pixel_y), cam->u2);
-	cam->r_init = v3_add(cam->r_init, v);
-	cam->r_init =  v3_add(cam->r_init, forward);
-	cam->r_init =  v3_add(cam->r_init, cam->eye);
-}
-
-bool	update_cam(t_cam *cam, float fov, t_point eye, t_v3 dir)
-{
 	if (cam)
 	{
-		cam->aspect = (float)W_WIDTH / (float)W_HEIGHT;
+		cam->aspect = vsize / hsize;
 		if (fov >= 180.0f)
-			fov  = 179.99f;
-		cam->fov = fov * (M_PI / 180.0f);
-		cam->hsize = 2.0f * tanf(cam->fov / 2.0f);
+			cam->fov = 179.99f;
+		else
+			cam->fov = fov;
+		half_view = tanf((cam->fov * 0.01745329251) / 2.0);
+		cam->hsize = 2 * half_view;
 		cam->vsize = cam->aspect * cam->hsize;
-		cam->pixel_x = (float)W_WIDTH;
-		cam->pixel_y = (float)W_HEIGHT;
-		cam->eye = eye;
-		build_camera_viewport_vectors(cam, dir);
+		cam->half_height = half_view;
+		cam->half_width = half_view * cam->aspect;
+		cam->pixel_dx = cam->vsize / vsize;
+		cam->pixel_dy = cam->hsize / hsize;
 		return (true);
 	}
 	return (false);
 }
 
-t_cam	*build_camera(t_point origin, t_v3 dir, float fov)
+t_cam	*build_camera(t_point origin, t_v3 forward, float fov)
 {
 	t_cam	*cam;
+	t_v3	up;
 
 	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
 	if (cam)
 	{
-		update_cam(cam, fov, origin, dir);
-		cam->transform = get_identity_matrix();
-		cam->inv_tr = get_identity_matrix();
+		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
+		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
+		cam->eye = origin;
+		cam->look_at = forward;
+		if (forward.x != 0)
+			up = normalize(v3(((-forward.y) / forward.x), 1, 0));
+		else if (forward.z != 0)
+			up = normalize(v3(0, 1, (-forward.y) / forward.z));
+		else
+			up = v3(1, 0, 0);
+		cam->transform = view_transform(origin, forward, up);
+		cam->inv_tr = get_inverse(cam->transform);
 	}
 	return (cam);
 }
