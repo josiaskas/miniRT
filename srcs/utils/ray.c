@@ -20,21 +20,13 @@
  */
 t_ray	*ray_for_pixel(t_cam *cam, float px, float py)
 {
-	float	off[2];
-	t_v4	v[2];
-	t_v3	p[2];
 	t_v3	dir;
+	t_v3	p_view;
 
-	px = px * cam->pixel_dx;
-	py = py * cam->pixel_dy;
-	off[0] = cam->half_width - px;
-	off[1] = cam->half_height - py;
-	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[0], off[1], -1.0f, 1.0f));
-	v[0] = multiply_m4_v4(cam->inv_tr, v4(0.0f, 0.0f, 0.0f, 1.0f));
-	p[1] = v3(v[1].r, v[1].g, v[1].b);
-	p[0] = v3(v[0].r, v[0].g, v[0].b);
-	dir = normalize(v3_sub(p[1], p[0]));
-	return (build_ray(p[0], dir));
+	p_view = v3_add(v3_multi(px, cam->u1), v3_multi(py , cam->u2));
+	p_view = v3_add(p_view, cam->r_init);
+	dir = normalize(v3_sub(p_view, cam->eye));
+	return (build_ray(p_view, dir));
 }
 
 /*

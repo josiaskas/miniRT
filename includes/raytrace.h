@@ -53,8 +53,7 @@ void	printProgress(int count);
 
 t_cam	*build_camera(t_point origin, t_v3 dir, float fov);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
-bool	update_cam(t_cam *cam, float hsize, float vsize, float fov);
-
+bool	update_cam(t_cam *cam, float fov, t_point eye, t_v3 dir);
 bool	bld_t(t_scene *scene, t_point p1, t_point p2, t_point p3, t_v3 v_color);
 
 t_color	color_at(t_scene *world, t_ray *ray);

@@ -92,11 +92,11 @@ bool	render(t_app *app)
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			x_pixel = x;
-			y_pixel = y;
+			x_pixel = (float)x + 0.5f;
+			y_pixel = (float)y + 0.5f;
 			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
 			app->scene->pix_traced++;
-			printProgress(app->scene->pix_traced);
+			//printProgress(app->scene->pix_traced);
 			x++;
 		}
 		y++;

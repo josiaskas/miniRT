@@ -56,6 +56,31 @@ bool	parse_plan(char **tokens, t_app *app)
 	return (build_plane(app->scene, p, normal, v_color));
 }
 
+//static inline t_v3 get_angles(t_v3 dir)
+//{
+//	t_v3	left;
+//	t_v3	true_up;
+//	t_v3	angles;
+//
+//	dir = normalize(dir);
+//	left = ft_cross(dir, normalize(v3(0, 1.0f, 0)));
+//	true_up = ft_cross(left, dir);
+//
+//	left = normalize(left);
+//	true_up = normalize(true_up);
+//
+//	angles.z = acosf(ft_dot(dir, v3(0, 0, 1.0f)));
+//	angles.x = acosf(ft_dot(true_up, v3(0, 1.0f, 0)));
+//	angles.y = acosf(ft_dot(true_up, v3(1.0f, 0, 0)));
+//	if (isnan(angles.z))
+//		angles.z = 0;
+//	if (isnan(angles.x))
+//		angles.x = 0;
+//	if (isnan(angles.y))
+//		angles.y = 0;
+//	printf("angles (%f, %f, %f)\n", angles.x, angles.y, angles.z);
+//	return (angles);
+//}
 bool	parse_cylinder(char **tokens, t_app *app)
 {
 	t_point		p;
@@ -80,8 +105,8 @@ bool	parse_cylinder(char **tokens, t_app *app)
 	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
 	conf[0] = conf[0] / 2;
-	data[0] = v3_multi((conf[0] / 2.0f), v3(1.0f, 1.0f, 1.0f));
-	data[1] = v3(45.0f, 45.0f, 45.0f);
+	data[0] = v3((conf[0] / 2.0f), 1.0f, 1.0f);
+	data[1] = v3(0.0f, 0.0f, 0.0f);
 	transform_to_rad_and_check(&data[1]);
 	return (build_cy(app->scene, p, data, conf[1]));
 }

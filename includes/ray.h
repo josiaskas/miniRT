@@ -84,14 +84,14 @@ typedef struct s_camera
 	float	hsize;
 	float	vsize;
 	float	aspect;
-	float	pixel_dx;
-	float	pixel_dy;
-	float	half_height;
-	float	half_width;
+	float	pixel_x;
+	float	pixel_y;
 	t_point	eye;
-	t_point	look_at;
 	t_m4	transform;
 	t_m4	inv_tr;
+	t_v3	u1;
+	t_v3	u2;
+	t_v3	r_init;
 }	t_cam;
 
 typedef struct s_hit_record
@@ -100,6 +100,7 @@ typedef struct s_hit_record
 	t_hit_type	type;
 	t_hittable	*object;
 	float		t;
+	float		m;
 	float		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
