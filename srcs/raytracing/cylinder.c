@@ -118,7 +118,7 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
 	ray_o = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
-	cyl_ray = v3_sub(ray_o->o, cyl->o);
+	cyl_ray = v3_sub(ray_o->o, v3(0, 0, 0));
 	terms[0] = ft_dot(ray_o->dir, ray_o->dir)
 		- powf(ft_dot(ray_o->dir, cyl->dir), 2.0f);
 	terms[1] = ft_dot(ray_o->dir, cyl_ray)
