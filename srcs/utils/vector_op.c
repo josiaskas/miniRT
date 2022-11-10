@@ -13,7 +13,7 @@
 #include "vector.h"
 
 // multiply a vector with a number
-t_v3	v3_multi(float i, t_v3 v)
+t_v3	v3_multi(double i, t_v3 v)
 {
 	t_v3	r;
 
@@ -26,7 +26,7 @@ t_v3	v3_multi(float i, t_v3 v)
 // return normalized t_v3
 t_v3	normalize(t_v3 v)
 {
-	float	norm;
+	double	norm;
 
 	norm = sqrtf(((v.x * v.x) + (v.y * v.y) + (v.z * v.z)));
 	if (norm != 0.f)

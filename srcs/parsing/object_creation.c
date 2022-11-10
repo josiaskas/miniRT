@@ -45,7 +45,7 @@ char	*change_obj_name(t_hittable *obj, char *new_name)
  * Build a normal object material with
  * colors, specular coefficient , diffuse coefficient and phong shines
  */
-t_material	build_default_material(t_color clr, float s, float d, float ph)
+t_material	build_default_material(t_color clr, double s, double d, double ph)
 {
 	t_material	m;
 
@@ -63,7 +63,7 @@ t_material	build_default_material(t_color clr, float s, float d, float ph)
  * Build a stripped object material with
  * colors, specular coefficient , diffuse coefficient and phong shines
  */
-t_material	build_stripped(t_color clr[], float s, float d, float ph)
+t_material	build_stripped(t_color clr[], double s, double d, double ph)
 {
 	t_material	m;
 

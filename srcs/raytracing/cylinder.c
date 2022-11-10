@@ -6,60 +6,12 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 22:17:56 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/01 18:16:27 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:13:46 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 #include "parser.h"
-
-//inline static bool check_end_of_cylinder(t_hittable *c, t_hit *hit, t_v3 v[])
-//{
-//	float 	dot[3];
-//	t_point	p_ray;
-//	//t_v3	p;
-//
-//	p_ray = get_point_on_ray_at(hit->t, hit->ray);
-//	dot[0] = ft_dot(v3_sub(p_ray, c->o), c->dir);
-//	dot[1] = ft_dot(v3_sub(p_ray, c->p2), c->dir);
-//	hit->h_point = p_ray;
-//	if (dot[0] > 0 && dot[1]< 0)
-//	{
-//
-//	}
-//	if ((dot[0] > 0) && (dot[1] < 0))
-//	{
-//		hit->intersection = true;
-//		//p = v3_multi(ft_dot(v3_sub(p_ray, c->o), c->dir), c->dir);
-//		hit->normal= normalize(v3_add(v[0],v3_multi(hit->t, v[1])));
-//		dot[2] = 2 * ft_dot(v3_multi(-1, hit->ray->dir), hit->normal);
-//		hit->r = v3_add(hit->ray->dir, v3_multi(dot[2], hit->normal));
-//		hit->r = normalize(hit->r);
-//		return (true);
-//	}
-//	return (false);
-//}
-
-/*
-bool	check_cylinder_cap(t_hit *hit, t_ray *ray, t_hittable *cy)
-{
-	float	y[2];
-
-	y[0] = ray->o.y + hit->t_trace[0] * ray->dir.y;
-	y[1] = ray->o.y + hit->t_trace[1] * ray->dir.y;
-	if ((0 < y[0]) && (y[0] < cy->h))
-	{
-		hit->t = hit->t_trace[0];
-		return (true);
-	}
-	if ((0 < y[1]) && (y[1] < cy->h))
-	{
-		hit->t = hit->t_trace[1];
-		return (true);
-	}
-	return (false);
-}
-*/
 
 void	compute_cylinder_hit(t_hit *hit)
 {
@@ -71,22 +23,22 @@ void	compute_cylinder_hit(t_hit *hit)
 		hit->normal = hit->object->dir;
 	else
 		hit->normal = v3_sub(hit->h_point_obj_coord,
-							 v3_multi(hit->m, hit->object->dir));
-	n_world = v4_sub(v3_to_v4(hit->normal), v4(0.0f, 0.0f, 0.0f, 0.0f));
-	n_world = multiply_m4_v4(get_transposed(&hit->object->inv_tr), n_world);
-	hit->normal = normalize(v3(n_world.r, n_world.g, n_world.b));
+				v3_multi(hit->m, hit->object->dir));
+	n_world = v3_to_v4(hit->normal);
+	multiply_m4_v4(hit->object->inv_tr_trans, n_world);
+	hit->normal = normalize((t_v3){n_world.r, n_world.g, n_world.b});
 	if (hit->inside)
-		hit->normal = v3_multi(-1.0f, hit->normal);
-	hit->over_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
+		hit->normal = v3_multi(-1, hit->normal);
+	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 {
-	float	m;
+	double	m;
 
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[0])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= -(hit->object->h / 2.0f)) && (m <= (hit->object->h / 2.0f)))
+	if ((m >= -(hit->object->h / 2)) && (m <= (hit->object->h / 2)))
 	{
 		hit->t = hit->t_trace[0];
 		hit->intersection = true;
@@ -97,7 +49,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 	}
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[1])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= -(hit->object->h / 2.0f)) && (m <= (hit->object->h / 2.0f)))
+	if ((m >= -(hit->object->h / 2)) && (m <= (hit->object->h / 2)))
 	{
 		hit->t = hit->t_trace[1];
 		hit->intersection = true;
@@ -110,22 +62,22 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 
 void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 {
-	float	terms[3];
-	float	t[2];
+	double	terms[3];
+	double	t[2];
 	t_ray	*ray_o;
 	t_v3	cyl_ray;
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	ray_o = get_transformed_ray(ray, cyl->inv_tr, v3(0, 0, 0));
-	cyl_ray = v3_sub(ray_o->o, v3(0, 0, 0));
+	ray_o = get_transformed_ray(ray, cyl->inv_tr, (t_v3){0, 0, 0});
+	cyl_ray = ray_o->o;
 	terms[0] = ft_dot(ray_o->dir, ray_o->dir)
-		- powf(ft_dot(ray_o->dir, cyl->dir), 2.0f);
+		- pow(ft_dot(ray_o->dir, cyl->dir), 2);
 	terms[1] = ft_dot(ray_o->dir, cyl_ray)
 		- (ft_dot(ray_o->dir, cyl->dir) * ft_dot(cyl_ray, cyl->dir));
-	terms[1] = 2.0f * terms[1];
+	terms[1] = 2 * terms[1];
 	terms[2] = ft_dot(cyl_ray, cyl_ray)
-		- powf(ft_dot(cyl_ray, cyl->dir), 2.0f) - powf(cyl->radius, 2.0f);
+		- pow(ft_dot(cyl_ray, cyl->dir), 2) - pow(cyl->radius, 2);
 	if (solve_quad(terms, &t[0], &t[1]))
 	{
 		hit->t_trace[0] = t[0];
@@ -135,7 +87,7 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 	free(ray_o);
 }
 
-bool	build_cy(t_scene *scn, t_point o, t_v3 data[4], float h)
+bool	build_cy(t_scene *scn, t_point o, t_v3 data[4], double h)
 {
 	t_hittable	*cy;
 	t_color		color;
@@ -143,18 +95,14 @@ bool	build_cy(t_scene *scn, t_point o, t_v3 data[4], float h)
 	cy = (t_hittable *)ft_calloc(1, sizeof(t_hittable));
 	if (cy)
 	{
-		cy->o = v3(0.0f, 0.0f, 0.0f);
+		cy->o = (t_v3){0, 0, 0};
 		cy->type = e_hit_cylinder;
 		cy->radius = data[0].x;
-		cy->scale = v3(1.0f, 1.0f, 1.0f);
-		cy->angles = data[1];
-		cy->trans = o;
 		cy->dir = normalize(data[3]);
 		cy->h = h;
 		color = make_color_vector(data[2], 1);
-		cy->material = build_default_material(color, 0.3f, 0.7f,200.0f);
-		cy->tr = get_tr_matrix(cy->trans, cy->angles, cy->scale, false);
-		cy->inv_tr = get_tr_matrix(cy->trans, cy->angles, cy->scale, true);
+		cy->material = build_default_material(color, 0.3, 0.7, 200);
+		transform_cy(cy, o, data[1], (t_v3){1, 1, 1});
 		cy->name = add_name(scn, "Cylinder parsed o_n_", true);
 		ft_push(scn->hittable, cy);
 		return (true);
@@ -171,6 +119,7 @@ bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc)
 		cylinder->scale = sc;
 		cylinder->tr = get_tr_matrix(tr, ang, sc, false);
 		cylinder->inv_tr = get_tr_matrix(tr, ang, sc, true);
+		cylinder->inv_tr_trans = get_transposed(&cylinder->inv_tr);
 		return (true);
 	}
 	return (false);

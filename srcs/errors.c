@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:06:55 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:30:49 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_print_error(char *error_message, int code)
 {
-	ft_putstr_fd("miniRT: code:", STDERR_FILENO);
+	ft_putstr_fd("miniRT: error\nCode:", STDERR_FILENO);
 	ft_putnbr_fd(code, STDERR_FILENO);
 	ft_putchar_fd(' ', STDERR_FILENO);
 	ft_putendl_fd(error_message, STDERR_FILENO);

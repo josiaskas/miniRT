@@ -19,7 +19,7 @@ static inline t_hittable	*find_selected_object(t_scene	*scn, int x, int y)
 	t_ray	*ray;
 
 	ray = ray_for_pixel(scn->selected_camera, x, y);
-	records = do_intersect_objs(scn, ray, false);
+	records = do_intersect_objs(scn, ray);
 	first = get_first_obj_hit(records, RAY_T_MAX, 0);
 	if (first)
 		return (first->object);
@@ -33,9 +33,9 @@ static	inline void	sphere_edition(t_hittable *sphere)
 	t_color	color;
 	t_v3	translate;
 	t_v3	scale;
-	float	r;
+	double	r;
 
-	scale = v3(1, 1, 1);
+	scale = (t_v3){1, 1, 1};
 	r = 1;
 	printf("\033[0;31m-- Sphere Edition --\033[0m\nName: %s", sphere->name);
 	printf("Current position: (%lf, %lf, %lf)\n",
@@ -43,11 +43,11 @@ static	inline void	sphere_edition(t_hittable *sphere)
 	get_line_vector("translation", &translate);
 	printf("Current scale(equal for a perfect sphere): (%lf, %lf, %lf)\n",
 		   sphere->scale.x, sphere->scale.y, sphere->scale.z);
-	get_line_float("scale-radius", &r);
+	get_line_double("scale-radius", &r);
 	get_line_color(&color);
 	sphere->material.main = color;
 	scale = v3_multi(r, scale);
-	transform_sphere(sphere, translate, v3(0, 0, 0), scale);
+	transform_sphere(sphere, translate, (t_v3){0, 0, 0}, scale);
 }
 
 static	inline void	start_edition(t_app *app)

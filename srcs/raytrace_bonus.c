@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:54:39 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 18:36:20 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:26:13 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ inline t_color	shade_hit(t_scene *world, t_hit *hit)
 	t_light	*light;
 	size_t	i;
 
-	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	color = (t_v4){0, 0, 0, 1};
 	i = 0;
 	while (i < world->lights->length)
 	{
@@ -55,20 +55,23 @@ inline t_color	color_at(t_scene *world, t_ray *ray)
 	t_hit	*first_hit;
 	t_color	color;
 
-	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
-	records = do_intersect_objs(world, ray, false);
+	color = (t_v4){0, 0, 0, 1};
+	records = do_intersect_objs(world, ray);
 	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
 	if (first_hit != NULL)
+	{
+		ft_compute_hit(first_hit);
 		color = shade_hit(world, first_hit);
+	}
 	ft_free_d_array(records);
 	return (color);
 }
 
-inline t_color get_pixel_clr(t_scene *scene, float x, float y)
+t_color	get_pixel_clr(t_scene *scene, double x, double y)
 {
-	t_color color;
-	t_cam *camera;
-	t_ray *ray;
+	t_color	color;
+	t_cam	*camera;
+	t_ray	*ray;
 
 	camera = scene->selected_camera;
 	ray = ray_for_pixel(camera, x, y);
@@ -91,11 +94,11 @@ void	*run_thread_pixel(void *thread_info)
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			color = get_pixel_clr(t->scene, (float)x, (float)y);
+			color = get_pixel_clr(t->scene, (double)x, (double)y);
 			t->data[y][x] = color;
 			pthread_mutex_lock(t->write_mutex);
 			t->scene->pix_traced++;
-			printProgress(t->scene->pix_traced);
+			print_progress(t->scene->pix_traced);
 			fflush(stdout);
 			pthread_mutex_unlock(t->write_mutex);
 			x++;

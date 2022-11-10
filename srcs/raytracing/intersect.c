@@ -6,25 +6,25 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:34:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/01 13:42:09 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:14:11 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 
-static void	ft_swap(float *t0, float *t1)
+static void	ft_swap(double *t0, double *t1)
 {
-	float	temp;
+	double	temp;
 
 	temp = *t1;
 	*t1 = *t0;
 	*t0 = temp;
 }
 
-bool	solve_quad(const float terms[], float *t0, float *t1)
+bool	solve_quad(const double terms[], double *t0, double *t1)
 {
-	float	discriminant;
-	float	q;
+	double	discriminant;
+	double	q;
 
 	discriminant = (terms[1] * terms[1]) - (4 * terms[0] * terms[2]);
 	if (discriminant < 0)
@@ -60,7 +60,7 @@ static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 		hit->t = RAY_T_MAX;
 		hit->type = obj->type;
 		hit->ray = ray;
-		hit->normal = v3(0.0f, 0.0f, 0.0f);
+		hit->normal = (t_v3){0, 0, 0};
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
 		else if (obj->type == e_hit_plane)
@@ -71,7 +71,7 @@ static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 	return (hit);
 }
 
-t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
+t_array	*do_intersect_objs(t_scene *scene, t_ray *ray)
 {
 	t_array		*records;
 	t_hittable	*obj;
@@ -87,11 +87,7 @@ t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
 			hit = do_intersect(ray, obj);
 			if (hit->intersection == true)
-			{
 				ft_push(records, hit);
-				if ((l == true) && (hit->intersection == true))
-					return (records);
-			}
 			else
 				free(hit);
 			i++;
@@ -100,14 +96,12 @@ t_array	*do_intersect_objs(t_scene *scene, t_ray *ray, bool l)
 	return (records);
 }
 
-t_hit	*get_first_obj_hit(t_array *rec, const float max, float min)
+t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
 {
 	size_t	i;
-	float	curr_min;
 	t_hit	*first_hit;
 	t_hit	*hit;
 
-	curr_min = max;
 	first_hit = NULL;
 	i = 0;
 	if (!rec)
@@ -115,10 +109,10 @@ t_hit	*get_first_obj_hit(t_array *rec, const float max, float min)
 	while (i < rec->length)
 	{
 		hit = (t_hit *)ft_get_elem(rec, i);
-		if (hit->intersection && (hit->t < curr_min) && (hit->t > min))
+		if (hit->intersection && (hit->t < max) && (hit->t > min))
 		{
 			first_hit = hit;
-			curr_min = hit->t;
+			max = hit->t;
 		}
 		i++;
 	}

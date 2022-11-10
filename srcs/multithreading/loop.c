@@ -34,7 +34,7 @@ static void	run_thread_batch(t_thread	info[], void* (*apply)(void *))
 void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
 {
 	int				i;
-	float			delta;
+	double			delta;
 	t_thread		thread_list[THREAD_NUMBER];
 	pthread_mutex_t	*write;
 

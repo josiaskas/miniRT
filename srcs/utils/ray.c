@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:30:08 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 17:35:59 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:29:07 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,9 @@
  * use a matrix to transform from camera to view world
  * ray dir is normalized
  */
-t_ray	*ray_for_pixel(t_cam *cam, float px, float py)
+t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 {
-	float	off[2];
+	double	off[2];
 	t_v4	v[2];
 	t_v3	p[2];
 	t_v3	dir;
@@ -29,10 +29,10 @@ t_ray	*ray_for_pixel(t_cam *cam, float px, float py)
 	py = py * cam->pixel_dy;
 	off[0] = cam->half_width - px;
 	off[1] = cam->half_height - py;
-	v[1] = multiply_m4_v4(cam->inv_tr, v4(off[0], off[1], -1.0f, 1.0f));
-	v[0] = multiply_m4_v4(cam->inv_tr, v4(0.0f, 0.0f, 0.0f, 1.0f));
-	p[1] = v3(v[1].r, v[1].g, v[1].b);
-	p[0] = v3(v[0].r, v[0].g, v[0].b);
+	v[1] = multiply_m4_v4(cam->inv_tr, (t_v4){off[0], off[1], -1, 1});
+	v[0] = multiply_m4_v4(cam->inv_tr, (t_v4){0, 0, 0, 1});
+	p[1] = (t_v3){v[1].r, v[1].g, v[1].b};
+	p[0] = (t_v3){v[0].r, v[0].g, v[0].b};
 	dir = normalize(v3_sub(p[1], p[0]));
 	return (build_ray(p[0], dir));
 }
@@ -52,6 +52,23 @@ t_ray	*get_transformed_ray(t_ray *ray, const t_m4 transform, const t_v3 sp_o)
 	oo = multiply_m4_v4(transform, v3_to_v4(sp_o));
 	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
 	dir = v4_sub(dir, oo);
-	tr_ray = build_ray(v3(o.r, o.g, o.b), v3(dir.r, dir.g, dir.b));
+	tr_ray = build_ray((t_v3){o.r, o.g, o.b}, (t_v3){dir.r, dir.g, dir.b});
 	return (tr_ray);
+}
+
+/*
+* Return the vector after a transformation is applied
+* cant get a vector in the correct space (Object or World)
+*/
+t_v3	get_vector_tr(t_v3 v, const t_m4 transform, const t_v3 origin)
+{
+	t_v4	dir;
+	t_v4	oo;
+	t_v3	result;
+
+	oo = multiply_m4_v4(transform, v3_to_v4(origin));
+	dir = multiply_m4_v4(transform, v3_to_v4(v));
+	dir = v4_sub(dir, oo);
+	result = (t_v3){dir.r, dir.g, dir.b};
+	return (result);
 }
