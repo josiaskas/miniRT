@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:02:16 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:01:10 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,10 @@ t_cam	*build_camera(t_point origin, t_v3 forward, float fov)
 		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
 		cam->eye = origin;
 		cam->look_at = forward;
-		if (forward.x != 0)
-			up = normalize(v3(((-forward.y) / forward.x), 1, 0));
-		else if (forward.z != 0)
-			up = normalize(v3(0, 1, (-forward.y) / forward.z));
-		else
-			up = v3(1, 0, 0);
+		up = (t_v3){0, 1, 0};
+		if (forward.x == 0 && (forward.y == 1 || forward.y == -1)
+			&& forward.z == 0)
+			up = (t_v3){0, 0, 1};
 		cam->transform = view_transform(origin, forward, up);
 		cam->inv_tr = get_inverse(cam->transform);
 	}
