@@ -14,11 +14,13 @@
 
 void	ft_print_error(char *error_message, int code)
 {
-	ft_putstr_fd("miniRT: error\nCode:", STDERR_FILENO);
+	ft_putstr_fd("Error\nminiRT: Code:", STDERR_FILENO);
 	ft_putnbr_fd(code, STDERR_FILENO);
 	ft_putchar_fd(' ', STDERR_FILENO);
 	ft_putendl_fd(error_message, STDERR_FILENO);
 }
+
+
 
 static void	clean_app_stuff(t_app *app)
 {

@@ -127,13 +127,14 @@ bool	parse_file_line(char *line, t_app *app)
 bool	parse_rt_file(t_app *app)
 {
 	char	*line;
+	int		res;
 
 	line = NULL;
 	app->scene = init_scene();
 	app->error_message = "Error during parsing";
 	app->error_code = 2;
-	printf("Start File parsing\n");
-	while (get_next_line(app->in_fd, &line) > 0)
+	res = get_next_line(app->in_fd, &line);
+	while (res > 0)
 	{
 		if (!parse_file_line(line, app))
 		{
@@ -141,8 +142,10 @@ bool	parse_rt_file(t_app *app)
 			return (false);
 		}
 		free(line);
+		res = get_next_line(app->in_fd, &line);
 	}
 	free(line);
 	app->error_message = NULL;
+	printf("File parsing finished\n");
 	return (true);
 }

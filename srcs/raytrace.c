@@ -98,7 +98,7 @@ bool	render(t_app *app)
 			y_pixel = (double)y + 0.5;
 			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
 			app->scene->pix_traced++;
-			print_progress(app->scene->pix_traced);
+			//print_progress(app->scene->pix_traced);
 			x++;
 		}
 		y++;

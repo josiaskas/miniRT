@@ -79,3 +79,20 @@ t_cam	*build_camera(t_point origin, t_v3 forward, double fov)
 	}
 	return (cam);
 }
+
+bool	move_camera(t_cam *camera, t_point origin, t_v3 forward)
+{
+	t_v3	up;
+
+	camera->eye = origin;
+	camera->look_at = forward;
+	up = (t_v3){0, 1, 0};
+	if (forward.x == 0 && (forward.y == 1 || forward.y == -1)
+		&& forward.z == 0)
+		up = (t_v3){0, 0, 1};
+	camera->transform = view_transform(origin, forward, up);
+	camera->inv_tr = get_inverse(camera->transform);
+	return (true);
+}
+
+

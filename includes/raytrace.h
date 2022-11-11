@@ -54,7 +54,8 @@ void	print_progress(int count);
 t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
 bool	update_cam(t_cam *cam, double hsize, double vsize, double fov);
-bool	build_triangle(t_scene *scene, t_point p[3], t_v3 v_color);
+bool	move_camera(t_cam *camera, t_point origin, t_v3 forward);
+
 
 t_color	color_at(t_scene *world, t_ray *ray);
 t_color	get_pixel_clr(t_scene *scene, double x, double y);
@@ -79,6 +80,9 @@ bool	transform_cy(t_hittable *cylinder, t_v3 tr, t_v3 ang, t_v3 sc);
 bool	build_plane(t_scene *scene, t_point p, t_v3 normal, t_v3 v_color);
 void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray);
 bool	transform_plane(t_hittable *plan, t_v3 tr, t_v3 ang, t_v3 sc);
+
+//triangle
+bool	build_triangle(t_scene *scene, t_point p[3], t_v3 v_color);
 
 bool	solve_quad(const double terms[], double *t0, double *t1);
 t_array	*do_intersect_objs(t_scene *scene, t_ray *ray);
