@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 16:41:12 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:29:57 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ inline t_v4	v4_sub(t_v4 a, t_v4 b)
 	return (sub);
 }
 
-inline	t_v4	v4_multi(float k, t_v4 v)
+inline	t_v4	v4_multi(double k, t_v4 v)
 {
 	t_v4	multiplication;
 
@@ -44,4 +44,3 @@ inline	t_v4	v4_multi(float k, t_v4 v)
 	multiplication.a = k * v.a;
 	return (multiplication);
 }
-

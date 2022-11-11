@@ -33,19 +33,19 @@ static inline bool	ft_is_a_number(char *str, bool is_decimal)
 	return (true);
 }
 
-// return a float formed from two strings "12"."34"
-static float	ft_parse_float(char *str1, char *str2)
+// return a double formed from two strings "12"."34"
+static double	ft_parse_double(char *str1, char *str2)
 {
-	float	r;
-	float	f;
-	float	after_dot;
+	double	r;
+	double	f;
+	double	after_dot;
 
-	r = (float)ft_atoi(str1);
+	r = (double)ft_atoi(str1);
 	f = 0;
 	if (str2)
 	{
-		after_dot = (float)ft_strlen(str2) * -1.0f;
-		f = powf(10.0f, after_dot) * (float)ft_atoi(str2);
+		after_dot = (double)ft_strlen(str2) * -1.0f;
+		f = powf(10.0f, after_dot) * (double)ft_atoi(str2);
 	}
 	if (str1[0] != '-')
 		return (r + f);
@@ -53,7 +53,7 @@ static float	ft_parse_float(char *str1, char *str2)
 		return (r - f);
 }
 
-bool	parse_float_from_str(char *str, float *result)
+bool	parse_double_from_str(char *str, double *result)
 {
 	char	**values;
 	size_t	i;
@@ -70,12 +70,12 @@ bool	parse_float_from_str(char *str, float *result)
 	if ((i > 2) || (status == false))
 		status = false;
 	else if (i == 1)
-		*result = ft_parse_float(values[0], NULL);
+		*result = ft_parse_double(values[0], NULL);
 	else
 	{
 		if (!ft_is_a_number(values[1], true))
 			status = false;
-		*result = ft_parse_float(values[0], values[1]);
+		*result = ft_parse_double(values[0], values[1]);
 	}
 	ft_free_splitted(values);
 	return (status);
@@ -96,11 +96,11 @@ bool	parse_a_vector(char *token, t_v3 *vector)
 		status = false;
 	else
 	{
-		if (!parse_float_from_str(values[0], &vector->x))
+		if (!parse_double_from_str(values[0], &vector->x))
 			status = false;
-		if (!parse_float_from_str(values[1], &vector->y))
+		if (!parse_double_from_str(values[1], &vector->y))
 			status = false;
-		if (!parse_float_from_str(values[2], &vector->z))
+		if (!parse_double_from_str(values[2], &vector->z))
 			status = false;
 	}
 	ft_free_splitted(values);

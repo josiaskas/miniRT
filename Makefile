@@ -56,16 +56,19 @@ THREADING_SRCS_PREFIXED = $(addprefix $(THREADING_DIR), $(THREADING_SRCS))
 
 #sources
 SRCS_DIR = srcs/
-SRCS = main.c errors.c app.c raytrace.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED)
+SRCS = main.c errors.c app.c raytrace.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED)
 SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(SRCS))
 
 #bonus sources
-BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c parse.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
+BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
 BONUS_SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(BONUS_SRCS))
 
 #includes
-INCLUDES_FILES = minirt.h vector.h raytrace.h parser.h window.h ray.h
+INCLUDES_FILES = minirt.h vector.h color.h raytrace.h parser.h window.h ray.h transformation.h
 INCLUDES = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
+#includes bonus
+INCLUDES_FILES_BONUS = $(INCLUDES_FILES) multithread.h
+INCLUDES_BONUS = $(INCLUDES_FILES:%=$(INCLUDES_DIR)/%)
 
 #objsm
 OBJS := $(SRCS_PREFIXED:%.c=$(OBJS_DIR)/%.o)
@@ -102,7 +105,7 @@ $(OBJS_BONUS_DIR):
 	@echo "$(GREEN)building bonus object dir $(RESET_COLOR)"
 	@mkdir -p $(OBJS_BONUS_DIR)
 
-$(OBJS_BONUS_DIR)/%.o : %.c $(INCLUDES)
+$(OBJS_BONUS_DIR)/%.o : %.c $(INCLUDES_BONUS)
 	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -DIS_BONUS=1 -c $< -o $@
 

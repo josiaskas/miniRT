@@ -6,14 +6,13 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/22 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 16:38:30 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:27:57 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "transformation.h"
-#include <stdio.h>
 
-static inline t_m4	*inv_s(float a[4][4], float s[6], float c[6], float d)
+static inline t_m4	*inv_s(double a[4][4], double s[6], double c[6], double d)
 {
 	t_m4	*i;
 
@@ -62,9 +61,9 @@ inline t_m4	get_transposed(t_m4	*matrix)
 
 static inline t_m4	*inverse(t_m4 m)
 {
-	float	s[6];
-	float	c[6];
-	float	det;
+	double	s[6];
+	double	c[6];
+	double	det;
 
 	s[1] = m.data[0][0] * m.data[1][2] - m.data[1][0] * m.data[0][2];
 	s[0] = m.data[0][0] * m.data[1][1] - m.data[1][0] * m.data[0][1];

@@ -21,7 +21,7 @@ typedef t_v4	t_color;
  * return with an alpha and range for all canals (0-1)
  * you need to make sure v as no negative
 */
-t_color			make_color_vector(t_v3 v, float alpha);
+t_color			make_color_vector(t_v3 v, double alpha);
 t_color			hadamar_prod(t_color a, t_color b);
 unsigned int	get_trgb(t_color color);
 

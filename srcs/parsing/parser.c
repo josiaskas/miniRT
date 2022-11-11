@@ -25,7 +25,7 @@ bool	parse_light(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[1], &light->o))
 		return (false);
-	if (!parse_float_from_str(tokens[2], &light->cd))
+	if (!parse_double_from_str(tokens[2], &light->cd))
 		return (false);
 	if (!parse_a_vector(tokens[3], &v_color))
 		return (false);
@@ -48,7 +48,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
 		return (false);
-	if (!parse_float_from_str(tokens[1], &ambiant.intensity))
+	if (!parse_double_from_str(tokens[1], &ambiant.intensity))
 		return (false);
 	if (!parse_a_vector(tokens[2], &v_color))
 		return (false);
@@ -74,7 +74,7 @@ bool	parse_camera(char **tokens, t_app *app)
 	t_cam		*camera;
 	t_point		origin;
 	t_point		orientation;
-	float		angle;
+	double		angle;
 
 	angle = 0;
 	app->error_message = "Error during parsing, On a camera";
@@ -84,7 +84,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &orientation))
 		return (false);
-	if (!parse_float_from_str(tokens[3], &angle))
+	if (!parse_double_from_str(tokens[3], &angle))
 		return (false);
 	if (!all_vector_coord_are_in_range(-1, 1, &orientation))
 		return (false);
@@ -112,6 +112,8 @@ bool	parse_file_line(char *line, t_app *app)
 		status = parse_camera(tokens, app);
 	else if (ft_strncmp(tokens[0], "pl", 2) == 0)
 		status = parse_plan(tokens, app);
+	else if (ft_strncmp(tokens[0], "tr", 2) == 0)
+		status = parse_triangle(tokens, app);
 	else if (ft_strncmp(tokens[0], "L", 1) == 0)
 		status = parse_light(tokens, app);
 	else if (ft_strncmp(tokens[0], "A", 1) == 0)
@@ -131,7 +133,6 @@ bool	parse_rt_file(t_app *app)
 	app->scene = init_scene();
 	app->error_message = "Error during parsing";
 	app->error_code = 2;
-	printf("Start File parsing\n");
 	res = get_next_line(app->in_fd, &line);
 	while (res > 0)
 	{
@@ -145,5 +146,6 @@ bool	parse_rt_file(t_app *app)
 	}
 	free(line);
 	app->error_message = NULL;
+	printf("File parsing finished\n");
 	return (true);
 }

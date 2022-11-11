@@ -59,7 +59,7 @@ void	get_line_color(t_color *color)
 	printf("\033[0;32m ok\033[0m\n");
 }
 
-void	get_line_float(char *title, float *val)
+void	get_line_double(char *title, double *val)
 {
 	char	*line;
 	char	*trim_l;
@@ -71,7 +71,7 @@ void	get_line_float(char *title, float *val)
 		printf("\033[0;32m\n-%s:\033[0m ", title);
 		get_next_line(STDIN_FILENO, &line);
 		trim_l = ft_strtrim(line, " \v\r\t");
-		is_valid = parse_float_from_str(trim_l, val);
+		is_valid = parse_double_from_str(trim_l, val);
 		free(trim_l);
 	}
 	free(line);

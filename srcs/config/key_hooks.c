@@ -15,16 +15,25 @@
 static int	prepare_camera_move(int key, t_app *app)
 {
 	t_cam	*cam;
-	float	step;
-	t_v3	move;
+	t_v3	new_origin;
+	double	dx;
+	double	dy;
 
 	cam = app->scene->selected_camera;
 	if (cam && (app->conf.c_mode == e_normal_mode))
 	{
-		step = 5 * (M_PI / 180);
-		(void)step;
-		(void)move;
-		(void)key;
+		dx = cam->pixel_dx * 100;
+		dy = cam->pixel_dy * 100;
+		new_origin = cam->eye;
+		if (key == ARROW_UP)
+			new_origin.x += dx;
+		else if (key == ARROW_DOWN)
+			new_origin.x -= dx;
+		else if (key == ARROW_LEFT)
+			new_origin.y += dy;
+		else
+			new_origin.y -= dy;
+		move_camera(cam, new_origin, cam->look_at);
 		render(app);
 		app->conf.rerender = true;
 	}

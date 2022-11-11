@@ -6,20 +6,20 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/08 14:30:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:45:26 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:17:00 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 
-void	printProgress(int count)
+void	print_progress(int count)
 {
-	float	percentage;
+	double	percentage;
 	int		val;
 	int		lpad;
 	int		rpad;
 
-	percentage = (float)count / (((float)W_HEIGHT - 1) * (float)W_WIDTH);
+	percentage = (double)count / (((double)W_HEIGHT - 1) * (double)W_WIDTH);
 	val = (int)(percentage * 100);
 	lpad = (int)(percentage * PBWIDTH);
 	rpad = PBWIDTH - lpad;

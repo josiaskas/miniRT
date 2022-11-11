@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:54:17 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 18:36:11 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 18:26:46 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ inline t_color	shade_hit(t_scene *world, t_hit *hit)
 	t_light	*light;
 	size_t	i;
 
-	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
+	color = (t_v4){0, 0, 0, 1};
 	i = 0;
 	while (i < world->lights->length)
 	{
@@ -55,16 +55,19 @@ inline t_color	color_at(t_scene *world, t_ray *ray)
 	t_hit	*first_hit;
 	t_color	color;
 
-	color = v4(0.0f, 0.0f, 0.0f, 1.0f);
-	records = do_intersect_objs(world, ray, false);
-	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0.0f);
+	color = (t_v4){0, 0, 0, 1};
+	records = do_intersect_objs(world, ray);
+	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
 	if (first_hit != NULL)
+	{
+		ft_compute_hit(first_hit);
 		color = shade_hit(world, first_hit);
+	}
 	ft_free_d_array(records);
 	return (color);
 }
 
-inline t_color	get_pixel_clr(t_scene *scene, float x, float y)
+t_color	get_pixel_clr(t_scene *scene, double x, double y)
 {
 	t_color	color;
 	t_cam	*camera;
@@ -81,27 +84,25 @@ bool	render(t_app *app)
 {
 	int		x;
 	int		y;
-	float	x_pixel;
-	float	y_pixel;
+	double	x_pixel;
+	double	y_pixel;
 
 	init_raytracing(app);
 	y = 0;
-	printf("\033[0;32m\nRaytracing\033[0m\n");
 	while (y < W_HEIGHT)
 	{
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			x_pixel = (float)x + 0.5f;
-			y_pixel = (float)y + 0.5f;
+			x_pixel = (double)x + 0.5;
+			y_pixel = (double)y + 0.5;
 			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
 			app->scene->pix_traced++;
-			//printProgress(app->scene->pix_traced);
+			//print_progress(app->scene->pix_traced);
 			x++;
 		}
 		y++;
 	}
-	printf("\033[0;32m\nFinished\033[0m\n");
 	app->scene->pix_traced = 0;
 	app->conf.rerender = true;
 	return (true);

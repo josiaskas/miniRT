@@ -42,12 +42,12 @@ typedef enum e_hittable_pattern
 
 typedef struct s_material
 {
-	float			shininess;
+	double			shininess;
 	t_composition	type;
 	t_pattern		pattern;
-	float			reflexive;
-	float			diffuse;
-	float			specular;
+	double			reflexive;
+	double			diffuse;
+	double			specular;
 	t_color			main;
 	t_color			second;
 	t_color			third;
@@ -62,11 +62,12 @@ typedef struct s_hittable
 	t_point		p3;
 	t_m4		tr;
 	t_m4		inv_tr;
+	t_m4		inv_tr_trans;
 	t_v3		trans;
 	t_v3		scale;
 	t_v3		angles;
-	float		radius;
-	float		h;
+	double		radius;
+	double		h;
 	t_v3		dir;
 	char		*name;
 	t_material	material;
@@ -80,14 +81,14 @@ typedef struct s_ray
 
 typedef struct s_camera
 {
-	float	fov;
-	float	hsize;
-	float	vsize;
-	float	aspect;
-	float	pixel_dx;
-	float	pixel_dy;
-	float	half_height;
-	float	half_width;
+	double	fov;
+	double	hsize;
+	double	vsize;
+	double	aspect;
+	double	pixel_dx;
+	double	pixel_dy;
+	double	half_height;
+	double	half_width;
 	t_point	eye;
 	t_point	look_at;
 	t_m4	transform;
@@ -99,13 +100,13 @@ typedef struct s_hit_record
 	bool		intersection;
 	t_hit_type	type;
 	t_hittable	*object;
-	float		t;
-	float		m;
-	float		t_trace[2];
+	double		t;
+	double		m;
+	double		t_trace[2];
 	t_ray		*ray;
 	t_point		h_point;
 	t_point		h_point_obj_coord;
-	t_point		over_p;
+	t_point		acne_p;
 	t_v3		normal;
 	t_v3		r;
 	bool		inside;
@@ -128,15 +129,16 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 	return (ray);
 }
 
-t_ray	*ray_for_pixel(t_cam *cam, float px, float py);
+t_ray	*ray_for_pixel(t_cam *cam, double px, double py);
 t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o);
+t_v3	get_vector_tr(t_v3 v,  t_m4 transform, t_v3 origin);
 
 /*
  * Return a Point according to t with a ray, parametric equation.
  * equation is point = ray_origin + (t * ray_dir)
  * ray dir vector need to be normalized to be correct
 */
-static inline t_point	get_point_on_ray_at(const float t, t_ray *ray)
+static inline t_point	get_point_on_ray_at(const double t, t_ray *ray)
 {
 	t_point	a;
 

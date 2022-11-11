@@ -6,11 +6,12 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:02:16 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/10 09:27:15 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
+
 /*Get the look_at matrix with a translation away from the world*/
 inline t_m4	view_transform(t_v3 from, t_v3 forward, t_v3 up)
 {
@@ -34,18 +35,18 @@ inline t_m4	view_transform(t_v3 from, t_v3 forward, t_v3 up)
 	return (m4_multi(or, translate_m(v3_multi(-1, from))));
 }
 
-inline bool	update_cam(t_cam *cam, float hsize, float vsize, float fov)
+inline bool	update_cam(t_cam *cam, double hsize, double vsize, double fov)
 {
-	float	half_view;
+	double	half_view;
 
 	if (cam)
 	{
 		cam->aspect = vsize / hsize;
-		if (fov >= 180.0f)
-			cam->fov = 179.99f;
+		if (fov >= 180)
+			cam->fov = 179.99;
 		else
 			cam->fov = fov;
-		half_view = tanf((cam->fov * 0.01745329251) / 2.0);
+		half_view = tanf((cam->fov * 0.01745329251) / 2);
 		cam->hsize = 2 * half_view;
 		cam->vsize = cam->aspect * cam->hsize;
 		cam->half_height = half_view;
@@ -57,7 +58,7 @@ inline bool	update_cam(t_cam *cam, float hsize, float vsize, float fov)
 	return (false);
 }
 
-t_cam	*build_camera(t_point origin, t_v3 forward, float fov)
+t_cam	*build_camera(t_point origin, t_v3 forward, double fov)
 {
 	t_cam	*cam;
 	t_v3	up;
@@ -65,18 +66,33 @@ t_cam	*build_camera(t_point origin, t_v3 forward, float fov)
 	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
 	if (cam)
 	{
-		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
-		update_cam(cam, (float)W_HEIGHT, (float)W_WIDTH, fov);
+		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
+		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
 		cam->eye = origin;
 		cam->look_at = forward;
-		if (forward.x != 0)
-			up = normalize(v3(((-forward.y) / forward.x), 1, 0));
-		else if (forward.z != 0)
-			up = normalize(v3(0, 1, (-forward.y) / forward.z));
-		else
-			up = v3(1, 0, 0);
+		up = (t_v3){0, 1, 0};
+		if (forward.x == 0 && (forward.y == 1 || forward.y == -1)
+			&& forward.z == 0)
+			up = (t_v3){0, 0, 1};
 		cam->transform = view_transform(origin, forward, up);
 		cam->inv_tr = get_inverse(cam->transform);
 	}
 	return (cam);
 }
+
+bool	move_camera(t_cam *camera, t_point origin, t_v3 forward)
+{
+	t_v3	up;
+
+	camera->eye = origin;
+	camera->look_at = forward;
+	up = (t_v3){0, 1, 0};
+	if (forward.x == 0 && (forward.y == 1 || forward.y == -1)
+		&& forward.z == 0)
+		up = (t_v3){0, 0, 1};
+	camera->transform = view_transform(origin, forward, up);
+	camera->inv_tr = get_inverse(camera->transform);
+	return (true);
+}
+
+

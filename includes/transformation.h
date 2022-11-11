@@ -24,16 +24,16 @@ typedef enum e_rotation_type
 void	init_m4(t_m4 *a);
 t_m4	translate_m(t_v3 with);
 t_m4	scale_m(t_v3 with);
-t_m4	rotation_z(float ang);
-t_m4	rotation_x(float ang);
-t_m4	rotation_y(float ang);
+t_m4	rotation_z(double ang);
+t_m4	rotation_x(double ang);
+t_m4	rotation_y(double ang);
 t_m4	get_identity_matrix(void);
 t_m4	get_transposed(t_m4	*matrix);
 t_m4	get_inverse(t_m4 matrix);
 t_m4	copy_matrix(t_m4 *matrix);
 t_v4	multiply_m4_v4(t_m4 m, t_v4 c);
 t_m4	m4_multi(t_m4 a, t_m4 b);
-t_m4	quaternion_z(float q0, float q1, float q2, float q3);
+t_m4	quaternion_z(double q0, double q1, double q2, double q3);
 /*
  * return the transformation matrix or the inverse transformation matrix
  * trans:translation vector, angles: vector, scaling vector, is inverse check
