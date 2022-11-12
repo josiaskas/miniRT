@@ -31,7 +31,7 @@ static void	run_thread_batch(t_thread	info[], void* (*apply)(void *))
 	return ;
 }
 
-void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
+void	run_threads(void *(*apply)(void *), t_app *app, t_color **clrs)
 {
 	int				i;
 	double			delta;
@@ -43,7 +43,8 @@ void	run_threads(void *(*apply)(void *), t_scene *scn, t_color **clrs)
 	i = 0;
 	while (i < THREAD_NUMBER)
 	{
-		thread_list[i].scene = scn;
+		thread_list[i].scene = app->scene;
+		thread_list[i].app =  app;
 		thread_list[i].data = clrs;
 		thread_list[i].start = delta * i;
 		thread_list[i].end = thread_list[i].start + delta;

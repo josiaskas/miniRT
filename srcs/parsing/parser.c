@@ -147,5 +147,5 @@ bool	parse_rt_file(t_app *app)
 	free(line);
 	app->error_message = NULL;
 	printf("File parsing finished\n");
-	return (true);
+	return (check_config_file(app));
 }

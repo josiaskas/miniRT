@@ -13,23 +13,24 @@
 #include "minirt.h"
 
 // clear all data stored to prepare a new frame
-inline void	init_raytracing(t_app *app)
+static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 {
-	size_t	i;
-	t_scene	*scene;
+	int		pos;
+	char 	*pixel;
+	t_image	*img;
 
-	app->error_code = 0;
-	app->error_message = NULL;
-	scene = app->scene;
-	if (!app->data)
+	img = app->img;
+	if (app->out_fd != 0)
 	{
-		app->data = (t_color **)ft_calloc((W_HEIGHT), sizeof(t_color *));
-		i = 0;
-		while (i < W_HEIGHT)
-			app->data[i++] = ft_calloc(W_WIDTH, sizeof (t_color));
+		app->data[y][x] = clr;
 	}
-	if (!scene->selected_camera)
-		scene->selected_camera = ft_get_elem(scene->cameras, 0);
+	else
+	{
+		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+		pixel = img->data + pos;
+		*(unsigned int *)pixel = get_trgb(clr);
+		//print_progress(app->scene->pix_traced);
+	}
 }
 
 inline t_color	shade_hit(t_scene *world, t_hit *hit)
@@ -84,21 +85,17 @@ bool	render(t_app *app)
 {
 	int		x;
 	int		y;
-	double	x_pixel;
-	double	y_pixel;
+	t_color pix_clr;
 
-	init_raytracing(app);
 	y = 0;
 	while (y < W_HEIGHT)
 	{
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			x_pixel = (double)x + 0.5;
-			y_pixel = (double)y + 0.5;
-			app->data[y][x] = get_pixel_clr(app->scene, x_pixel, y_pixel);
+			pix_clr = get_pixel_clr(app->scene, (x + 0.5), (y + 0.5));
 			app->scene->pix_traced++;
-			//print_progress(app->scene->pix_traced);
+			print_clr_to_screen(app, pix_clr, x, y);
 			x++;
 		}
 		y++;

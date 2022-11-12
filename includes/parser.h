@@ -31,4 +31,5 @@ char		*add_name(t_scene *scene, char *name, bool parsed);
 bool		all_vector_coord_are_in_range(double min, double max, const t_v3 *v);
 t_material	build_default_material(t_color clr, double s, double d, double ph);
 t_material	build_stripped(t_color clr[], double s, double d, double ph);
+bool		check_config_file(t_app *app);
 #endif

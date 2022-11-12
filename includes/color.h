@@ -23,7 +23,27 @@ typedef t_v4	t_color;
 */
 t_color			make_color_vector(t_v3 v, double alpha);
 t_color			hadamar_prod(t_color a, t_color b);
-unsigned int	get_trgb(t_color color);
 
+static inline unsigned int	get_trgb(t_color color)
+{
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+	unsigned int	a;
+
+	if (color.r > 1)
+		color.r = 1;
+	if (color.g > 1)
+		color.g = 1;
+	if (color.b > 1)
+		color.b = 1;
+	if (color.a > 1)
+		color.a = 1;
+	r = (unsigned int)(color.r * 255);
+	g = (unsigned int)(color.g * 255);
+	b = (unsigned int)(color.b * 255);
+	a = (unsigned int)(color.a);
+	return ((a << 24) | (r << 16) | (g << 8) | b);
+}
 
 #endif

@@ -13,28 +13,6 @@
 #include "minirt.h"
 #include "window.h"
 
-void	draw_scene(t_image *img, t_color **colors)
-{
-	int		x;
-	int		y;
-	int		pos;
-	char	*pixel;
-
-	y = 0;
-	while (y < W_HEIGHT)
-	{
-		x = 0;
-		while (x < W_WIDTH)
-		{
-			pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
-			pixel = img->data + pos;
-			*(unsigned int *)pixel = get_trgb(colors[y][x]);
-			x++;
-		}
-		y++;
-	}
-}
-
 int	watcher(t_app *app)
 {
 	void	*mlx;
@@ -46,7 +24,6 @@ int	watcher(t_app *app)
 	img = app->img;
 	if (app->conf.rerender)
 	{
-		draw_scene(app->img, app->data);
 		mlx_put_image_to_window(mlx, win, img->img, 0, 0);
 		write_info_section(app, mlx, win);
 		app->conf.rerender = false;
@@ -60,7 +37,6 @@ void	app_loop(t_app *app)
 	t_image	*img;
 
 	img = app->img;
-	draw_scene(img, app->data);
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);

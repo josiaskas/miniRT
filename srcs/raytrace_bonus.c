@@ -14,22 +14,24 @@
 #include "../includes/multithread.h"
 
 // clear all data stored to prepare a new frame
-inline void	init_raytracing(t_app *app)
+static inline void	print_clr_to_screen(t_thread *t, t_color clr, int x, int y)
 {
-	size_t	i;
-	t_scene	*scene;
+	int		pos;
+	char 	*pixel;
+	t_image	*img;
 
-	app->error_code = 0;
-	app->error_message = NULL;
-	scene = app->scene;
-	if (app->data)
-		free_array((void **)app->data, W_HEIGHT);
-	app->data = (t_color **)ft_calloc((W_HEIGHT), sizeof(t_color *));
-	i = 0;
-	while (i < W_HEIGHT)
-		app->data[i++] = ft_calloc(W_WIDTH, sizeof (t_color));
-	if (!scene->selected_camera)
-		scene->selected_camera = ft_get_elem(scene->cameras, 0);
+	img = t->app->img;
+	if (t->app->out_fd != 0)
+	{
+		t->data[y][x] = clr;
+	}
+	else
+	{
+		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+		pixel = img->data + pos;
+		*(unsigned int *)pixel = get_trgb(clr);
+		//print_progress(app->scene->pix_traced);
+	}
 }
 
 inline t_color	shade_hit(t_scene *world, t_hit *hit)
@@ -85,7 +87,7 @@ void	*run_thread_pixel(void *thread_info)
 	t_thread	*t;
 	int			y;
 	int			x;
-	t_color		color;
+	t_color		pix_clr;
 
 	t = thread_info;
 	y = t->start;
@@ -94,12 +96,10 @@ void	*run_thread_pixel(void *thread_info)
 		x = 0;
 		while (x < W_WIDTH)
 		{
-			color = get_pixel_clr(t->scene, (double)x, (double)y);
-			t->data[y][x] = color;
+			pix_clr = get_pixel_clr(t->scene, (x + 0.5), (y + 0.5));
 			pthread_mutex_lock(t->write_mutex);
 			t->scene->pix_traced++;
-			print_progress(t->scene->pix_traced);
-			fflush(stdout);
+			print_clr_to_screen(t, pix_clr, x, y);
 			pthread_mutex_unlock(t->write_mutex);
 			x++;
 		}
@@ -110,12 +110,9 @@ void	*run_thread_pixel(void *thread_info)
 
 bool	render(t_app *app)
 {
-	init_raytracing(app);
-	printf("\033[0;32m\nRaytracing\033[0m\n");
 	app->scene->pix_traced = 0;
-	run_threads(run_thread_pixel, app->scene, app->data);
+	run_threads(run_thread_pixel, app, app->data);
 	app->scene->pix_traced = 0;
-	printf("\033[0;32m\nFinished\033[0m\n");
 	app->conf.rerender = true;
 	return (true);
 }
