@@ -26,10 +26,12 @@ int	write_info_section(t_app *app, void *mlx, void *win)
 	fov = ft_itoa((int)(round(app->scene->selected_camera->fov)));
 	cam_nbr = ft_itoa((int)(app->scene->cam_cursor + 1));
 	mlx_string_put(mlx, win, x, y += 20, BLUE_LIGHT2, app->file_name);
-	if (app->conf.c_mode == e_normal_mode)
+	if (app->conf.c_mode == 0 || app->conf.c_mode == 2)
 		mlx_string_put(mlx, win, (x + 15), y += 30, BLUE_LIGHT, "Normal Mode");
 	else if (app->conf.c_mode == e_select_mode)
 		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "Edition Mode");
+	if (app->conf.c_mode == e_clock_wise_mode)
+		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "clock wise");
 	mlx_string_put(mlx, win, (x + 15), y += 40, BLUE_LIGHT2, "fov:");
 	mlx_string_put(mlx, win, (x + 50), y, RED_L, fov);
 	mlx_string_put(mlx, win, (x + 15), y += 40, WHITE, "cam:");

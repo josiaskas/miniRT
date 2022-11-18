@@ -46,7 +46,9 @@ void	make_camera_rotate(int key, t_app *app)
 	double	step;
 
 	cam = app->scene->selected_camera;
-	step = 5 * (M_PI / 180);
+	step = 0.0872665;
+	if (app->conf.c_mode == e_clock_wise_mode)
+		step = -0.0872665;
 	if (key == MAIN_PAD_X)
 	{
 		cam->rot_angles.x += step;
@@ -114,11 +116,16 @@ int	key_pressed_hook(int key, t_app *app)
 	else if ((key == MAIN_PAD_1) || (key == MAIN_PAD_2) || (key == MAIN_PAD_3)
 		|| (key == MAIN_PAD_4) || (key == MAIN_PAD_5))
 		start_light_edition(key, app);
-	else if (key == MAIN_PAD_V)
+	else if (key == MAIN_PAD_C)
 		select_new_camera(app);
-	else if (key == MAIN_PAD_I)
+	else if (key == MAIN_PAD_I || key == MAIN_PAD_V)
 	{
-		app->conf.c_mode = e_select_mode;
+		if (key == MAIN_PAD_I)
+			app->conf.c_mode = e_select_mode;
+		else if (app->conf.c_mode != e_clock_wise_mode)
+			app->conf.c_mode = e_clock_wise_mode;
+		else
+			app->conf.c_mode = e_normal_mode;
 		app->conf.rerender = true;
 	}
 	return (0);
