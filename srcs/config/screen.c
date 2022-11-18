@@ -50,7 +50,7 @@ void	light_edition(t_light *light, size_t i)
 	color = light->color;
 	printf("\033[0;31m-- Light Edition --\033[0m\nLight: %ld\n", i);
 	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
-		   light->o.x, light->o.y, light->o.z);
+		light->o.x, light->o.y, light->o.z);
 	get_trans_vector(&translate);
 	translate = v3_add(light->o, translate);
 	get_line_color(&color);
@@ -73,12 +73,12 @@ void	cylinder_edition(t_hittable *cyl)
 	color = cyl->material.main;
 	printf("\033[0;31m-- Cylinder Edition --\033[0m\nName: %s\n", cyl->name);
 	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
-		   cyl->trans.x, cyl->trans.y, cyl->trans.z);
+		cyl->trans.x, cyl->trans.y, cyl->trans.z);
 	get_trans_vector(&translate);
 	translate = v3_add(cyl->trans, translate);
 	ang = v3_multi(57.2957795131, cyl->angles);
 	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
-		   	ang.x, ang.y, ang.z);
+		ang.x, ang.y, ang.z);
 	get_line_angles(&ang);
 	get_line_double("Radius scale (1 to keep)", &conf[0]);
 	get_line_double("H scale (1 to keep)", &conf[1]);

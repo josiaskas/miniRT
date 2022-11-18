@@ -66,8 +66,8 @@ static void	write_data_to_fd(t_color **data)
 		while (x < W_WIDTH)
 		{
 			color = data[y][x];
-			printf("%d %d %d ", (int)(color.a * 255.0f),
-				(int)(color.g * 255.0f), (int)(color.b * 255.0f));
+			printf("%d %d %d ", (int)(color.r * 255),
+				(int)(color.g * 255), (int)(color.b * 255));
 			x++;
 		}
 		printf("\n");

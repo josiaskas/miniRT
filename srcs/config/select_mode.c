@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:49:50 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:22:24 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	sphere_edition(t_hittable *sphere)
 	color = sphere->material.main;
 	printf("\033[0;31m-- Sphere Edition --\033[0m\nName: %s\n", sphere->name);
 	printf("Apply Translation to this position: (%lf, %lf, %lf)\n",
-		   sphere->trans.x, sphere->trans.y, sphere->trans.z);
+		sphere->trans.x, sphere->trans.y, sphere->trans.z);
 	get_trans_vector(&translate);
 	translate = v3_add(sphere->trans, translate);
 	get_line_double("Radius scale (1 to keep)", &r);
@@ -58,12 +58,12 @@ void	plan_edition(t_hittable *plan)
 	color = plan->material.main;
 	printf("\033[0;31m-- Plan Edition --\033[0m\nName: %s\n", plan->name);
 	printf("Apply Translation to this position: (%lf, %lf, %lf)\n",
-		   plan->trans.x, plan->trans.y, plan->trans.z);
+		plan->trans.x, plan->trans.y, plan->trans.z);
 	get_trans_vector(&translate);
 	translate = v3_add(plan->trans, translate);
 	angles = v3_multi(57.2957795131, plan->angles);
 	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
-		   angles.x, angles.y, angles.z);
+		angles.x, angles.y, angles.z);
 	get_line_angles(&angles);
 	get_line_color(&color);
 	plan->material.main = color;

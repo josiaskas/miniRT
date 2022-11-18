@@ -22,7 +22,9 @@ static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 	img = app->img;
 	if (app->out_fd != 0)
 	{
+		color_correction(&clr);
 		app->data[y][x] = clr;
+		print_progress(app->scene->pix_traced);
 	}
 	else
 	{
@@ -101,5 +103,7 @@ bool	render(t_app *app)
 	}
 	app->scene->pix_traced = 0;
 	app->conf.rerender = true;
+	if (app->out_fd != 0)
+		printf("\nRaytracing finished\n");
 	return (true);
 }

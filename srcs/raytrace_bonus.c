@@ -67,5 +67,7 @@ bool	render(t_app *app)
 	run_threads(run_thread_pixel, app, app->data);
 	app->scene->pix_traced = 0;
 	app->conf.rerender = true;
+	if (app->out_fd != 0)
+		printf("\nRaytracing finished\n");
 	return (true);
 }

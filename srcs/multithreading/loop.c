@@ -41,7 +41,9 @@ static inline void	print_clr_to_screen(t_thread *t, t_color clr, int x, int y)
 	img = t->app->img;
 	if (t->app->out_fd != 0)
 	{
+		color_correction(&clr);
 		t->data[y][x] = clr;
+		print_progress(t->scene->pix_traced);
 	}
 	else
 	{

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/18 02:22:33 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 15:23:08 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,7 @@ void	make_camera_rotate(int key, t_app *app)
 		new_ang.z += step;
 	if (all_vector_coord_are_in_range(-0.785398, 0.785398, &new_ang))
 	{
-		move_camera(cam, cam->eye,
-					get_camera_rotate_dir(key, dir, step));
+		move_camera(cam, cam->eye, get_camera_rotate_dir(key, dir, step));
 		cam->rot_angles = new_ang;
 		render(app);
 		app->conf.rerender = true;

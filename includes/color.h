@@ -24,6 +24,16 @@ typedef t_v4	t_color;
 t_color			make_color_vector(t_v3 v, double alpha);
 t_color			hadamar_prod(t_color a, t_color b);
 
+static inline void	color_correction(t_color *color)
+{
+	if (color->r > 1)
+		color->r = 1;
+	if (color->g > 1)
+		color->g = 1;
+	if (color->b > 1)
+		color->b = 1;
+}
+
 static inline unsigned int	get_trgb(t_color color)
 {
 	unsigned int	r;
