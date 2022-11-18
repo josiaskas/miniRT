@@ -3,26 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/30 14:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 14:56:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 14:51:21 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/10/23 14:51:22 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
+// check if is only digit, if decimal '-' in front is false
+static inline bool	ft_is_a_number(char *str, bool is_decimal)
+{
+	size_t	i;
+
+	i = 0;
+	if (!str)
+		return (false);
+	if ((str[0] == '-' || str[0] == '+') && (!is_decimal))
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (false);
+		i++;
+	}
+	if (i > 10)
+		return (false);
+	return (true);
+}
+
 // return a double formed from two strings "12"."34"
-static double ft_parse_double(char *str1, char *str2)
+static double	ft_parse_double(char *str1, char *str2)
 {
 	double	r;
 	double	f;
-	int		after_dot;
+	double	after_dot;
 
 	r = (double)ft_atoi(str1);
-	after_dot = (int)ft_strlen(str2) * -1;
-	f = pow(10, after_dot) * (double)ft_atoi(str2) ;
-	return (r + f);
+	f = 0;
+	if (str2)
+	{
+		after_dot = (double)ft_strlen(str2) * -1.0f;
+		f = powf(10.0f, after_dot) * (double)ft_atoi(str2);
+	}
+	if (str1[0] != '-')
+		return (r + f);
+	else
+		return (r - f);
 }
 
 bool	parse_double_from_str(char *str, double *result)
@@ -37,15 +65,15 @@ bool	parse_double_from_str(char *str, double *result)
 	values = ft_split(str, '.');
 	while (values[i] != 0)
 		i++;
-	if (!ft_is_a_number(values[0]))
+	if (!ft_is_a_number(values[0], false))
 		status = false;
 	if ((i > 2) || (status == false))
 		status = false;
 	else if (i == 1)
-		*result = *result = ft_parse_double(values[0], NULL);
+		*result = ft_parse_double(values[0], NULL);
 	else
 	{
-		if (!ft_is_a_number(values[1]))
+		if (!ft_is_a_number(values[1], true))
 			status = false;
 		*result = ft_parse_double(values[0], values[1]);
 	}
@@ -53,7 +81,7 @@ bool	parse_double_from_str(char *str, double *result)
 	return (status);
 }
 
-bool	parse_a_vector(char *token, t_vector *vector)
+bool	parse_a_vector(char *token, t_v3 *vector)
 {
 	char	**values;
 	size_t	i;
@@ -81,24 +109,12 @@ bool	parse_a_vector(char *token, t_vector *vector)
 
 inline bool	tokens_has_valid_params_nbr(char **tokens, size_t nbr)
 {
-	size_t		params_nbr;
+	size_t	params_nbr;
 
 	params_nbr = 0;
 	while (tokens[params_nbr] != 0)
 		params_nbr++;
 	if (params_nbr != nbr)
-		return (false);
-	return (true);
-}
-
-// check if vector parameters are in [min, max]
-inline bool all_vector_coord_are_in_range(double min, double max, t_vector *v)
-{
-	if (v->x < min || v->x > max)
-		return (false);
-	if (v->y < min || v->y > max)
-		return (false);
-	if (v->z < min || v->z > max)
 		return (false);
 	return (true);
 }

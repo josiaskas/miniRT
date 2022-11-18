@@ -3,81 +3,59 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:41:10 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
 
 // retourne la norme au carré du vecteur
-inline double get_vector_norm_2(t_vector *v)
+inline double	v3_norm_2(t_v3 v)
 {
-	if (v)
-		return ((v->x * v->x) + (v->y * v->y) + (v->z * v->z));
-	return (0);
+	return ((v.x * v.x) + (v.y * v.y) + (v.z * v.z));
 }
 
 // retourne la norme du vecteur
-inline double get_vector_norm(t_vector *v)
+inline double	v3_norm(t_v3 v)
 {
-	if (v)
-		return (sqrt(get_vector_norm_2(v)));
-	return (0);
+	return (sqrt(v3_norm_2(v)));
 }
 
 // addition of two vectors
-inline t_vector	add_vector(t_vector *a, t_vector *b)
+inline t_v3	v3_add(t_v3 a, t_v3 b)
 {
-	t_vector  r;
+	t_v3	r;
 
-	r.x = 0;
-	r.y = 0;
-	r.z = 0;
-	if (a && b)
-	{
-		r.x = (a->x + b->x);
-		r.y = (a->y + b->y);
-		r.z = (a->z + b->z);
-	}
+	r.x = (a.x + b.x);
+	r.y = (a.y + b.y);
+	r.z = (a.z + b.z);
 	return (r);
 }
 
-// multiply a vector with a number
-inline t_vector	multiply_vector(double i, t_vector *v)
+inline t_v3	v3_sub(t_v3 a, t_v3 b)
 {
-	t_vector  r;
+	t_v3	r;
 
-	r.x = 0;
-	r.y = 0;
-	r.z = 0;
-	if (v)
-	{
-		r.x = (i * v->x);
-		r.y = (i * v->y);
-		r.z = (i * v->z);
-	}
+	r.x = (a.x - b.x);
+	r.y = (a.y - b.y);
+	r.z = (a.z - b.z);
 	return (r);
 }
 
-// return normalized version of a vector
-inline t_vector	get_vector_normalized(t_vector *v)
+// return a vector with (1/x, 1/y, 1/z) by checking zeros
+inline t_v3	inverse_comp(t_v3 v)
 {
-	t_vector	n;
-	double		coef;
+	t_v3	i;
 
-	n.x = 0;
-	n.y = 0;
-	n.z = 0;
-	if (v)
-	{
-		coef = get_vector_norm(v);
-		if (coef != 0){
-			coef = (1 / coef);
-			return (multiply_vector(coef, &n));
-		}
-	}
-	return (n);
+	i = (t_v3){0, 0, 0};
+	if (v.x != 0)
+		i.x = 1 / v.x;
+	if (v.y != 0)
+		i.y = 1.0f / v.y;
+	if (v.z != 0)
+		i.z = 1.0f / v.z;
+	return (i);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/23 15:00:02 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/11/18 02:47:18 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,23 +15,24 @@
 # include "../libft/libft.h"
 # include "../minilibx/mlx.h"
 # include "hooks_key.h"
-# include "vector.h"
 # include "raytrace.h"
 # include <unistd.h>
 # include <fcntl.h>
 # include <string.h>
 # include <errno.h>
 
-# define W_HEIGHT 800
-# define W_WIDTH 1200
+# ifndef IS_BONUS
+#  define IS_BONUS 0
+# endif
 
 typedef struct s_mouse
 {
-	int		start_x; //if pressed set by the beginning of pressing
-	int		start_y;
-	int		x;
-	int		y;
-	bool	b_pressed;
+	int			start_x;
+	int			start_y;
+	int			x;
+	int			y;
+	bool		b_pressed;
+	t_hittable	*selected_object;
 }	t_mouse;
 
 typedef struct s_image {
@@ -41,6 +42,22 @@ typedef struct s_image {
 	int		line_length;
 	int		endian;
 }	t_image;
+
+typedef enum e_app_mode
+{
+	e_normal_mode,
+	e_select_mode,
+	e_clock_wise_mode,
+}	t_mode;
+
+typedef struct config_status
+{
+	t_mode		c_mode;
+	t_hittable	*selected_obj;
+	int			status;
+	char		*message;
+	bool		rerender;
+}	t_config;
 
 typedef struct s_app
 {
@@ -52,9 +69,10 @@ typedef struct s_app
 	int			error_code;
 	int			in_fd;
 	int			out_fd;
-	t_vector	*data;
+	t_color		**data;
 	t_mouse		*mouse;
 	t_scene		*scene;
+	t_config	conf;
 }	t_app;
 
 int		write_image_to_file(t_app *app);
@@ -63,8 +81,10 @@ int		open_rt_file(char *filename, t_app *app);
 int		open_out_file(char *file, t_app *app);
 bool	parse_rt_file(t_app *app);
 void	exit_app(t_app *app, bool error);
-
+void	draw_scene(t_image *img, t_color **colors);
 bool	init_window(t_app *app);
+int		close_window(t_app *app);
 void	app_loop(t_app *app);
-bool	do_raytracing(t_app *app);
+bool	render(t_app *app);
+int		rerender(t_app *app);
 #endif

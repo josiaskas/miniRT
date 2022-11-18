@@ -3,60 +3,72 @@
 /*                                                        :::      ::::::::   */
 /*   ray.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/28 12:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/30 11:26:04 by jkasongo         ###   ########.fr       */
+/*   Created: 2022/10/31 17:30:08 by jkasongo          #+#    #+#             */
+/*   Updated: 2022/11/10 09:29:07 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "vector.h"
+#include "ray.h"
+#include "transformation.h"
 
 /*
- * Build the ray with origin and direction vector
- * return a *t_ray to be freed
-*/
-inline t_ray	*build_ray(t_point *origin, t_vector *direction)
+ * return a ray from camera eye to the pixel
+ * use a matrix to transform from camera to view world
+ * ray dir is normalized
+ */
+t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 {
-	t_ray		*ray;
+	double	off[2];
+	t_v4	v[2];
+	t_v3	p[2];
+	t_v3	dir;
 
-	ray = (t_ray *)ft_calloc(1, sizeof(t_ray));
-	if (ray)
-	{
-		ray->origin = origin;
-		ray->dir = direction;
-	}
-	return (ray);
+	px = px * cam->pixel_dx;
+	py = py * cam->pixel_dy;
+	off[0] = cam->half_width - px;
+	off[1] = cam->half_height - py;
+	v[1] = multiply_m4_v4(cam->inv_tr, (t_v4){off[0], off[1], -1, 1});
+	v[0] = multiply_m4_v4(cam->inv_tr, (t_v4){0, 0, 0, 1});
+	p[1] = (t_v3){v[1].r, v[1].g, v[1].b};
+	p[0] = (t_v3){v[0].r, v[0].g, v[0].b};
+	dir = normalize(v3_sub(p[1], p[0]));
+	return (build_ray(p[0], dir));
 }
 
 /*
- * Return a Point according to t with a ray, parametric equation.
- * equation is point = ray_origin + (t * ray_dir)
- * ray dir vector need to be normalized to be correct
+* Return the ray in the object space
+* The ray need after usage to be freed
 */
-inline t_point	get_point_on_ray_at(double t, t_ray *ray)
+t_ray	*get_transformed_ray(t_ray *ray, const t_m4 transform, const t_v3 sp_o)
 {
-	t_point	a;
+	t_ray	*tr_ray;
+	t_v4	o;
+	t_v4	dir;
+	t_v4	oo;
 
-	ft_bzero(&a, sizeof(t_point));
-	if (ray->dir)
-	{
-		a.x = ray->origin->x + (t * ray->dir->x);
-		a.y = ray->origin->y + (t * ray->dir->y);
-		a.z = ray->origin->z + (t * ray->dir->z);
-	}
-	return (a);
+	o = multiply_m4_v4(transform, v3_to_v4(ray->o));
+	oo = multiply_m4_v4(transform, v3_to_v4(sp_o));
+	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
+	dir = v4_sub(dir, oo);
+	tr_ray = build_ray((t_v3){o.r, o.g, o.b}, (t_v3){dir.r, dir.g, dir.b});
+	return (tr_ray);
 }
 
-// Clean the ray
-void	free_ray(t_ray *ray)
+/*
+* Return the vector after a transformation is applied
+* cant get a vector in the correct space (Object or World)
+*/
+t_v3	get_vector_tr(t_v3 v, const t_m4 transform, const t_v3 origin)
 {
-	if (ray)
-	{
-		if (ray->origin)
-			free(ray->origin);
-		if (ray->dir)
-			free(ray->dir);
-		free(ray);
-	}
+	t_v4	dir;
+	t_v4	oo;
+	t_v3	result;
+
+	oo = multiply_m4_v4(transform, v3_to_v4(origin));
+	dir = multiply_m4_v4(transform, v3_to_v4(v));
+	dir = v4_sub(dir, oo);
+	result = (t_v3){dir.r, dir.g, dir.b};
+	return (result);
 }

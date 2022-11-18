@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jkasongo <jkasongo@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/08/14 18:54:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:08:35 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_print_error(char *error_message, int code)
 {
-	ft_putstr_fd("miniRT: code:", STDERR_FILENO);
+	ft_putstr_fd("Error\nminiRT: Code:", STDERR_FILENO);
 	ft_putnbr_fd(code, STDERR_FILENO);
 	ft_putchar_fd(' ', STDERR_FILENO);
 	ft_putendl_fd(error_message, STDERR_FILENO);
@@ -31,7 +31,7 @@ static void	clean_app_stuff(t_app *app)
 	if (app->out_fd != 0)
 		close(app->out_fd);
 	if (app->data)
-		free(app->data);
+		free_array((void **)app->data, W_HEIGHT);
 }
 
 static void	clean_raytrace_stuff(t_app *app)
