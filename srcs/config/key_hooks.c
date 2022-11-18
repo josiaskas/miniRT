@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "window.h"
+#include "parser.h"
 
 static int	move_camera_eye(int key, t_app *app)
 {
@@ -42,31 +43,31 @@ static int	move_camera_eye(int key, t_app *app)
 
 void	make_camera_rotate(int key, t_app *app)
 {
-	t_cam	*cam;
+	t_v3	new_ang;
 	double	step;
+	t_v4	dir;
+	t_cam	*cam;
 
 	cam = app->scene->selected_camera;
-	step = 0.0872665;
+	dir = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 0};
+	new_ang = cam->rot_angles;
+	step = 0.0349066;
 	if (app->conf.c_mode == e_clock_wise_mode)
-		step = -0.0872665;
+		step = -0.0349066;
 	if (key == MAIN_PAD_X)
-	{
-		cam->rot_angles.x += step;
-		cam->transform = m4_multi(cam->transform, rotation_x(step));
-	}
+		new_ang.x += step;
 	else if (key == MAIN_PAD_Y)
-	{
-		cam->rot_angles.z += step;
-		cam->transform = m4_multi(cam->transform, rotation_z(step));
-	}
+		new_ang.y += step;
 	else if (key == MAIN_PAD_Z)
+		new_ang.z += step;
+	if (all_vector_coord_are_in_range(-0.785398, 0.785398, &new_ang))
 	{
-		cam->rot_angles.y += step;
-		cam->transform = m4_multi(cam->transform, rotation_y(step));
+		move_camera(cam, cam->eye,
+					get_camera_rotate_dir(key, dir, step));
+		cam->rot_angles = new_ang;
+		render(app);
+		app->conf.rerender = true;
 	}
-	cam->inv_tr = get_inverse(cam->transform);
-	render(app);
-	app->conf.rerender = true;
 }
 
 void	select_new_camera(t_app *app)

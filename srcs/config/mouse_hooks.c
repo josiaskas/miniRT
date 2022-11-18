@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "window.h"
-#include "minirt.h"
-#include "raytrace.h"
 
 int	ft_zoom_hook(int button, t_app *app)
 {
@@ -31,6 +29,17 @@ int	ft_zoom_hook(int button, t_app *app)
 	}
 	app->conf.rerender = true;
 	return (0);
+}
+
+t_v3	get_camera_rotate_dir(int key, t_v4 dir, double step)
+{
+	if (key == MAIN_PAD_X)
+		dir = multiply_m4_v4(rotation_x(step), dir);
+	else if (key == MAIN_PAD_Y)
+		dir = multiply_m4_v4(rotation_y(step), dir);
+	else if (key == MAIN_PAD_Z)
+		dir = multiply_m4_v4(rotation_z(step), dir);
+	return ((t_v3){dir.r, dir.g, dir.b});
 }
 
 int	mouse_pressed(int button, int x, int y, t_app *app)

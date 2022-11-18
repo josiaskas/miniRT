@@ -85,7 +85,7 @@ t_cam	*build_camera(t_point origin, t_v3 forward, double fov)
 bool	move_camera(t_cam *camera, t_point origin, t_v3 forward)
 {
 	t_v3	up;
-	t_m4	rot;
+	//t_m4	rot;
 
 	camera->eye = origin;
 	camera->look_at = forward;
@@ -94,9 +94,9 @@ bool	move_camera(t_cam *camera, t_point origin, t_v3 forward)
 		&& forward.z == 0)
 		up = (t_v3){0, 0, 1};
 	camera->transform = view_transform(origin, forward, up);
-	rot = get_tr_matrix((t_v3){0, 0, 0}, camera->rot_angles,
-			(t_v3){1, 1, 1}, false);
-	camera->transform = m4_multi(camera->transform, rot);
+//	rot = get_tr_matrix((t_v3){0, 0, 0}, camera->rot_angles,
+//			(t_v3){1, 1, 1}, false);
+//	camera->transform = m4_multi(camera->transform, rot);
 	camera->inv_tr = get_inverse(camera->transform);
 	return (true);
 }
