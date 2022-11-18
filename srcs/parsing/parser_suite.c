@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:50:59 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:51:00 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:36:24 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,7 @@ bool	parse_cylinder(char **tokens, t_app *app)
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
-	conf[0] = conf[0] / 2;
-	data[0] = (t_v3){(conf[0] * 0.5), 1, 1};
+	data[0] = (t_v3){conf[0] * 0.5, 1, 1};
 	data[1] = (t_v3){0, 0, 0};
 	transform_to_rad_and_check(&data[1]);
 	return (build_cy(app->scene, p, data, conf[1]));

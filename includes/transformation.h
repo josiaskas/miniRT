@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:00:24 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 18:39:15 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:45:43 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,5 @@ t_m4	quaternion_z(double q0, double q1, double q2, double q3);
  * trans:translation vector, angles: vector, scaling vector, is inverse check
 */
 t_m4	get_tr_matrix(t_v3 trans, t_v3 angles, t_v3 sc, bool inv);
-
 
 #endif

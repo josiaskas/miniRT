@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:00:13 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:35:47 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:44:39 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ typedef struct s_scene
 	t_ambiant	ambiant;
 	t_array		*names;
 	int			pix_traced;
+	size_t		cam_cursor;
 }	t_scene;
 
 t_scene	*init_scene(void);
@@ -55,14 +56,13 @@ t_cam	*build_camera(t_point origin, t_v3 dir, double fov);
 t_m4	view_transform(t_v3 from, t_v3 to, t_v3 up);
 bool	update_cam(t_cam *cam, double hsize, double vsize, double fov);
 bool	move_camera(t_cam *camera, t_point origin, t_v3 forward);
-
+bool	switch_camera(t_scene *scn);
 
 t_color	color_at(t_scene *world, t_ray *ray);
 t_color	get_pixel_clr(t_scene *scene, double x, double y);
 void	ft_compute_hit(t_hit *hit);
 t_color	lighting(t_scene *scn, t_hit *hit, t_light *light);
-bool	is_shadowed(t_scene *world, t_v3 to_light, const t_point p, double dist);
-
+bool	is_shadowed(t_scene *world, t_v3 to_light, const t_point p, double d);
 
 //sphere
 bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3]);

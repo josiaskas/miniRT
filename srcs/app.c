@@ -38,6 +38,7 @@ void	app_loop(t_app *app)
 
 	img = app->img;
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
+	mlx_do_key_autorepeatoff(app->mlx);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
 	mlx_loop_hook(app->mlx, watcher, app);

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/29 15:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:40:40 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:45:26 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ typedef struct s_camera
 	double	pixel_dy;
 	double	half_height;
 	double	half_width;
+	t_v3	rot_angles;
 	t_point	eye;
 	t_point	look_at;
 	t_m4	transform;
@@ -131,7 +132,7 @@ static inline t_ray	*build_ray(t_point origin, t_v3 direction)
 
 t_ray	*ray_for_pixel(t_cam *cam, double px, double py);
 t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o);
-t_v3	get_vector_tr(t_v3 v,  t_m4 transform, t_v3 origin);
+t_v3	get_vector_tr(t_v3 v, t_m4 transform, t_v3 origin);
 
 /*
  * Return a Point according to t with a ray, parametric equation.

@@ -18,6 +18,7 @@ OBJS_DIR = ./objs
 OBJS_BONUS_DIR = ./objs_bonus
 #libft
 LIBFT_DIR = ./libft
+LIBFT_LIB = ./libft/libft.a
 #mlx
 MLX_DIR =./minilibx
 MLX_FLAGS = -L./ -lmlx -framework OpenGl -framework AppKit
@@ -79,15 +80,13 @@ all : $(NAME)
 
 bonus: $(NAME)_bonus
 
-$(NAME): $(OBJS_DIR) $(OBJS) $(MLX_LIB_FILES)
+$(NAME): $(OBJS_DIR) $(OBJS) $(LIBFT_LIB) $(MLX_LIB_FILES)
 	@echo "$(GREEN)finish building objects$(RESET_COLOR)"
-	@$(MAKE) -C $(LIBFT_DIR)
 	@$(CC) $(CFLAGS) $(OBJS) -lm -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $@
 	@echo "$(GREEN)$(NAME) est construit$(RESET_COLOR)"
 
-$(NAME)_bonus: $(OBJS_BONUS_DIR) $(OBJS_BONUS) $(MLX_LIB_FILES)
+$(NAME)_bonus: $(OBJS_BONUS_DIR) $(OBJS_BONUS) $(LIBFT_LIB) $(MLX_LIB_FILES)
 	@echo "$(GREEN)finish building objects$(RESET_COLOR)"
-	@$(MAKE) -C $(LIBFT_DIR)
 	@$(CC) $(CFLAGS) $(OBJS_BONUS) -lm -L$(LIBFT_DIR) -lft $(MLX_FLAGS) -o $(NAME)_bonus
 	@echo "$(GREEN)$(NAME) bonus version est construit$(RESET_COLOR)"
 
@@ -113,6 +112,8 @@ $(MLX_LIB_FILES):
 	@$(MAKE) -C $(MLX_DIR)
 	@cd $(MLX_DIR) && mv $@ ..
 
+$(LIBFT_LIB):
+	@$(MAKE) -C $(LIBFT_DIR)
 clean :
 	@rm -rf $(OBJS_DIR)
 	@rm -rf $(OBJS_BONUS_DIR)

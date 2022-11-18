@@ -6,13 +6,12 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:52:10 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 20:32:53 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:40:01 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "raytrace.h"
 #include "parser.h"
-
 
 // clear all data stored to prepare a new frame
 static inline void	init_raytracing(t_app *app)

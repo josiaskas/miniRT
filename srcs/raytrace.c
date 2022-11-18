@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:54:17 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 18:26:46 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:08:17 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 {
 	int		pos;
-	char 	*pixel;
+	char	*pixel;
 	t_image	*img;
 
 	img = app->img;
@@ -29,7 +29,6 @@ static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
 		pixel = img->data + pos;
 		*(unsigned int *)pixel = get_trgb(clr);
-		//print_progress(app->scene->pix_traced);
 	}
 }
 
@@ -85,7 +84,7 @@ bool	render(t_app *app)
 {
 	int		x;
 	int		y;
-	t_color pix_clr;
+	t_color	pix_clr;
 
 	y = 0;
 	while (y < W_HEIGHT)

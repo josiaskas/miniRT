@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:50:37 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:11:45 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:38:19 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ bool	parse_sphere_bonus(char **tokens, t_app *app)
 	return (build_sphere(app->scene, origin, data));
 }
 
-bool	all_vector_coord_are_in_range(double min, const double max, const t_v3 *v)
+bool	all_vector_coord_are_in_range(double min, double max, const t_v3 *v)
 {
 	if (v->x < min || v->x > max)
 		return (false);

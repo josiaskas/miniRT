@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/05 22:17:56 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 18:13:46 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:37:26 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 	}
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[1])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= 0) && (m <= hit->object->h ))
+	if ((m >= 0) && (m <= hit->object->h))
 	{
 		hit->t = hit->t_trace[1];
 		hit->intersection = true;

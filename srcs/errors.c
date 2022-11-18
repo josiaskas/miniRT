@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:54:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 09:30:49 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:08:35 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ void	ft_print_error(char *error_message, int code)
 	ft_putchar_fd(' ', STDERR_FILENO);
 	ft_putendl_fd(error_message, STDERR_FILENO);
 }
-
-
 
 static void	clean_app_stuff(t_app *app)
 {

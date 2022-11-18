@@ -11,19 +11,20 @@
 /* ************************************************************************** */
 
 #include "window.h"
-#include "parser.h"
 
 int	write_info_section(t_app *app, void *mlx, void *win)
 {
 	int		y;
 	int		x;
 	char	*fov;
+	char	*cam_nbr;
 
 	y = 400;
 	x = 1100;
 	mlx = app->mlx;
 	win = app->window;
-	fov = ft_itoa( (int)(round(app->scene->selected_camera->fov)));
+	fov = ft_itoa((int)(round(app->scene->selected_camera->fov)));
+	cam_nbr = ft_itoa((int)(app->scene->cam_cursor + 1));
 	mlx_string_put(mlx, win, x, y += 20, BLUE_LIGHT2, app->file_name);
 	if (app->conf.c_mode == e_normal_mode)
 		mlx_string_put(mlx, win, (x + 15), y += 30, BLUE_LIGHT, "Normal Mode");
@@ -31,8 +32,33 @@ int	write_info_section(t_app *app, void *mlx, void *win)
 		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "Edition Mode");
 	mlx_string_put(mlx, win, (x + 15), y += 40, BLUE_LIGHT2, "fov:");
 	mlx_string_put(mlx, win, (x + 50), y, RED_L, fov);
+	mlx_string_put(mlx, win, (x + 15), y += 40, WHITE, "cam:");
+	mlx_string_put(mlx, win, (x + 50), y, RED_L, cam_nbr);
 	free(fov);
+	free(cam_nbr);
 	return (0);
+}
+
+void	light_edition(t_light *light, size_t i)
+{
+	t_color	color;
+	t_v3	translate;
+	double	cd;
+
+	color = light->color;
+	printf("\033[0;31m-- Light Edition --\033[0m\nLight: %ld\n", i);
+	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
+		   light->o.x, light->o.y, light->o.z);
+	get_trans_vector(&translate);
+	translate = v3_add(light->o, translate);
+	get_line_color(&color);
+	printf("> Current cd: %lf\n", light->cd);
+	get_line_double("New cd:", &cd);
+	if (cd > 1)
+		cd = 1;
+	light->cd = cd;
+	light->color = v4_multi(light->cd, color);
+	printf("\033[0;31m\n-- End --\033[0m\n");
 }
 
 void	cylinder_edition(t_hittable *cyl)

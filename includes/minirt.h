@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 15:00:02 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 15:00:03 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:47:18 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ typedef enum e_app_mode
 {
 	e_normal_mode,
 	e_select_mode,
-	e_insert_mode,
 	e_rotation_mode,
 }	t_mode;
 

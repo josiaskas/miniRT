@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:52:30 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 18:15:15 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:28:06 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	compute_sphere_hit(t_hit *hit)
 	hit->normal = normalize((t_v3){n.r, n.g, n.b});
 	if (hit->inside)
 		hit->normal = v3_multi(-1, hit->normal);
-	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN,hit->normal));
+	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray *obj_r)

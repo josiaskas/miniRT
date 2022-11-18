@@ -6,14 +6,14 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/12 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/05 19:33:22 by jkasongo         ###   ########.fr       */
+/*   Updated: 2022/11/18 02:42:32 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minirt.h"
 #include "../../includes/multithread.h"
 
-static void	run_thread_batch(t_thread	info[], void* (*apply)(void *))
+static void	run_thread_batch(t_thread	info[], void *(*apply)(void *))
 {
 	int			nb_t;
 
@@ -31,6 +31,52 @@ static void	run_thread_batch(t_thread	info[], void* (*apply)(void *))
 	return ;
 }
 
+// clear all data stored to prepare a new frame
+static inline void	print_clr_to_screen(t_thread *t, t_color clr, int x, int y)
+{
+	int		pos;
+	char	*pixel;
+	t_image	*img;
+
+	img = t->app->img;
+	if (t->app->out_fd != 0)
+	{
+		t->data[y][x] = clr;
+	}
+	else
+	{
+		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
+		pixel = img->data + pos;
+		*(unsigned int *)pixel = get_trgb(clr);
+	}
+}
+
+void	*run_thread_pixel(void *thread_info)
+{
+	t_thread	*t;
+	int			y;
+	int			x;
+	t_color		pix_clr;
+
+	t = thread_info;
+	y = t->start;
+	while (y < t->end)
+	{
+		x = 0;
+		while (x < W_WIDTH)
+		{
+			pix_clr = get_pixel_clr(t->scene, (x + 0.5), (y + 0.5));
+			pthread_mutex_lock(t->write_mutex);
+			t->scene->pix_traced++;
+			print_clr_to_screen(t, pix_clr, x, y);
+			pthread_mutex_unlock(t->write_mutex);
+			x++;
+		}
+		y++;
+	}
+	return (t);
+}
+
 void	run_threads(void *(*apply)(void *), t_app *app, t_color **clrs)
 {
 	int				i;
@@ -44,7 +90,7 @@ void	run_threads(void *(*apply)(void *), t_app *app, t_color **clrs)
 	while (i < THREAD_NUMBER)
 	{
 		thread_list[i].scene = app->scene;
-		thread_list[i].app =  app;
+		thread_list[i].app = app;
 		thread_list[i].data = clrs;
 		thread_list[i].start = delta * i;
 		thread_list[i].end = thread_list[i].start + delta;
