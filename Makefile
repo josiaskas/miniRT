@@ -109,6 +109,7 @@ $(OBJS_BONUS_DIR)/%.o : %.c $(INCLUDES_BONUS)
 	@$(CC) $(CFLAGS) -I$(INCLUDES_DIR) -DIS_BONUS=1 -c $< -o $@
 
 $(MLX_LIB_FILES):
+	@echo "trying to build mlx"
 	@$(MAKE) -C $(MLX_DIR)
 	@cd $(MLX_DIR) && mv $@ ..
 
@@ -118,11 +119,9 @@ clean :
 	@rm -rf $(OBJS_DIR)
 	@rm -rf $(OBJS_BONUS_DIR)
 	@$(MAKE) clean -C $(LIBFT_DIR)
-	@$(MAKE) clean -C $(MLX_DIR)
 	@echo "$(GREEN)cleaning objs$(RESET_COLOR)"
 
 fclean : clean
-	@rm -rf $(MLX_LIB_FILES)
 	@rm -f ./$(NAME)
 	@rm -f ./$(NAME)_bonus
 	@echo "$(RED)clean$(RESET_COLOR)"

@@ -13,7 +13,7 @@
 #ifndef MINIRT_H
 # define MINIRT_H
 # include "../libft/libft.h"
-# include "../minilibx/mlx.h"
+# include "mlx.h"
 # include "hooks_key.h"
 # include "raytrace.h"
 # include <unistd.h>
