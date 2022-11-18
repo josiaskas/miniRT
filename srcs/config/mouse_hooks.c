@@ -14,6 +14,25 @@
 #include "minirt.h"
 #include "raytrace.h"
 
+int	ft_zoom_hook(int button, t_app *app)
+{
+	t_cam	*cam;
+	double	fov;
+
+	cam = app->scene->selected_camera;
+	if (button == MOUSE_SCROLL_UP)
+		fov = cam->fov - 5;
+	else
+		fov = cam->fov + 5;
+	if (fov >= 1 && fov <= 180)
+	{
+		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
+		render(app);
+	}
+	app->conf.rerender = true;
+	return (0);
+}
+
 int	mouse_pressed(int button, int x, int y, t_app *app)
 {
 	if (!app->mouse->b_pressed)
@@ -24,6 +43,8 @@ int	mouse_pressed(int button, int x, int y, t_app *app)
 	}
 	if ((button == MOUSE_LEFT_BUTTON) && (app->conf.c_mode == e_select_mode))
 		start_selecting_mode(app, x, y);
+	else if ((button == MOUSE_SCROLL_UP) || (button == MOUSE_SCROLL_DOWN))
+		ft_zoom_hook(button, app);
 	return (0);
 }
 

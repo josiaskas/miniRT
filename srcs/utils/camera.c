@@ -44,6 +44,8 @@ inline bool	update_cam(t_cam *cam, double hsize, double vsize, double fov)
 		cam->aspect = vsize / hsize;
 		if (fov >= 180)
 			cam->fov = 179.99;
+		else if (fov < 1)
+			cam->fov = 1;
 		else
 			cam->fov = fov;
 		half_view = tanf((cam->fov * 0.01745329251) / 2);
@@ -66,7 +68,6 @@ t_cam	*build_camera(t_point origin, t_v3 forward, double fov)
 	cam = (t_cam *)ft_calloc(1, sizeof(t_cam));
 	if (cam)
 	{
-		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
 		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
 		cam->eye = origin;
 		cam->look_at = forward;

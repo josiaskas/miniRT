@@ -29,7 +29,7 @@ void	compute_cylinder_hit(t_hit *hit)
 	hit->normal = normalize((t_v3){n_world.r, n_world.g, n_world.b});
 	if (hit->inside)
 		hit->normal = v3_multi(-1, hit->normal);
-	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
+	hit->acne_p = v3_add(hit->h_point, v3_multi(0.0015, hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
@@ -38,7 +38,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[0])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= -(hit->object->h / 2)) && (m <= (hit->object->h / 2)))
+	if ((m >= 0) && (m <= hit->object->h))
 	{
 		hit->t = hit->t_trace[0];
 		hit->intersection = true;
@@ -49,7 +49,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 	}
 	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[1])
 		+ ft_dot(cyl_ray, hit->object->dir);
-	if ((m >= -(hit->object->h / 2)) && (m <= (hit->object->h / 2)))
+	if ((m >= 0) && (m <= hit->object->h ))
 	{
 		hit->t = hit->t_trace[1];
 		hit->intersection = true;

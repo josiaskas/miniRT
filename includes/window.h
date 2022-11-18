@@ -27,11 +27,14 @@
 int		write_info_section(t_app *app, void *mlx, void *win);
 int		mouse_pressed(int button, int x, int y, t_app *app);
 int		mouse_release(int button, int x, int y, t_app *app);
+int		key_pressed_hook(int key, t_app *app);
 
 void	start_selecting_mode(t_app *app, int x, int y);
-int		key_pressed_hook(int key, t_app *app);
-void	get_line_vector(char *title, t_v3 *v);
+void	start_edition(t_app *app);
+void	cylinder_edition(t_hittable *cyl);
+void	get_trans_vector(t_v3 *v);
 void	get_line_color(t_color *color);
 void	get_line_double(char *title, double *val);
+void	get_line_angles(t_v3 *angles);
 
 #endif

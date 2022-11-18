@@ -20,7 +20,7 @@ static inline bool	ft_is_a_number(char *str, bool is_decimal)
 	i = 0;
 	if (!str)
 		return (false);
-	if (str[0] == '-' && (!is_decimal))
+	if ((str[0] == '-' || str[0] == '+') && (!is_decimal))
 		i++;
 	while (str[i])
 	{

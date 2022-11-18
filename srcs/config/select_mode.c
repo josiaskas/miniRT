@@ -28,29 +28,49 @@ static inline t_hittable	*find_selected_object(t_scene	*scn, int x, int y)
 	return (NULL);
 }
 
-static	inline void	sphere_edition(t_hittable *sphere)
+void	sphere_edition(t_hittable *sphere)
 {
 	t_color	color;
 	t_v3	translate;
 	t_v3	scale;
 	double	r;
 
-	scale = (t_v3){1, 1, 1};
-	r = 1;
-	printf("\033[0;31m-- Sphere Edition --\033[0m\nName: %s", sphere->name);
-	printf("Current position: (%lf, %lf, %lf)\n",
+	scale = sphere->scale;
+	color = sphere->material.main;
+	printf("\033[0;31m-- Sphere Edition --\033[0m\nName: %s\n", sphere->name);
+	printf("Apply Translation to this position: (%lf, %lf, %lf)\n",
 		   sphere->trans.x, sphere->trans.y, sphere->trans.z);
-	get_line_vector("translation", &translate);
-	printf("Current scale(equal for a perfect sphere): (%lf, %lf, %lf)\n",
-		   sphere->scale.x, sphere->scale.y, sphere->scale.z);
-	get_line_double("scale-radius", &r);
+	get_trans_vector(&translate);
+	translate = v3_add(sphere->trans, translate);
+	get_line_double("Radius scale (1 to keep)", &r);
 	get_line_color(&color);
 	sphere->material.main = color;
 	scale = v3_multi(r, scale);
 	transform_sphere(sphere, translate, (t_v3){0, 0, 0}, scale);
 }
 
-static	inline void	start_edition(t_app *app)
+void	plan_edition(t_hittable *plan)
+{
+	t_color	color;
+	t_v3	translate;
+	t_v3	angles;
+
+	color = plan->material.main;
+	printf("\033[0;31m-- Plan Edition --\033[0m\nName: %s\n", plan->name);
+	printf("Apply Translation to this position: (%lf, %lf, %lf)\n",
+		   plan->trans.x, plan->trans.y, plan->trans.z);
+	get_trans_vector(&translate);
+	translate = v3_add(plan->trans, translate);
+	angles = v3_multi(57.2957795131, plan->angles);
+	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
+		   angles.x, angles.y, angles.z);
+	get_line_angles(&angles);
+	get_line_color(&color);
+	plan->material.main = color;
+	transform_plane(plan, translate, angles, (t_v3){1, 1, 1});
+}
+
+void	start_edition(t_app *app)
 {
 	t_hittable	*obj;
 
@@ -58,6 +78,10 @@ static	inline void	start_edition(t_app *app)
 	app->conf.status = 0;
 	if (obj->type == e_hit_sphere)
 		sphere_edition(obj);
+	else if (obj->type == e_hit_cylinder)
+		cylinder_edition(obj);
+	else if (obj->type == e_hit_plane)
+		plan_edition(obj);
 	app->conf.status = 0;
 	app->conf.selected_obj = NULL;
 	render(app);

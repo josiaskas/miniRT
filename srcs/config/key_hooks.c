@@ -40,6 +40,24 @@ static int	prepare_camera_move(int key, t_app *app)
 	return (0);
 }
 
+void	make_camera_rotate(int key, t_app *app)
+{
+	t_cam	*cam;
+	double	step;
+
+	cam = app->scene->selected_camera;
+	step = 5 * (M_PI / 180);
+	if (key == MAIN_PAD_X)
+		cam->transform = m4_multi(cam->transform, rotation_x(step));
+	else if (key == MAIN_PAD_Y)
+		cam->transform = m4_multi(cam->transform, rotation_z(step));
+	else if (key == MAIN_PAD_Z)
+		cam->transform = m4_multi(cam->transform, rotation_y(step));
+	cam->inv_tr = get_inverse(cam->transform);
+	render(app);
+	app->conf.rerender = true;
+}
+
 int	key_pressed_hook(int key, t_app *app)
 {
 	if ((key == MAIN_PAD_ESC) || (key == MAIN_PAD_Q))
@@ -47,7 +65,13 @@ int	key_pressed_hook(int key, t_app *app)
 	else if ((key == ARROW_UP) || (key == ARROW_DOWN)
 		|| (key == ARROW_LEFT) || (key == ARROW_RIGHT))
 		prepare_camera_move(key, app);
-	else if (key == MAIN_PAD_C)
+	else if ((key == MAIN_PAD_X) || (key == MAIN_PAD_Y)
+			 || (key == MAIN_PAD_Z))
+		make_camera_rotate(key, app);
+	else if (key == MAIN_PAD_I)
+	{
 		app->conf.c_mode = e_select_mode;
+		app->conf.rerender = true;
+	}
 	return (0);
 }
