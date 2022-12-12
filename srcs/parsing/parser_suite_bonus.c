@@ -45,7 +45,7 @@ bool	parse_sphere_bonus(char **tokens, t_app *app)
 		return (false);
 	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
 		return (false);
-	return (build_sphere(app->scene, origin, data));
+	return (build_special_sphere(app->scene, origin, data));
 }
 
 bool	all_vector_coord_are_in_range(double min, double max, const t_v3 *v)

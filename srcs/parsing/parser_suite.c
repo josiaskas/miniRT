@@ -15,7 +15,7 @@
 bool	parse_sphere(char **tokens, t_app *app)
 {
 	t_point		origin;
-	t_v3		data[3];
+	t_v3		color_rgb;
 	double		radius;
 
 	app->error_message = "Error during parsing, On a sphere";
@@ -25,13 +25,11 @@ bool	parse_sphere(char **tokens, t_app *app)
 		return (false);
 	if (!parse_double_from_str(tokens[2], &radius))
 		return (false);
-	if (!parse_a_vector(tokens[3], &data[2]))
+	if (!parse_a_vector(tokens[3], &color_rgb))
 		return (false);
-	if (!all_vector_coord_are_in_range(0, 255, &data[2]))
+	if (!all_vector_coord_are_in_range(0, 255, &color_rgb))
 		return (false);
-	data[0] = v3_multi(radius, (t_v3){1, 1, 1});
-	data[1] = (t_v3){0, 0, 0};
-	return (build_sphere(app->scene, origin, data));
+	return (build_sphere(app->scene, origin, radius, color_rgb));
 }
 
 bool	parse_plan(char **tokens, t_app *app)

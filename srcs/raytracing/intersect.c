@@ -63,6 +63,8 @@ static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
 		hit->normal = (t_v3){0, 0, 0};
 		if (obj->type == e_hit_sphere)
 			intersect_sphere(hit, obj, ray);
+		else if (obj->type == e_hit_sphere_spec)
+			intersect_tr_sphere(hit, obj, ray);
 		else if (obj->type == e_hit_plane)
 			intersect_plane(hit, obj, ray);
 		else if (obj->type == e_hit_cylinder)

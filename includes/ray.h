@@ -18,6 +18,7 @@
 typedef enum e_hittable_type
 {
 	e_hit_sphere,
+	e_hit_sphere_spec,
 	e_hit_plane,
 	e_hit_triangle,
 	e_hit_cylinder,

@@ -64,10 +64,15 @@ void	ft_compute_hit(t_hit *hit);
 t_color	lighting(t_scene *scn, t_hit *hit, t_light *light);
 bool	is_shadowed(t_scene *world, t_v3 to_light, const t_point p, double d);
 
-//sphere
-bool	build_sphere(t_scene *scn, t_point o, t_v3 data[3]);
-void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
+// sphere
+bool	build_sphere(t_scene *scn, t_point o, double radius, t_v3 color_rgb);
 void	compute_sphere_hit(t_hit *hit);
+void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
+
+//special sphere
+bool	build_special_sphere(t_scene *scn, t_point o, t_v3 data[3]);
+void	intersect_tr_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray);
+void	compute_transformable_sphere_hit(t_hit *hit);
 bool	transform_sphere(t_hittable *sphere, t_v3 tr, t_v3 ang, t_v3 sc);
 
 //cylinder
