@@ -47,7 +47,8 @@ typedef enum e_app_mode
 {
 	e_normal_mode,
 	e_select_mode,
-	e_clock_wise_mode,
+	e_x_z_mode,
+	e_z_y_mode,
 }	t_mode;
 
 typedef struct config_status

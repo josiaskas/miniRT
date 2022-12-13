@@ -133,18 +133,17 @@ bool	parse_rt_file(t_app *app)
 	app->scene = init_scene();
 	app->error_message = "Error during parsing";
 	app->error_code = 2;
-	res = get_next_line(app->in_fd, &line);
+	res = 1;
 	while (res > 0)
 	{
+		res = get_next_line(app->in_fd, &line);
 		if (!parse_file_line(line, app))
 		{
 			free(line);
 			return (false);
 		}
 		free(line);
-		res = get_next_line(app->in_fd, &line);
 	}
-	free(line);
 	app->error_message = NULL;
 	printf("File parsing finished\n");
 	return (check_config_file(app));

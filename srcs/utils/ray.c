@@ -12,7 +12,7 @@
 
 #include "ray.h"
 #include "transformation.h"
-
+#include <stdio.h>
 /*
  * return a ray from camera eye to the pixel
  * use a matrix to transform from camera to view world
@@ -21,7 +21,7 @@
 t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 {
 	double	off[2];
-	t_v4	v[2];
+	t_v4	v;
 	t_v3	p[2];
 	t_v3	dir;
 
@@ -29,10 +29,9 @@ t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 	py = py * cam->pixel_dy;
 	off[0] = cam->half_width - px;
 	off[1] = cam->half_height - py;
-	v[1] = multiply_m4_v4(cam->inv_tr, (t_v4){off[0], off[1], -1, 1});
-	v[0] = multiply_m4_v4(cam->inv_tr, (t_v4){0, 0, 0, 1});
-	p[1] = (t_v3){v[1].r, v[1].g, v[1].b};
-	p[0] = (t_v3){v[0].r, v[0].g, v[0].b};
+	v = multiply_m4_v4(cam->inv_tr, (t_v4){off[0], off[1], -1, 1});
+	p[0] = (t_v3){cam->inv_tr.data[0][3], cam->inv_tr.data[1][3], cam->inv_tr.data[2][3]};
+	p[1] = (t_v3){v.r, v.g, v.b};
 	dir = normalize(v3_sub(p[1], p[0]));
 	return (build_ray(p[0], dir));
 }

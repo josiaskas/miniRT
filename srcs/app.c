@@ -25,6 +25,7 @@ int	watcher(t_app *app)
 	if (app->conf.rerender)
 	{
 		mlx_put_image_to_window(mlx, win, img->img, 0, 0);
+		render(app);
 		write_info_section(app, mlx, win);
 		app->conf.rerender = false;
 	}
@@ -38,7 +39,7 @@ void	app_loop(t_app *app)
 
 	img = app->img;
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
-	mlx_do_key_autorepeatoff(app->mlx);
+//	mlx_do_key_autorepeatoff(app->mlx);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
 	mlx_loop_hook(app->mlx, watcher, app);

@@ -72,7 +72,7 @@ t_cam	*build_camera(t_point origin, t_v3 forward, double fov)
 		cam->eye = origin;
 		cam->look_at = forward;
 		up = (t_v3){0, 1, 0};
-		if (forward.x == 0 && (forward.y == 1 || forward.y == -1)
+		if (forward.x == 0 && (forward.y == 1.0 || forward.y == -1.0)
 			&& forward.z == 0)
 			up = (t_v3){0, 0, 1};
 		cam->transform = view_transform(origin, forward, up);
