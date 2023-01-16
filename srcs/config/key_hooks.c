@@ -52,10 +52,16 @@ int	key_pressed_hook(int key, t_app *app)
 		do_camera_rotation(key, app);
 	else if (key == MAIN_PAD_I)
 	{
-		app->conf.c_mode = e_select_mode;
+		if (app->conf.c_mode == e_select_mode)
+		{
+			app->conf.c_mode = e_normal_mode;
+			app->conf.selected_obj = NULL;
+		}
+		else
+			app->conf.c_mode = e_select_mode;
 		app->conf.rerender = true;
 	}
-	else if (key == MAIN_PAD_V)
+	else if (key == MAIN_PAD_V && app->conf.c_mode != e_select_mode)
 		select_plan_mode(app);
 	return (0);
 }

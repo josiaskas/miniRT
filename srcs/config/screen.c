@@ -14,10 +14,10 @@
 
 int	write_info_section(t_app *app, void *mlx, void *win)
 {
-	int		y;
-	int		x;
-	char	*fov;
-	char	*cam_nbr;
+	int y;
+	int x;
+	char *fov;
+	char *cam_nbr;
 
 	y = 400;
 	x = 1100;
@@ -43,6 +43,56 @@ int	write_info_section(t_app *app, void *mlx, void *win)
 	return (0);
 }
 
+void	translate_object(t_hittable *obj)
+{
+	t_v3	translate;
+
+	if (obj->type == e_hit_sphere || obj->type == e_hit_plane)
+	{
+		printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
+			   obj->o.x, obj->o.y, obj->o.z);
+		get_trans_vector(&translate);
+		translate = v3_add(obj->o, translate);
+		obj->o = translate;
+	}
+	else if (obj->type == e_hit_cylinder)
+	{
+
+		printf("> Curent translation applied on cylinder is : (%lf, %lf, %lf)\n",
+			   obj->trans.x, obj->trans.y, obj->trans.z);
+		get_trans_vector(&translate);
+		translate = v3_add(obj->trans, translate);
+		transform_cy(obj, translate, obj->angles,obj->scale);
+	}
+}
+
+void	rotate_object(t_hittable *obj)
+{
+	t_v4 rotate;
+	t_v3 angles;
+	t_m4 rot_matrix;
+
+	if (obj->type == e_hit_sphere)
+		printf("Can't rotate a sphere\n");
+	if (obj->type == e_hit_plane)
+	{
+		printf("> Set rotation angles \n");
+		get_line_angles(&angles);
+		rot_matrix = get_tr_matrix((t_v3){0, 0, 0}, angles, (t_v3){0, 0, 0},
+								   false);
+		rotate = multiply_m4_v4(rot_matrix,
+								(t_v4){obj->dir.x, obj->dir.y, obj->dir.z, 1});
+		obj->dir = (t_v3){rotate.r, rotate.g, rotate.b};
+	}
+	else if (obj->type == e_hit_cylinder)
+	{
+		printf("> Curent angles applied on cylinder is : (%lf, %lf, %lf)\n",
+			   obj->angles.x, obj->angles.y, obj->angles.z);
+		get_line_angles(&angles);
+		transform_cy(obj, obj->trans, angles, obj->scale);
+	}
+}
+
 void	light_edition(t_light *light, size_t i)
 {
 	t_color	color;
@@ -65,28 +115,29 @@ void	light_edition(t_light *light, size_t i)
 	printf("\033[0;31m\n-- End --\033[0m\n");
 }
 
-void	cylinder_edition(t_hittable *cyl)
-{
-	t_color	color;
-	t_v3	translate;
-	t_v3	ang;
-	double	conf[2];
-
-	color = cyl->material.main;
-	printf("\033[0;31m-- Cylinder Edition --\033[0m\nName: %s\n", cyl->name);
-	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
-		cyl->trans.x, cyl->trans.y, cyl->trans.z);
-	get_trans_vector(&translate);
-	translate = v3_add(cyl->trans, translate);
-	ang = v3_multi(57.2957795131, cyl->angles);
-	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
-		ang.x, ang.y, ang.z);
-	get_line_angles(&ang);
-	get_line_double("Radius scale (1 to keep)", &conf[0]);
-	get_line_double("H scale (1 to keep)", &conf[1]);
-	get_line_color(&color);
-	cyl->material.main = color;
-	cyl->radius = conf[0] * cyl->radius;
-	cyl->h = conf[1] * cyl->h;
-	transform_cy(cyl, translate, ang, (t_v3){1, 1, 1});
-}
+//
+//void	cylinder_edition(t_hittable *cyl)
+//{
+//	t_color	color;
+//	t_v3	translate;
+//	t_v3	ang;
+//	double	conf[2];
+//
+//	color = cyl->material.main;
+//	printf("\033[0;31m-- Cylinder Edition --\033[0m\nName: %s\n", cyl->name);
+//	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
+//		cyl->trans.x, cyl->trans.y, cyl->trans.z);
+//	get_trans_vector(&translate);
+//	translate = v3_add(cyl->trans, translate);
+//	ang = v3_multi(57.2957795131, cyl->angles);
+//	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
+//		ang.x, ang.y, ang.z);
+//	get_line_angles(&ang);
+//	get_line_double("Radius scale (1 to keep)", &conf[0]);
+//	get_line_double("H scale (1 to keep)", &conf[1]);
+//	get_line_color(&color);
+//	cyl->material.main = color;
+//	cyl->radius = conf[0] * cyl->radius;
+//	cyl->h = conf[1] * cyl->h;
+//	transform_cy(cyl, translate, ang, (t_v3){1, 1, 1});
+//}

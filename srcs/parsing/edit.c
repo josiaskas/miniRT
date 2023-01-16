@@ -105,3 +105,26 @@ void	get_line_double(char *title, double *val)
 	}
 	ft_putstr_fd("\033[0;32m ok\033[0m\n", STDOUT_FILENO);
 }
+
+void	get_line_int(char *title, int *val, int min, int max)
+{
+	char	*line;
+	bool	is_valid;
+
+	is_valid = false;
+	line = NULL;
+	while (!is_valid)
+	{
+		ft_printf("\033[0;32m-%s:\033[0m ", title);
+		get_next_line(STDIN_FILENO, &line);
+		is_valid = ft_is_a_number(line, false);
+		if (is_valid)
+			*val = ft_atoi(line);
+		free(line);
+		line = NULL;
+		if (is_valid)
+			is_valid = (*val >= min) && (*val <= max);
+		if (!is_valid)
+			ft_putchar_fd('\n', STDOUT_FILENO);
+	}
+}

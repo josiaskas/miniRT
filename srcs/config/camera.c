@@ -14,38 +14,50 @@
 
 static inline void	rotate_in_x_y(int key, double step, t_cam *cam)
 {
+	t_v4	forward;
+
+	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
 	if (key == ARROW_UP)
-		cam->transform = m4_multi(cam->transform, rotation_x(step));
+		forward = multiply_m4_v4(rotation_x(-step), forward);
 	else if (key == ARROW_DOWN)
-		cam->transform = m4_multi(cam->transform, rotation_x(-step));
+		forward = multiply_m4_v4(rotation_x(step), forward);
 	else if (key == ARROW_LEFT)
-		cam->transform = m4_multi(cam->transform, rotation_y(step));
+		forward = multiply_m4_v4(rotation_y(-step), forward);
 	else if (key == ARROW_RIGHT)
-		cam->transform = m4_multi(cam->transform, rotation_y(-step));
+		forward = multiply_m4_v4(rotation_y(step), forward);
+	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
 
 static inline void	rotate_in_x_z(int key, double step, t_cam *cam)
 {
+	t_v4	forward;
+
+	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
 	if (key == ARROW_UP)
-		cam->transform = m4_multi(cam->transform, rotation_x(step));
+		forward = multiply_m4_v4(rotation_x(-step), forward);
 	else if (key == ARROW_DOWN)
-		cam->transform = m4_multi(cam->transform, rotation_x(-step));
+		forward = multiply_m4_v4(rotation_x(step), forward);
 	else if (key == ARROW_LEFT)
-		cam->transform = m4_multi(cam->transform, rotation_z(step));
+		forward = multiply_m4_v4(rotation_z(-step), forward);
 	else if (key == ARROW_RIGHT)
-		cam->transform = m4_multi(cam->transform, rotation_z(-step));
+		forward = multiply_m4_v4(rotation_z(step), forward);
+	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
 
 static inline void	rotate_in_z_y(int key, double step, t_cam *cam)
 {
+	t_v4	forward;
+
+	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
 	if (key == ARROW_UP)
-		cam->transform = m4_multi(cam->transform, rotation_z(step));
+		forward = multiply_m4_v4(rotation_z(-step), forward);
 	else if (key == ARROW_DOWN)
-		cam->transform = m4_multi(cam->transform, rotation_z(-step));
+		forward = multiply_m4_v4(rotation_z(step), forward);
 	else if (key == ARROW_LEFT)
-		cam->transform = m4_multi(cam->transform, rotation_y(step));
+		forward = multiply_m4_v4(rotation_y(-step), forward);
 	else if (key == ARROW_RIGHT)
-		cam->transform = m4_multi(cam->transform, rotation_y(-step));
+		forward = multiply_m4_v4(rotation_y(step), forward);
+	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
 
 inline void	do_camera_rotation(int key, t_app *app)
@@ -59,6 +71,5 @@ inline void	do_camera_rotation(int key, t_app *app)
 		rotate_in_x_z(key, 0.0349066, cam);
 	else if (app->conf.c_mode == e_z_y_mode)
 		rotate_in_z_y(key, 0.0349066, cam);
-	cam->inv_tr = get_inverse(cam->transform);
 	app->conf.rerender = true;
 }

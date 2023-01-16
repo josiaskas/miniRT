@@ -26,6 +26,7 @@ bool		parse_cylinder(char **tokens, t_app *app);
 bool		parse_triangle(char **tokens, t_app *app);
 bool		transform_to_rad_and_check(t_v3 *v);
 char		*add_name(t_scene *scene, char *name, bool parsed);
+bool		ft_is_a_number(char *str, bool is_decimal);
 
 // check if vector parameters are in [min, max]
 bool		all_vector_coord_are_in_range(double mi, double max, const t_v3 *v);

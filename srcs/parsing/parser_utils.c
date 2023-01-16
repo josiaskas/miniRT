@@ -13,7 +13,7 @@
 #include "parser.h"
 
 // check if is only digit, if decimal '-' in front is false
-static inline bool	ft_is_a_number(char *str, bool is_decimal)
+bool	ft_is_a_number(char *str, bool is_decimal)
 {
 	size_t	i;
 
