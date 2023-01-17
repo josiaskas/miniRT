@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 13:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/22 16:42:04 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 14:01:49 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ void	get_line_int(char *title, int *val, int min, int max)
 		free(line);
 		line = NULL;
 		if (is_valid)
-			is_valid = (*val >= min) && (*val <= max);
+			is_valid = ((*val >= min) && (*val <= max));
 		if (!is_valid)
 			ft_putchar_fd('\n', STDOUT_FILENO);
 	}

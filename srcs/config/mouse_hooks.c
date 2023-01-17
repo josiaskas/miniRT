@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:48:51 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 13:56:29 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	ft_zoom_hook(int button, t_app *app)
 		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
 	app->conf.rerender = true;
 }
-
 
 int	mouse_pressed(int button, int x, int y, t_app *app)
 {

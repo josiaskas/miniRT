@@ -12,6 +12,27 @@
 
 #include "window.h"
 
+static inline void	write_info_mode(int *x, int *y, t_app *app)
+{
+	void	*mlx;
+	void	*win;
+
+	mlx = app->mlx;
+	win = app->window;
+	if (app->conf.c_mode == e_normal_mode)
+		mlx_string_put(mlx, win, (*x += 15), (*y += 30), BLUE_LIGHT,
+			"Normal Mode");
+	if (app->conf.c_mode == e_select_mode)
+		mlx_string_put(mlx, win, (*x += 15), (*y += 30), RED_L,
+			"Edition Mode");
+	else if (app->conf.c_mode == e_x_z_mode)
+		mlx_string_put(mlx, win, (*x += 15), (*y += 30), RED_L,
+			"X - Z Plan mode");
+	else if (app->conf.c_mode == e_z_y_mode)
+		mlx_string_put(mlx, win, (*x += 15), (*y += 30), RED_L,
+			"Z - Y Plan mode");
+}
+
 int	write_info_section(t_app *app, void *mlx, void *win)
 {
 	int		y;
@@ -26,14 +47,7 @@ int	write_info_section(t_app *app, void *mlx, void *win)
 	fov = ft_itoa((int)(round(app->scene->selected_camera->fov)));
 	cam_nbr = ft_itoa((int)(app->scene->cam_cursor + 1));
 	mlx_string_put(mlx, win, x, y += 20, BLUE_LIGHT2, app->file_name);
-	if (app->conf.c_mode == e_normal_mode)
-		mlx_string_put(mlx, win, (x + 15), y += 30, BLUE_LIGHT, "Normal Mode");
-	if (app->conf.c_mode == e_select_mode)
-		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "Edition Mode");
-	else if (app->conf.c_mode == e_x_z_mode)
-		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "X - Z Plan mode");
-	else if (app->conf.c_mode == e_z_y_mode)
-		mlx_string_put(mlx, win, (x + 15), y += 30, RED_L, "Z - Y Plan mode");
+	write_info_mode(&x, &y, app);
 	mlx_string_put(mlx, win, (x + 15), y += 40, BLUE_LIGHT2, "fov:");
 	mlx_string_put(mlx, win, (x + 50), y, RED_L, fov);
 	mlx_string_put(mlx, win, (x + 15), y += 40, WHITE, "cam:");
@@ -50,7 +64,7 @@ void	translate_object(t_hittable *obj)
 	if (obj->type == e_hit_sphere || obj->type == e_hit_plane)
 	{
 		printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
-			   obj->o.x, obj->o.y, obj->o.z);
+			obj->o.x, obj->o.y, obj->o.z);
 		get_trans_vector(&translate);
 		translate = v3_add(obj->o, translate);
 		obj->o = translate;
@@ -58,10 +72,10 @@ void	translate_object(t_hittable *obj)
 	else if (obj->type == e_hit_cylinder)
 	{
 		printf("> Curent translation applied on cylinder is : (%lf, %lf, %lf)\n",
-			   obj->trans.x, obj->trans.y, obj->trans.z);
+			obj->trans.x, obj->trans.y, obj->trans.z);
 		get_trans_vector(&translate);
 		translate = v3_add(obj->trans, translate);
-		transform_cy(obj, translate, obj->angles,obj->scale);
+		transform_cy(obj, translate, obj->angles, obj->scale);
 	}
 }
 
@@ -73,7 +87,7 @@ void	scale_object(t_hittable *obj)
 	if (obj->type == e_hit_sphere || obj->type == e_hit_cylinder)
 	{
 		printf("> Curent radius applied on object is : %lf\n", obj->radius);
-		get_line_double("radius",&radius);
+		get_line_double("radius", &radius);
 		if (radius > 0)
 			obj->radius = radius;
 		else
@@ -82,7 +96,7 @@ void	scale_object(t_hittable *obj)
 	if (obj->type == e_hit_cylinder)
 	{
 		printf("> Curent height applied on cylinder is : %lf\n", obj->h);
-		get_line_double("height",&height);
+		get_line_double("height", &height);
 		if (height > 0)
 			obj->h = height;
 		else
@@ -92,9 +106,9 @@ void	scale_object(t_hittable *obj)
 
 void	rotate_object(t_hittable *obj)
 {
-	t_v4 rotate;
-	t_v3 angles;
-	t_m4 rot_matrix;
+	t_v4	rotate;
+	t_v3	angles;
+	t_m4	rot_matrix;
 
 	if (obj->type == e_hit_sphere)
 		printf("Can't rotate a sphere\n");
@@ -103,36 +117,16 @@ void	rotate_object(t_hittable *obj)
 		printf("> Set rotation angles \n");
 		get_line_angles(&angles);
 		rot_matrix = get_tr_matrix((t_v3){0, 0, 0}, angles, (t_v3){0, 0, 0},
-								   false);
+				false);
 		rotate = multiply_m4_v4(rot_matrix,
-								(t_v4){obj->dir.x, obj->dir.y, obj->dir.z, 1});
+				(t_v4){obj->dir.x, obj->dir.y, obj->dir.z, 1});
 		obj->dir = (t_v3){rotate.r, rotate.g, rotate.b};
 	}
 	else if (obj->type == e_hit_cylinder)
 	{
 		printf("> Curent angles applied on cylinder is : (%lf, %lf, %lf)\n",
-			   obj->angles.x, obj->angles.y, obj->angles.z);
+			obj->angles.x, obj->angles.y, obj->angles.z);
 		get_line_angles(&angles);
 		transform_cy(obj, obj->trans, angles, obj->scale);
-	}
-}
-
-void	light_edition(t_light *light, size_t i)
-{
-	t_color	color;
-	t_v3	translate;
-
-	color = light->color;
-	printf("\033[0;31m-- Editing Light: %ld --\033[0m\n", i);
-	printf("> Current light position: (%lf, %lf, %lf)\n",
-		light->o.x, light->o.y, light->o.z);
-	get_trans_vector(&translate);
-	translate = v3_add(light->o, translate);
-	printf("Do you want to change the color of the light ? (y/n)\n");
-	if (get_line_bool("select"))
-	{
-		printf("> Current light color: (%lf, %lf, %lf)\n", color.r, color.g, color.b);
-		get_line_color(&color);
-		light->color = color;
 	}
 }

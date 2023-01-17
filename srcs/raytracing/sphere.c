@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:52:30 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/18 02:28:06 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 13:54:53 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 	sphere_to_ray = v3_sub(ray->o, sphere->o);
 	terms[0] = ft_dot(ray->dir, ray->dir);
 	terms[1] = 2 * ft_dot(ray->dir, sphere_to_ray);
-	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray) - (sphere->radius * sphere->radius);
+	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray)
+		- (sphere->radius * sphere->radius);
 	if (solve_quad(terms, &t[0], &t[1]))
 	{
 		hit->t_trace[0] = t[0];

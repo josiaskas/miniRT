@@ -6,7 +6,7 @@
 #    By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/08/14 18:37:04 by jkasongo          #+#    #+#              #
-#    Updated: 2022/12/13 11:50:25 by jkasongo         ###   ########.fr        #
+#    Updated: 2023/01/17 14:21:46 by jkasongo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -47,7 +47,7 @@ RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #config sources
 CONFIG_DIR = config/
-CONFIG_SRCS = key_hooks.c mouse_hooks.c screen.c select_mode.c camera.c get_line.c
+CONFIG_SRCS = key_hooks.c key_hooks_suite.c mouse_hooks.c screen.c select_mode.c camera.c get_line.c
 CONFIG_SRCS_PREFIXED = $(addprefix $(CONFIG_DIR), $(CONFIG_SRCS))
 
 #multithreading sources

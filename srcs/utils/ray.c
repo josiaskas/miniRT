@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/31 17:30:08 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 09:29:07 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 13:54:14 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,10 @@ t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 	off[0] = cam->half_width - px;
 	off[1] = cam->half_height - py;
 	v = multiply_m4_v4(cam->inv_tr, (t_v4){off[0], off[1], -1, 1});
-	p[0] = (t_v3){cam->inv_tr.data[0][3], cam->inv_tr.data[1][3], cam->inv_tr.data[2][3]};
+	p[0] = (t_v3){
+		cam->inv_tr.data[0][3],
+		cam->inv_tr.data[1][3],
+		cam->inv_tr.data[2][3]};
 	p[1] = (t_v3){v.r, v.g, v.b};
 	dir = normalize(v3_sub(p[1], p[0]));
 	return (build_ray(p[0], dir));

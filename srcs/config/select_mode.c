@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/18 15:22:24 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 13:55:47 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,13 @@ static void	change_object_color(t_hittable *obj)
 
 	color = obj->material.main;
 	printf("> Curent color applied on sphere is : (%lf, %lf, %lf)\n",
-		   color.r, color.g, color.b);
+		color.r, color.g, color.b);
 	printf("> Set new color \n");
 	get_line_color(&color);
 	obj->material.main = color;
 }
 
-static int	select_edition()
+static int	select_edition(void)
 {
 	bool	is_selected;
 	int		edition;

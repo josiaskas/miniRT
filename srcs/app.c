@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 19:06:32 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 14:20:36 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	app_loop(t_app *app)
 
 	img = app->img;
 	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
-//	mlx_do_key_autorepeatoff(app->mlx);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
 	mlx_loop_hook(app->mlx, watcher, app);
