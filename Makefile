@@ -37,7 +37,7 @@ UTILS_SRCS_PREFIXED = $(addprefix $(UTILS_DIR), $(UTILS_SRCS))
 
 #parsing sources
 PARSER_DIR = parsing/
-PARSER_SRCS = parser.c file.c parser_utils.c parser_suite.c parser_suite_bonus.c object_creation.c edit.c
+PARSER_SRCS = parser.c parser_utils.c parser_suite.c parser_suite_bonus.c object_creation.c edit.c
 PARSER_SRCS_PREFIXED = $(addprefix $(PARSER_DIR), $(PARSER_SRCS))
 
 #raytracing sources
@@ -47,7 +47,7 @@ RAYTRACING_SRCS_PREFIXED = $(addprefix $(RAYTRACING_DIR), $(RAYTRACING_SRCS))
 
 #config sources
 CONFIG_DIR = config/
-CONFIG_SRCS = key_hooks.c mouse_hooks.c screen.c select_mode.c camera.c
+CONFIG_SRCS = key_hooks.c mouse_hooks.c screen.c select_mode.c camera.c get_line.c
 CONFIG_SRCS_PREFIXED = $(addprefix $(CONFIG_DIR), $(CONFIG_SRCS))
 
 #multithreading sources
@@ -57,11 +57,11 @@ THREADING_SRCS_PREFIXED = $(addprefix $(THREADING_DIR), $(THREADING_SRCS))
 
 #sources
 SRCS_DIR = srcs/
-SRCS = main.c errors.c app.c raytrace.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED)
+SRCS = main.c errors.c app.c raytrace.c file.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED)
 SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(SRCS))
 
 #bonus sources
-BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
+BONUS_SRCS = main.c errors.c app.c raytrace_bonus.c file_bonus.c $(UTILS_SRCS_PREFIXED) $(PARSER_SRCS_PREFIXED) $(RAYTRACING_SRCS_PREFIXED) $(CONFIG_SRCS_PREFIXED) $(THREADING_SRCS_PREFIXED)
 BONUS_SRCS_PREFIXED = $(addprefix $(SRCS_DIR), $(BONUS_SRCS))
 
 #includes

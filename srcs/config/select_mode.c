@@ -42,7 +42,7 @@ static void	change_object_color(t_hittable *obj)
 	obj->material.main = color;
 }
 
-static int		select_edition()
+static int	select_edition()
 {
 	bool	is_selected;
 	int		edition;
@@ -54,9 +54,10 @@ static int		select_edition()
 		printf("what do you want to do with this object ?\n");
 		printf("1. Translate\n");
 		printf("2. Rotate\n");
-		printf("3. Change Color\n");
-		get_line_int("Select", &edition, 1, 3);
-		if (edition > 0 && edition < 4)
+		printf("3. Scale\n");
+		printf("4. Change Color\n");
+		get_line_int("Select", &edition, 1, 4);
+		if (edition > 0 && edition < 5)
 			is_selected = true;
 		else
 			printf("Please select a valid option\n");
@@ -78,12 +79,11 @@ static void	edit_objects(t_hittable	*selected_obj)
 		else if (edition == 2)
 			rotate_object(selected_obj);
 		else if (edition == 3)
+			scale_object(selected_obj);
+		else if (edition == 4)
 			change_object_color(selected_obj);
-		printf("Do you want to continue editing this object ?\n");
-		printf("1. Yes\n");
-		printf("2. No\n");
-		get_line_int("Select", &edition, 1, 2);
-		if (edition == 2)
+		printf("Do you want to continue editing this object ? (y, n)\n");
+		if (get_line_bool("Select") == false)
 			quit = true;
 	}
 	printf("Edited %s \n", selected_obj->name);

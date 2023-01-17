@@ -12,7 +12,14 @@
 
 #ifndef HOOKS_KEY_H
 # define HOOKS_KEY_H
+# define MAIN_PAD_B 11
+# define MAIN_PAD_H 4
 # define MAIN_PAD_I 34
+# define MAIN_PAD_J 38
+# define MAIN_PAD_K 40
+# define MAIN_PAD_L 37
+# define MAIN_PAD_M 46
+# define MAIN_PAD_N 45
 # define MAIN_PAD_P 35
 # define MAIN_PAD_D 2
 # define MAIN_PAD_U 32

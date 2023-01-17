@@ -14,10 +14,10 @@
 
 int	write_info_section(t_app *app, void *mlx, void *win)
 {
-	int y;
-	int x;
-	char *fov;
-	char *cam_nbr;
+	int		y;
+	int		x;
+	char	*fov;
+	char	*cam_nbr;
 
 	y = 400;
 	x = 1100;
@@ -57,12 +57,36 @@ void	translate_object(t_hittable *obj)
 	}
 	else if (obj->type == e_hit_cylinder)
 	{
-
 		printf("> Curent translation applied on cylinder is : (%lf, %lf, %lf)\n",
 			   obj->trans.x, obj->trans.y, obj->trans.z);
 		get_trans_vector(&translate);
 		translate = v3_add(obj->trans, translate);
 		transform_cy(obj, translate, obj->angles,obj->scale);
+	}
+}
+
+void	scale_object(t_hittable *obj)
+{
+	double	radius;
+	double	height;
+
+	if (obj->type == e_hit_sphere || obj->type == e_hit_cylinder)
+	{
+		printf("> Curent radius applied on object is : %lf\n", obj->radius);
+		get_line_double("radius",&radius);
+		if (radius > 0)
+			obj->radius = radius;
+		else
+			printf("radius must be > 0, current radius is %lf\n", obj->radius);
+	}
+	if (obj->type == e_hit_cylinder)
+	{
+		printf("> Curent height applied on cylinder is : %lf\n", obj->h);
+		get_line_double("height",&height);
+		if (height > 0)
+			obj->h = height;
+		else
+			printf("height must be > 0, current height is %lf\n", obj->h);
 	}
 }
 
@@ -97,47 +121,18 @@ void	light_edition(t_light *light, size_t i)
 {
 	t_color	color;
 	t_v3	translate;
-	double	cd;
 
 	color = light->color;
-	printf("\033[0;31m-- Light Edition --\033[0m\nLight: %ld\n", i);
-	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
+	printf("\033[0;31m-- Editing Light: %ld --\033[0m\n", i);
+	printf("> Current light position: (%lf, %lf, %lf)\n",
 		light->o.x, light->o.y, light->o.z);
 	get_trans_vector(&translate);
 	translate = v3_add(light->o, translate);
-	get_line_color(&color);
-	printf("> Current cd: %lf\n", light->cd);
-	get_line_double("New cd:", &cd);
-	if (cd > 1)
-		cd = 1;
-	light->cd = cd;
-	light->color = v4_multi(light->cd, color);
-	printf("\033[0;31m\n-- End --\033[0m\n");
+	printf("Do you want to change the color of the light ? (y/n)\n");
+	if (get_line_bool("select"))
+	{
+		printf("> Current light color: (%lf, %lf, %lf)\n", color.r, color.g, color.b);
+		get_line_color(&color);
+		light->color = color;
+	}
 }
-
-//
-//void	cylinder_edition(t_hittable *cyl)
-//{
-//	t_color	color;
-//	t_v3	translate;
-//	t_v3	ang;
-//	double	conf[2];
-//
-//	color = cyl->material.main;
-//	printf("\033[0;31m-- Cylinder Edition --\033[0m\nName: %s\n", cyl->name);
-//	printf("> Apply Translation to this position: (%lf, %lf, %lf)\n",
-//		cyl->trans.x, cyl->trans.y, cyl->trans.z);
-//	get_trans_vector(&translate);
-//	translate = v3_add(cyl->trans, translate);
-//	ang = v3_multi(57.2957795131, cyl->angles);
-//	printf("> Current object world rotation angles x: %lf, y: %lf, z: %lf)\n",
-//		ang.x, ang.y, ang.z);
-//	get_line_angles(&ang);
-//	get_line_double("Radius scale (1 to keep)", &conf[0]);
-//	get_line_double("H scale (1 to keep)", &conf[1]);
-//	get_line_color(&color);
-//	cyl->material.main = color;
-//	cyl->radius = conf[0] * cyl->radius;
-//	cyl->h = conf[1] * cyl->h;
-//	transform_cy(cyl, translate, ang, (t_v3){1, 1, 1});
-//}

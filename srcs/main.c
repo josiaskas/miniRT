@@ -70,7 +70,7 @@ int	main(int argc, char *argv[])
 {
 	if (argc == 2)
 		init_app(argv[1], NULL);
-	else if (argc == 3)
+	else if (argc == 3 && IS_BONUS)
 		init_app(argv[1], argv[2]);
 	else
 		ft_putendl_fd("Usage: miniRT *.rt", STDOUT_FILENO);

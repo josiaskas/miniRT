@@ -53,41 +53,31 @@ int	open_out_file(char *file, t_app *app)
 	return (0);
 }
 
-static void	write_data_to_fd(t_color **data)
-{
-	int		x;
-	int		y;
-	t_color	color;
-
-	y = 0;
-	while (y < W_HEIGHT)
-	{
-		x = 0;
-		while (x < W_WIDTH)
-		{
-			color = data[y][x];
-			printf("%d %d %d ", (int)(color.r * 255),
-				(int)(color.g * 255), (int)(color.b * 255));
-			x++;
-		}
-		printf("\n");
-		y++;
-	}
-}
+//static void	write_data_to_fd(t_color **data)
+//{
+//	int		x;
+//	int		y;
+//	t_color	color;
+//
+//	y = 0;
+//	while (y < W_HEIGHT)
+//	{
+//		x = 0;
+//		while (x < W_WIDTH)
+//		{
+//			color = data[y][x];
+//			printf("%d %d %d ", (int)(color.r * 255),
+//				(int)(color.g * 255), (int)(color.b * 255));
+//			x++;
+//		}
+//		printf("\n");
+//		y++;
+//	}
+//}
 
 // write inside a file data build dy raytracing
 int	write_image_to_file(t_app *app)
 {
-	int	cpy_stdout;
-
-	if (app->out_fd && app->data)
-	{
-		cpy_stdout = dup(STDOUT_FILENO);
-		dup2(app->out_fd, STDOUT_FILENO);
-		printf("P3\n%d %d\n255\n", W_WIDTH, W_HEIGHT);
-		write_data_to_fd(app->data);
-		dup2(cpy_stdout, app->out_fd);
-		app->out_fd = 0;
-	}
+	(void)app;
 	return (0);
 }

@@ -33,6 +33,7 @@ void	get_line_int(char *title, int *val, int min, int max);
 void	start_selecting_mode(t_app *app, int x, int y);
 
 void	translate_object(t_hittable *obj);
+void	scale_object(t_hittable *obj);
 void	rotate_object(t_hittable *obj);
 
 void	light_edition(t_light *light, size_t i);
@@ -40,5 +41,6 @@ void	get_trans_vector(t_v3 *v);
 void	get_line_color(t_color *color);
 void	get_line_double(char *title, double *val);
 void	get_line_angles(t_v3 *angles);
+bool	get_line_bool(char *title);
 
 #endif

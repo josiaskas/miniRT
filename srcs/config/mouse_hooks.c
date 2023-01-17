@@ -14,22 +14,17 @@
 
 void	ft_zoom_hook(int button, t_app *app)
 {
-//	t_cam	*cam;
-//	double	fov;
-//
-//	cam = app->scene->selected_camera;
-//	if (button == MOUSE_SCROLL_UP)
-//		fov = cam->fov - 5;
-//	else
-//		fov = cam->fov + 5;
-//	if (fov >= 1 && fov <= 180)
-//	{
-//		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
-//		render(app);
-//	}
-//	app->conf.rerender = true;
-	(void)button;
-	(void)app;
+	t_cam	*cam;
+	double	fov;
+
+	cam = app->scene->selected_camera;
+	if (button == MOUSE_SCROLL_UP)
+		fov = cam->fov - 5;
+	else
+		fov = cam->fov + 5;
+	if (fov >= 1 && fov <= 180)
+		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
+	app->conf.rerender = true;
 }
 
 
