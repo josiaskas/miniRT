@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 13:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 20:21:14 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 21:21:11 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	get_trans_vector(t_v3 *v)
 		free(line);
 		line = NULL;
 		if (!is_valid)
-			ft_putchar_fd('\n', STDOUT_FILENO);
+			printf("\033[0;31mInvalid input\033[0m \n");
 	}
 }
 
@@ -53,6 +53,8 @@ void	get_line_color(t_color *color)
 			if (!is_valid)
 				ft_putstr_fd(" invalid, range [0-255]\n", STDOUT_FILENO);
 		}
+		else
+			printf("\033[0;31mInvalid input\033[0m \n");
 	}
 	if (!all_vector_coord_are_in_range(0, 0, &v))
 		*color = make_color_vector(v, 1);
@@ -77,8 +79,10 @@ void	get_line_angles(t_v3 *angles)
 		{
 			is_valid = all_vector_coord_are_in_range(-180, 180, angles);
 			if (!is_valid)
-				ft_putstr_fd(" invalid, range [-180, 180]\n", STDOUT_FILENO);
+				ft_putstr_fd("Invalid, range [-180, 180]\n", STDOUT_FILENO);
 		}
+		else
+			printf("\033[0;31mInvalid input\033[0m \n");
 	}
 	*angles = v3_multi(0.01745329251, *angles);
 	ft_putstr_fd("\033[0;32m ok\033[0m\n", STDOUT_FILENO);
