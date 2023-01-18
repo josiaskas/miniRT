@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/17 14:04:27 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 14:09:22 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 23:06:20 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void	light_edition(t_light *light, size_t i)
 		light->o.x, light->o.y, light->o.z);
 	get_trans_vector(&translate);
 	translate = v3_add(light->o, translate);
+	light->o = translate;
 	printf("Do you want to change the color of the light ? (y/n)\n");
 	if (get_line_bool("select"))
 	{

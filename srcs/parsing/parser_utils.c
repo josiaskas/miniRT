@@ -12,15 +12,14 @@
 
 #include "parser.h"
 
-// check if is only digit, if decimal '-' in front is false
-bool	ft_is_a_number(char *str, bool is_decimal)
+bool	ft_is_a_number(char *str)
 {
-	size_t	i;
+	int	i;
 
 	i = 0;
 	if (!str)
 		return (false);
-	if ((str[0] == '-' || str[0] == '+') && (!is_decimal))
+	if (str[i] == '-')
 		i++;
 	while (str[i])
 	{
@@ -28,57 +27,61 @@ bool	ft_is_a_number(char *str, bool is_decimal)
 			return (false);
 		i++;
 	}
-	if (i > 10)
-		return (false);
 	return (true);
 }
 
-// return a double formed from two strings "12"."34"
-static double	ft_parse_double(char *str1, char *str2)
+static inline bool	parse_double_suite(char *str, double *result)
 {
-	double	r;
-	double	f;
-	double	after_dot;
+	bool	is_digit;
+	double	decimal;
+	int	    count_digit;
 
-	r = (double)ft_atoi(str1);
-	f = 0;
-	if (str2)
+	decimal = 0.0;
+	count_digit = 0;
+	is_digit = false;
+	while (ft_isdigit(*str) || (*str == '.'))
 	{
-		after_dot = (double)ft_strlen(str2) * -1.0f;
-		f = powf(10.0f, after_dot) * (double)ft_atoi(str2);
+		if ((*str == '.' && is_digit) || (*str == '.' && !ft_isdigit(*(str + 1))))
+			return (false);
+		else if (*str == '.')
+			is_digit = true;
+		else if (is_digit)
+		{
+			decimal = decimal * 10 + (*str - '0');
+			count_digit++;
+		}
+		else
+			*result = *result * 10 + (*str - '0');
+		str++;
 	}
-	if (str1[0] != '-')
-		return (r + f);
-	else
-		return (r - f);
+	*result += (decimal / pow(10, count_digit));
+	return (*str == '\0');
 }
 
-bool	parse_double_from_str(char *str, double *result, bool status)
+bool	parse_double_from_str(char *str, double *result)
 {
-	char	**values;
-	size_t	i;
+	bool 	is_valid;
+	bool 	is_negative;
 
-	i = 0;
-	*result = 0;
-	values = ft_split(str, '.');
-	while (values[i] != 0)
-		i++;
-	if (str[0] == '.')
-		status = false;
-	else if (!ft_is_a_number(values[0], false))
-		status = false;
-	if ((i > 2) || (status == false))
-		status = false;
-	else if (i == 1)
-		*result = ft_parse_double(values[0], NULL);
-	else
+	is_valid = false;
+	is_negative = false;
+	*result = 0.0;
+	while (ft_isspace(*str))
+		str++;
+	if (*str == '-')
 	{
-		if (!ft_is_a_number(values[1], true))
-			status = false;
-		*result = ft_parse_double(values[0], values[1]);
+		is_negative = true;
+		str++;
 	}
-	ft_free_splitted(values);
-	return (status);
+	if (!ft_isdigit(*str))
+		return (false);
+	if (parse_double_suite(str, result))
+	{
+		is_valid = true;
+		if (is_negative)
+			*result *= -1.0;
+	}
+	return (is_valid);
 }
 
 bool	parse_a_vector(char *token, t_v3 *vector)
@@ -87,20 +90,22 @@ bool	parse_a_vector(char *token, t_v3 *vector)
 	size_t	i;
 	bool	status;
 
-	values = ft_split(token, ',');
 	status = true;
+	if (ft_strnstr(token, ",,", ft_strlen(token)))
+		return (false);
+	values = ft_split(token, ',');
 	i = 0;
-	while (values[i] != 0)
+	while (values[i])
 		i++;
 	if (i != 3)
 		status = false;
 	else
 	{
-		if (!parse_double_from_str(values[0], &vector->x, true))
+		if (!parse_double_from_str(values[0], &vector->x))
 			status = false;
-		if (!parse_double_from_str(values[1], &vector->y, true))
+		if (!parse_double_from_str(values[1], &vector->y))
 			status = false;
-		if (!parse_double_from_str(values[2], &vector->z, true))
+		if (!parse_double_from_str(values[2], &vector->z))
 			status = false;
 	}
 	ft_free_splitted(values);

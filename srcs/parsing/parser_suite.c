@@ -23,7 +23,7 @@ bool	parse_sphere(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[1], &origin))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &radius, true))
+	if (!parse_double_from_str(tokens[2], &radius))
 		return (false);
 	if (!parse_a_vector(tokens[3], &color_rgb))
 		return (false);
@@ -68,9 +68,9 @@ bool	parse_cylinder(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &data[3]))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &conf[0], true))
+	if (!parse_double_from_str(tokens[3], &conf[0]))
 		return (false);
-	if (!parse_double_from_str(tokens[4], &conf[1], true))
+	if (!parse_double_from_str(tokens[4], &conf[1]))
 		return (false);
 	if (!parse_a_vector(tokens[5], &data[2]))
 		return (false);
@@ -103,4 +103,31 @@ bool	parse_triangle(char **tokens, t_app *app)
 	if (!all_vector_coord_are_in_range(0, 255, &v_color))
 		return (false);
 	return (build_triangle(app->scene, p, v_color));
+}
+
+bool	parse_light(char **tokens, t_app *app)
+{
+	t_light		*light;
+	t_v3		v_color;
+
+	app->error_message = "Error during parsing, On a light";
+	light = (t_light *)ft_calloc(1, sizeof(t_light));
+	ft_push(app->scene->lights, light);
+	if (!tokens_has_valid_params_nbr(tokens, 4))
+		return (false);
+	if (!parse_a_vector(tokens[1], &light->o))
+		return (false);
+	if (!parse_double_from_str(tokens[2], &light->cd))
+		return (false);
+	if (!parse_a_vector(tokens[3], &v_color))
+		return (false);
+	if (!all_vector_coord_are_in_range(0, 255, &v_color))
+		return (false);
+	if (light->cd < 0 || light->cd > 1.0f)
+		return (false);
+	if (light->cd < 0.01)
+		light->cd = 0.1;
+	light->color = make_color_vector(v_color, 1);
+	light->color = v4_multi(light->cd, light->color);
+	return (true);
 }

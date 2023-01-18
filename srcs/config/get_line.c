@@ -22,9 +22,9 @@ void	get_line_double(char *title, double *val)
 	line = NULL;
 	while (!is_valid)
 	{
-		ft_printf("\033[0;32m-%s:\033[0m ", title);
+		printf("\033[0;32m-%s:\033[0m ", title);
 		get_next_line(STDIN_FILENO, &line);
-		is_valid = parse_double_from_str(line, val, true);
+		is_valid = parse_double_from_str(line, val);
 		free(line);
 		line = NULL;
 		if (is_valid)
@@ -43,9 +43,9 @@ void	get_line_int(char *title, int *val, int min, int max)
 	line = NULL;
 	while (!is_valid)
 	{
-		ft_printf("\033[0;32m-%s:\033[0m ", title);
+		printf("\033[0;32m-%s:\033[0m ", title);
 		get_next_line(STDIN_FILENO, &line);
-		is_valid = ft_is_a_number(line, false);
+		is_valid = ft_is_a_number(line);
 		if (is_valid)
 			*val = ft_atoi(line);
 		free(line);
@@ -68,7 +68,7 @@ bool	get_line_bool(char *title)
 	state = false;
 	while (!is_valid)
 	{
-		ft_printf("\033[0;32m-%s:\033[0m ", title);
+		printf("\033[0;32m-%s:\033[0m ", title);
 		get_next_line(STDIN_FILENO, &line);
 		is_valid = true;
 		if (ft_strncmp(line, "y", 1) == 0)

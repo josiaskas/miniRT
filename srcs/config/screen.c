@@ -116,7 +116,7 @@ void	rotate_object(t_hittable *obj)
 	{
 		printf("> Set rotation angles \n");
 		get_line_angles(&angles);
-		rot_matrix = get_tr_matrix((t_v3){0, 0, 0}, angles, (t_v3){0, 0, 0},
+		rot_matrix = get_tr_matrix((t_v3){0, 0, 0}, angles, (t_v3){1, 1, 1},
 				false);
 		rotate = multiply_m4_v4(rot_matrix,
 				(t_v4){obj->dir.x, obj->dir.y, obj->dir.z, 1});

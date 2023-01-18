@@ -13,33 +13,6 @@
 #include "parser.h"
 #include <stdio.h>
 
-bool	parse_light(char **tokens, t_app *app)
-{
-	t_light		*light;
-	t_v3		v_color;
-
-	app->error_message = "Error during parsing, On a light";
-	light = (t_light *)ft_calloc(1, sizeof(t_light));
-	ft_push(app->scene->lights, light);
-	if (!tokens_has_valid_params_nbr(tokens, 4))
-		return (false);
-	if (!parse_a_vector(tokens[1], &light->o))
-		return (false);
-	if (!parse_double_from_str(tokens[2], &light->cd, true))
-		return (false);
-	if (!parse_a_vector(tokens[3], &v_color))
-		return (false);
-	if (!all_vector_coord_are_in_range(0, 255, &v_color))
-		return (false);
-	if (light->cd < 0 || light->cd > 1.0f)
-		return (false);
-	if (light->cd < 0.01)
-		light->cd = 0.1;
-	light->color = make_color_vector(v_color, 1);
-	light->color = v4_multi(light->cd, light->color);
-	return (true);
-}
-
 bool	parse_ambiant_light(char **tokens, t_app *app)
 {
 	t_ambiant	ambiant;
@@ -48,7 +21,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
 		return (false);
-	if (!parse_double_from_str(tokens[1], &ambiant.intensity, true))
+	if (!parse_double_from_str(tokens[1], &ambiant.intensity))
 		return (false);
 	if (!parse_a_vector(tokens[2], &v_color))
 		return (false);
@@ -84,7 +57,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &orientation))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &angle, true))
+	if (!parse_double_from_str(tokens[3], &angle))
 		return (false);
 	if (!all_vector_coord_are_in_range(-1, 1, &orientation))
 		return (false);
@@ -95,32 +68,45 @@ bool	parse_camera(char **tokens, t_app *app)
 	return (true);
 }
 
-bool	parse_file_line(char *line, t_app *app)
+static inline bool	select_object_parser(char **tokens, t_app *app)
 {
-	char	**tokens;
 	bool	status;
 
-	status = true;
-	if (!ft_strlen(line))
-		return (true);
-	tokens = ft_split_v(line, " \t\n\r\v");
+	status = false;
+	app->error_message = "Error during parsing, Non valid object";
+	if (ft_strncmp(tokens[0], "L", 1) == 0)
+		status = parse_light(tokens, app);
+	if (ft_strncmp(tokens[0], "A", 1) == 0)
+		status = parse_ambiant_light(tokens, app);
+	if (ft_strncmp(tokens[0], "C", 1) == 0)
+		status = parse_camera(tokens, app);
 	if (ft_strncmp(tokens[0], "sp", 2) == 0)
 		status = parse_sphere(tokens, app);
-	else if (ft_strncmp(tokens[0], "bsp", 3) == 0)
-		status = parse_sphere_bonus(tokens, app);
-	else if (ft_strncmp(tokens[0], "C", 1) == 0)
-		status = parse_camera(tokens, app);
-	else if (ft_strncmp(tokens[0], "pl", 2) == 0)
+	if (ft_strncmp(tokens[0], "pl", 2) == 0)
 		status = parse_plan(tokens, app);
-	else if (ft_strncmp(tokens[0], "tr", 2) == 0)
-		status = parse_triangle(tokens, app);
-	else if (ft_strncmp(tokens[0], "L", 1) == 0)
-		status = parse_light(tokens, app);
-	else if (ft_strncmp(tokens[0], "A", 1) == 0)
-		status = parse_ambiant_light(tokens, app);
-	else if (ft_strncmp(tokens[0], "cy", 2) == 0)
+	if (ft_strncmp(tokens[0], "cy", 2) == 0)
 		status = parse_cylinder(tokens, app);
-	ft_free_splitted(tokens);
+	if (ft_strncmp(tokens[0], "bsp", 3) == 0)
+		status = parse_sphere_bonus(tokens, app);
+	return (status);
+}
+
+bool	parse_file_line(char *line, t_app *app)
+{
+	char		**tokens;
+	char		*str;
+	bool		status;
+
+	status = true;
+	str = ft_strtrim(line, " \t\v\r\n");
+	if (ft_strlen(str))
+	{
+		tokens = ft_split_v(str, " \t\v\r");
+		if (tokens)
+			status = select_object_parser(tokens, app);
+		ft_free_splitted(tokens);
+	}
+	free(str);
 	return (status);
 }
 

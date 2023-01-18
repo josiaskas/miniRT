@@ -13,14 +13,33 @@
 #include "../includes/minirt.h"
 #include <stdio.h>
 
+static bool	is_valid_extension(char *filename)
+{
+	char	*extension;
+	size_t	len;
+
+	len = ft_strlen(filename);
+	if (len < 4)
+		return (false);
+	extension = NULL;
+	extension = ft_substr(filename, len - 3, 3);
+	if (!extension)
+		return (false);
+	if (ft_strncmp(extension, ".rt", 3) == 0)
+	{
+		free(extension);
+		return (true);
+	}
+	free(extension);
+	return (false);
+}
+
 // open input file with the correct extension
 int	open_rt_file(char *filename, t_app *app)
 {
-	int		fd;
-	char	*extension;
+	int	fd;
 
-	extension = ft_strnstr(filename, ".rt", ft_strlen(filename));
-	if (!extension)
+	if (!is_valid_extension(filename))
 	{
 		app->error_message = "miniRT need a file format like *.rt";
 		app->error_code = 1;
