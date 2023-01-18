@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/12 13:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 14:01:49 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:35:19 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	get_line_double(char *title, double *val)
 	{
 		ft_printf("\033[0;32m-%s:\033[0m ", title);
 		get_next_line(STDIN_FILENO, &line);
-		is_valid = parse_double_from_str(line, val);
+		is_valid = parse_double_from_str(line, val, true);
 		free(line);
 		line = NULL;
 		if (is_valid)

@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:50:59 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/18 02:36:24 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:30:55 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ bool	parse_sphere(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[1], &origin))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &radius))
+	if (!parse_double_from_str(tokens[2], &radius, true))
 		return (false);
 	if (!parse_a_vector(tokens[3], &color_rgb))
 		return (false);
@@ -68,9 +68,9 @@ bool	parse_cylinder(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &data[3]))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &conf[0]))
+	if (!parse_double_from_str(tokens[3], &conf[0], true))
 		return (false);
-	if (!parse_double_from_str(tokens[4], &conf[1]))
+	if (!parse_double_from_str(tokens[4], &conf[1], true))
 		return (false);
 	if (!parse_a_vector(tokens[5], &data[2]))
 		return (false);

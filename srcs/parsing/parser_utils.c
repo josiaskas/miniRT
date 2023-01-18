@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:51:21 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:51:22 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:34:45 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,19 +53,19 @@ static double	ft_parse_double(char *str1, char *str2)
 		return (r - f);
 }
 
-bool	parse_double_from_str(char *str, double *result)
+bool	parse_double_from_str(char *str, double *result, bool status)
 {
 	char	**values;
 	size_t	i;
-	bool	status;
 
-	status = true;
 	i = 0;
 	*result = 0;
 	values = ft_split(str, '.');
 	while (values[i] != 0)
 		i++;
-	if (!ft_is_a_number(values[0], false))
+	if (str[0] == '.')
+		status = false;
+	else if (!ft_is_a_number(values[0], false))
 		status = false;
 	if ((i > 2) || (status == false))
 		status = false;
@@ -96,11 +96,11 @@ bool	parse_a_vector(char *token, t_v3 *vector)
 		status = false;
 	else
 	{
-		if (!parse_double_from_str(values[0], &vector->x))
+		if (!parse_double_from_str(values[0], &vector->x, true))
 			status = false;
-		if (!parse_double_from_str(values[1], &vector->y))
+		if (!parse_double_from_str(values[1], &vector->y, true))
 			status = false;
-		if (!parse_double_from_str(values[2], &vector->z))
+		if (!parse_double_from_str(values[2], &vector->z, true))
 			status = false;
 	}
 	ft_free_splitted(values);

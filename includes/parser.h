@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/30 14:16:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/18 02:39:23 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:29:42 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include "color.h"
 
 bool		parse_a_vector(char *token, t_v3 *vector);
-bool		parse_double_from_str(char *str, double *result);
+bool		get_parse_splitted_nbr(char **values, char *str);
+bool		parse_double_from_str(char *str, double *result, bool status);
 bool		tokens_has_valid_params_nbr(char **tokens, size_t nbr);
 bool		parse_sphere(char **tokens, t_app *app);
 bool		parse_sphere_bonus(char **tokens, t_app *app);

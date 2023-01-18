@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:51:36 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/23 14:51:38 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 20:31:34 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ bool	parse_light(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[1], &light->o))
 		return (false);
-	if (!parse_double_from_str(tokens[2], &light->cd))
+	if (!parse_double_from_str(tokens[2], &light->cd, true))
 		return (false);
 	if (!parse_a_vector(tokens[3], &v_color))
 		return (false);
@@ -48,7 +48,7 @@ bool	parse_ambiant_light(char **tokens, t_app *app)
 	app->error_message = "Error during parsing, On ambiant light";
 	if (!tokens_has_valid_params_nbr(tokens, 3))
 		return (false);
-	if (!parse_double_from_str(tokens[1], &ambiant.intensity))
+	if (!parse_double_from_str(tokens[1], &ambiant.intensity, true))
 		return (false);
 	if (!parse_a_vector(tokens[2], &v_color))
 		return (false);
@@ -84,7 +84,7 @@ bool	parse_camera(char **tokens, t_app *app)
 		return (false);
 	if (!parse_a_vector(tokens[2], &orientation))
 		return (false);
-	if (!parse_double_from_str(tokens[3], &angle))
+	if (!parse_double_from_str(tokens[3], &angle, true))
 		return (false);
 	if (!all_vector_coord_are_in_range(-1, 1, &orientation))
 		return (false);
