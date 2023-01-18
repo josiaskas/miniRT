@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/14 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 14:20:36 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/17 21:06:43 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int	watcher(t_app *app)
 	if (app->conf.rerender)
 	{
 		mlx_put_image_to_window(mlx, win, img->img, 0, 0);
-		render(app);
+		if (app->conf.c_mode != e_select_mode)
+			render(app);
 		write_info_section(app, mlx, win);
 		app->conf.rerender = false;
 	}
