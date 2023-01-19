@@ -82,10 +82,9 @@ int		open_rt_file(char *filename, t_app *app);
 int		open_out_file(char *file, t_app *app);
 bool	parse_rt_file(t_app *app);
 void	exit_app(t_app *app, bool error);
-void	draw_scene(t_image *img, t_color **colors);
 bool	init_window(t_app *app);
 int		close_window(t_app *app);
 void	app_loop(t_app *app);
 bool	render(t_app *app);
-int		rerender(t_app *app);
+int		render_image(t_app *app);
 #endif

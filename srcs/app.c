@@ -13,7 +13,7 @@
 #include "minirt.h"
 #include "window.h"
 
-int	watcher(t_app *app)
+int	render_image(t_app *app)
 {
 	void	*mlx;
 	void	*win;
@@ -36,13 +36,8 @@ int	watcher(t_app *app)
 // loop and call hooks function on event
 void	app_loop(t_app *app)
 {
-	t_image	*img;
-
-	img = app->img;
-	mlx_put_image_to_window(app->mlx, app->window, img->img, 0, 0);
 	mlx_hook(app->window, 4, 1L << 2, mouse_pressed, app);
 	mlx_hook(app->window, 5, 1L << 3, mouse_release, app);
-	mlx_loop_hook(app->mlx, watcher, app);
 	mlx_hook(app->window, 2, 1L << 0, key_pressed_hook, app);
 	mlx_hook(app->window, 17, 0, close_window, app);
 	mlx_loop(app->mlx);

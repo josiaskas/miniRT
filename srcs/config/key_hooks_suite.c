@@ -58,7 +58,6 @@ static void	select_light_edition(int key, t_app *app)
 	size_t	i;
 
 	lights = app->scene->lights;
-	i = 0;
 	if (MAIN_PAD_1 <= key && key <= MAIN_PAD_9)
 	{
 		light = NULL;
@@ -68,6 +67,7 @@ static void	select_light_edition(int key, t_app *app)
 		{
 			light_edition(light, (key - MAIN_PAD_1));
 			app->conf.rerender = true;
+			render_image(app);
 		}
 		else
 			printf("No light at index %ld", i);
@@ -82,19 +82,20 @@ static void	move_camera_eye(int key, t_app *app)
 	cam = app->scene->selected_camera;
 	eye = cam->eye;
 	if (key == MAIN_PAD_H)
-		eye.x += 0.5;
+		eye.x += 1.0;
 	else if (key == MAIN_PAD_B)
-		eye.x -= 0.5;
+		eye.x -= 1.0;
 	else if (key == MAIN_PAD_J)
-		eye.y += 0.5;
+		eye.y += 1.0;
 	else if (key == MAIN_PAD_N)
-		eye.y -= 0.5;
+		eye.y -= 1.0;
 	else if (key == MAIN_PAD_K)
-		eye.z += 0.5;
+		eye.z += 1.0;
 	else if (key == MAIN_PAD_M)
-		eye.z -= 0.5;
+		eye.z -= 1.0;
 	move_camera(cam, eye, cam->look_at);
 	app->conf.rerender = true;
+	render_image(app);
 }
 
 int	key_pressed_hook_suite(int key, t_app *app)
@@ -111,6 +112,9 @@ int	key_pressed_hook_suite(int key, t_app *app)
 		|| key == MAIN_PAD_N)
 		move_camera_eye(key, app);
 	else if (key == MAIN_PAD_R)
+	{
 		app->conf.rerender = true;
+		render_image(app);
+	}
 	return (0);
 }

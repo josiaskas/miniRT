@@ -32,11 +32,11 @@ void	compute_cylinder_hit(t_hit *hit)
 	hit->acne_p = v3_add(hit->h_point, v3_multi(0.0015, hit->normal));
 }
 
-static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
+static inline void	set_point(t_hit *hit, t_ray ray, t_v3 cyl_ray)
 {
 	double	m;
 
-	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[0])
+	m = (ft_dot(ray.dir, hit->object->dir) * hit->t_trace[0])
 		+ ft_dot(cyl_ray, hit->object->dir);
 	if ((m >= 0) && (m <= hit->object->h))
 	{
@@ -47,7 +47,7 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 		hit->m = m;
 		return ;
 	}
-	m = (ft_dot(ray->dir, hit->object->dir) * hit->t_trace[1])
+	m = (ft_dot(ray.dir, hit->object->dir) * hit->t_trace[1])
 		+ ft_dot(cyl_ray, hit->object->dir);
 	if ((m >= 0) && (m <= hit->object->h))
 	{
@@ -60,21 +60,21 @@ static inline void	set_point(t_hit *hit, t_ray *ray, t_v3 cyl_ray)
 	}
 }
 
-void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
+void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray ray)
 {
 	double	terms[3];
 	double	t[2];
-	t_ray	*ray_o;
+	t_ray	ray_o;
 	t_v3	cyl_ray;
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
 	ray_o = get_transformed_ray(ray, cyl->inv_tr, (t_v3){0, 0, 0});
-	cyl_ray = ray_o->o;
-	terms[0] = ft_dot(ray_o->dir, ray_o->dir)
-		- pow(ft_dot(ray_o->dir, cyl->dir), 2);
-	terms[1] = ft_dot(ray_o->dir, cyl_ray)
-		- (ft_dot(ray_o->dir, cyl->dir) * ft_dot(cyl_ray, cyl->dir));
+	cyl_ray = ray_o.o;
+	terms[0] = ft_dot(ray_o.dir, ray_o.dir)
+		- pow(ft_dot(ray_o.dir, cyl->dir), 2);
+	terms[1] = ft_dot(ray_o.dir, cyl_ray)
+		- (ft_dot(ray_o.dir, cyl->dir) * ft_dot(cyl_ray, cyl->dir));
 	terms[1] = 2 * terms[1];
 	terms[2] = ft_dot(cyl_ray, cyl_ray)
 		- pow(ft_dot(cyl_ray, cyl->dir), 2) - pow(cyl->radius, 2);
@@ -84,7 +84,6 @@ void	intersect_cylinder(t_hit *hit, t_hittable *cyl, t_ray *ray)
 		hit->t_trace[1] = t[1];
 		set_point(hit, ray_o, cyl_ray);
 	}
-	free(ray_o);
 }
 
 bool	build_cy(t_scene *scn, t_point o, t_v3 data[4], double h)

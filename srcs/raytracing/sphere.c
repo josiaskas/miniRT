@@ -35,7 +35,7 @@ static inline void	set_point(t_hit *hit)
 	hit->h_point_obj_coord = hit->h_point;
 }
 
-void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
+void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray ray)
 {
 	double	terms[3];
 	double	t[2];
@@ -43,9 +43,10 @@ void	intersect_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	sphere_to_ray = v3_sub(ray->o, sphere->o);
-	terms[0] = ft_dot(ray->dir, ray->dir);
-	terms[1] = 2 * ft_dot(ray->dir, sphere_to_ray);
+	hit->t = RAY_T_MAX;
+	sphere_to_ray = v3_sub(ray.o, sphere->o);
+	terms[0] = ft_dot(ray.dir, ray.dir);
+	terms[1] = 2 * ft_dot(ray.dir, sphere_to_ray);
 	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray)
 		- (sphere->radius * sphere->radius);
 	if (solve_quad(terms, &t[0], &t[1]))

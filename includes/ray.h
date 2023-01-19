@@ -105,7 +105,7 @@ typedef struct s_hit_record
 	double		t;
 	double		m;
 	double		t_trace[2];
-	t_ray		*ray;
+	t_ray		ray;
 	t_point		h_point;
 	t_point		h_point_obj_coord;
 	t_point		acne_p;
@@ -118,21 +118,22 @@ typedef struct s_hit_record
  * Build the ray with origin and direction vector
  * return a *t_ray to be freed
 */
-static inline t_ray	*build_ray(t_point origin, t_v3 direction)
-{
-	t_ray	*ray;
+//static inline t_ray	*build_ray(t_point origin, t_v3 direction)
+//{
+//	t_ray	*ray;
+//
+//	ray = (t_ray *)ft_calloc(1, sizeof(t_ray));
+//	if (ray)
+//	{
+//		ray->o = origin;
+//		ray->dir = direction;
+//	}
+//	return (ray);
+//}
 
-	ray = (t_ray *)ft_calloc(1, sizeof(t_ray));
-	if (ray)
-	{
-		ray->o = origin;
-		ray->dir = direction;
-	}
-	return (ray);
-}
-
-t_ray	*ray_for_pixel(t_cam *cam, double px, double py);
-t_ray	*get_transformed_ray(t_ray *ray, t_m4 transform, t_v3 sp_o);
+t_ray	make_ray(t_v3 origin, t_v3 direction);
+t_ray	ray_for_pixel(t_cam *cam, double px, double py);
+t_ray	get_transformed_ray(t_ray ray, t_m4 transform, t_v3 sp_o);
 t_v3	get_vector_tr(t_v3 v, t_m4 transform, t_v3 origin);
 
 /*
@@ -140,13 +141,13 @@ t_v3	get_vector_tr(t_v3 v, t_m4 transform, t_v3 origin);
  * equation is point = ray_origin + (t * ray_dir)
  * ray dir vector need to be normalized to be correct
 */
-static inline t_point	get_point_on_ray_at(const double t, t_ray *ray)
+static inline t_point	get_point_on_ray_at(const double t, t_ray ray)
 {
 	t_point	a;
 
-	a.x = ray->o.x + (t * ray->dir.x);
-	a.y = ray->o.y + (t * ray->dir.y);
-	a.z = ray->o.z + (t * ray->dir.z);
+	a.x = ray.o.x + (t * ray.dir.x);
+	a.y = ray.o.y + (t * ray.dir.y);
+	a.z = ray.o.z + (t * ray.dir.z);
 	return (a);
 }
 

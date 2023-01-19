@@ -12,6 +12,28 @@
 
 #include "minirt.h"
 
+static inline unsigned int	get_trgb(t_color *color)
+{
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+	unsigned int	a;
+
+	if (color->r > 1)
+		color->r = 1;
+	if (color->g > 1)
+		color->g = 1;
+	if (color->b > 1)
+		color->b = 1;
+	if (color->a > 1)
+		color->a = 1;
+	r = (unsigned int)(color->r * 255);
+	g = (unsigned int)(color->g * 255);
+	b = (unsigned int)(color->b * 255);
+	a = (unsigned int)(color->a);
+	return ((a << 24) | (r << 16) | (g << 8) | b);
+}
+
 // clear all data stored to prepare a new frame
 static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 {
@@ -30,7 +52,7 @@ static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 	{
 		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
 		pixel = img->data + pos;
-		*(unsigned int *)pixel = get_trgb(clr);
+		*(unsigned int *)pixel = get_trgb(&clr);
 	}
 }
 
@@ -51,34 +73,22 @@ inline t_color	shade_hit(t_scene *world, t_hit *hit)
 	return (color);
 }
 
-inline t_color	color_at(t_scene *world, t_ray *ray)
+t_color	get_pixel_clr(t_scene *scn, double x, double y)
 {
-	t_array	*records;
-	t_hit	*first_hit;
 	t_color	color;
+	t_cam	*cam;
+	t_hit	first_hit;
+	t_ray	ray;
 
 	color = (t_v4){0, 0, 0, 1};
-	records = do_intersect_objs(world, ray);
-	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
-	if (first_hit != NULL)
+	cam = (t_cam *)scn->selected_camera;
+	ray = ray_for_pixel(cam, x, y);
+	first_hit = get_first_obj_hit(scn, ray, 3000, RAY_T_MIN);
+	if (first_hit.intersection)
 	{
-		ft_compute_hit(first_hit);
-		color = shade_hit(world, first_hit);
+		ft_compute_hit(&first_hit);
+		color = shade_hit(scn, &first_hit);
 	}
-	ft_free_d_array(records);
-	return (color);
-}
-
-t_color	get_pixel_clr(t_scene *scene, double x, double y)
-{
-	t_color	color;
-	t_cam	*camera;
-	t_ray	*ray;
-
-	camera = scene->selected_camera;
-	ray = ray_for_pixel(camera, x, y);
-	color = color_at(scene, ray);
-	free(ray);
 	return (color);
 }
 
@@ -88,21 +98,18 @@ bool	render(t_app *app)
 	int		y;
 	t_color	pix_clr;
 
-	y = 0;
-	while (y < W_HEIGHT)
+	y = -1;
+	while (++y < W_HEIGHT)
 	{
-		x = 0;
-		while (x < W_WIDTH)
+		x = -1;
+		while (++x < W_WIDTH)
 		{
 			pix_clr = get_pixel_clr(app->scene, (x + 0.5), (y + 0.5));
 			app->scene->pix_traced++;
 			print_clr_to_screen(app, pix_clr, x, y);
-			x++;
 		}
-		y++;
 	}
 	app->scene->pix_traced = 0;
-	app->conf.rerender = true;
 	if (app->out_fd != 0)
 		printf("\nRaytracing finished\n");
 	return (true);

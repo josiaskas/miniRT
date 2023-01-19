@@ -13,18 +13,11 @@
 #include "raytrace.h"
 #include "parser.h"
 
-void	compute_plan_hit(t_hit *hit)
+static inline void	compute_plan_hit(t_hit *hit)
 {
-	t_v3		n;
-	t_hittable	*plan;
-
 	if (hit->type != e_hit_plane)
 		return ;
-	plan = hit->object;
-	n = plan->dir;
-	if (!hit->inside)
-		n = v3_multi(-1, plan->dir);
-	hit->normal = normalize(n);
+	hit->normal = normalize(hit->object->dir);
 	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 }
 
@@ -40,27 +33,25 @@ void	ft_compute_hit(t_hit *hit)
 		compute_plan_hit(hit);
 }
 
-void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray *ray)
+void	intersect_plane(t_hit *hit, t_hittable *plan, t_ray ray)
 {
-	double	d[2];
 	double	t;
+	double	denom;
 
-	d[0] = ft_dot(plan->dir, ray->dir);
-	if (d[0] != 0)
+	denom = ft_dot(plan->dir, ray.dir);
+	if (denom != 0)
 	{
-		d[1] = ft_dot(v3_sub(plan->o, ray->o), plan->dir);
-		t = (d[1] / d[0]);
-		hit->t_trace[0] = t;
-		hit->t_trace[1] = RAY_T_MAX;
-		hit->t = t;
+		t = (ft_dot(v3_sub(plan->o, ray.o), plan->dir) / denom);
 		if (t > 0)
 		{
-			hit->inside = true;
-			hit->intersection = true;
-			hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
+			hit->t = t;
+			hit->h_point = get_point_on_ray_at(t, ray);
 			hit->h_point_obj_coord = hit->h_point;
-			if (ft_dot(plan->dir, normalize(ray->dir)) > 0)
-				hit->inside = false;
+			if (ft_dot(plan->dir, normalize(ray.dir)) > 0)
+				hit->normal = plan->dir;
+			else
+				hit->normal = v3_multi(-1, plan->dir);
+			hit->intersection = true;
 		}
 	}
 }

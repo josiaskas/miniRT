@@ -13,12 +13,22 @@
 #include "ray.h"
 #include "transformation.h"
 #include <stdio.h>
+
+t_ray	make_ray(t_v3 origin, t_v3 direction)
+{
+	t_ray	ray;
+
+	ray.o = origin;
+	ray.dir = direction;
+	return (ray);
+}
+
 /*
  * return a ray from camera eye to the pixel
  * use a matrix to transform from camera to view world
  * ray dir is normalized
  */
-t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
+t_ray	ray_for_pixel(t_cam *cam, double px, double py)
 {
 	double	off[2];
 	t_v4	v;
@@ -36,25 +46,24 @@ t_ray	*ray_for_pixel(t_cam *cam, double px, double py)
 		cam->inv_tr.data[2][3]};
 	p[1] = (t_v3){v.r, v.g, v.b};
 	dir = normalize(v3_sub(p[1], p[0]));
-	return (build_ray(p[0], dir));
+	return (make_ray(p[0], dir));
 }
 
 /*
 * Return the ray in the object space
-* The ray need after usage to be freed
 */
-t_ray	*get_transformed_ray(t_ray *ray, const t_m4 transform, const t_v3 sp_o)
+t_ray	get_transformed_ray(t_ray ray, const t_m4 transform, const t_v3 sp_o)
 {
-	t_ray	*tr_ray;
+	t_ray	tr_ray;
 	t_v4	o;
 	t_v4	dir;
 	t_v4	oo;
 
-	o = multiply_m4_v4(transform, v3_to_v4(ray->o));
+	o = multiply_m4_v4(transform, v3_to_v4(ray.o));
 	oo = multiply_m4_v4(transform, v3_to_v4(sp_o));
-	dir = multiply_m4_v4(transform, v3_to_v4(ray->dir));
+	dir = multiply_m4_v4(transform, v3_to_v4(ray.dir));
 	dir = v4_sub(dir, oo);
-	tr_ray = build_ray((t_v3){o.r, o.g, o.b}, (t_v3){dir.r, dir.g, dir.b});
+	tr_ray = make_ray((t_v3){o.r, o.g, o.b}, (t_v3){dir.r, dir.g, dir.b});
 	return (tr_ray);
 }
 

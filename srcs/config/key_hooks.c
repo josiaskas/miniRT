@@ -18,6 +18,7 @@ static inline void	select_new_camera(t_app *app)
 	switch_camera(app->scene);
 	render(app);
 	app->conf.rerender = true;
+	render_image(app);
 }
 
 int	key_pressed_hook(int key, t_app *app)
@@ -41,6 +42,7 @@ int	key_pressed_hook(int key, t_app *app)
 		else
 			app->conf.c_mode = e_select_mode;
 		app->conf.rerender = true;
+		render_image(app);
 	}
 	return (key_pressed_hook_suite(key, app));
 }

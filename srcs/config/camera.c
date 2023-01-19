@@ -72,4 +72,5 @@ inline void	do_camera_rotation(int key, t_app *app)
 	else if (app->conf.c_mode == e_z_y_mode)
 		rotate_in_z_y(key, 0.0349066, cam);
 	app->conf.rerender = true;
+	render_image(app);
 }

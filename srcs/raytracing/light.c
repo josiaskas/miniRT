@@ -43,7 +43,7 @@ static t_color	spec_light(t_light *light, t_hit *hit, t_v3 light_v)
 
 	v = v3_multi(-1, light_v);
 	reflect_v = reflect(&hit->normal, &v);
-	reflect_dot_eye = ft_dot(reflect_v, normalize(hit->ray->o));
+	reflect_dot_eye = ft_dot(reflect_v, normalize(hit->ray.o));
 	if (reflect_dot_eye <= 0)
 		return ((t_v4){0, 0, 0, 1});
 	factor = pow(reflect_dot_eye, hit->object->material.shininess);
@@ -54,20 +54,15 @@ static t_color	spec_light(t_light *light, t_hit *hit, t_v3 light_v)
 // check if there is an object between a light and point
 bool	is_shadowed(t_scene *world, t_v3 to_light, const t_point p, double dist)
 {
-	t_ray	*shadow_ray;
-	t_array	*records;
-	t_hit	*found;
+	t_ray	shadow_ray;
+	t_hit	found;
 	bool	in_shadow;
 
 	in_shadow = false;
-	found = NULL;
-	shadow_ray = build_ray(p, to_light);
-	records = do_intersect_objs(world, shadow_ray);
-	found = get_first_obj_hit(records, dist, RAY_T_MIN);
-	if (found != NULL)
+	shadow_ray = make_ray(p, to_light);
+	found = get_first_obj_hit(world, shadow_ray, dist, 0);
+	if (found.intersection == true)
 		in_shadow = true;
-	ft_free_d_array(records);
-	free(shadow_ray);
 	return (in_shadow);
 }
 

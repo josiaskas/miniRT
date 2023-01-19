@@ -31,15 +31,15 @@ bool	solve_quad(const double terms[], double *t0, double *t1)
 		return (false);
 	else if (discriminant == 0)
 	{
-		*t0 = -0.5f * (terms[1] / terms[0]);
+		*t0 = -0.5 * (terms[1] / terms[0]);
 		*t1 = *t0;
 	}
 	else
 	{
-		if (terms[1] > 0.0f)
-			q = -0.5f * (terms[1] + sqrtf(discriminant));
+		if (terms[1] > 0.0)
+			q = -0.5 * (terms[1] + sqrt(discriminant));
 		else
-			q = -0.5f * (terms[1] - sqrtf(discriminant));
+			q = -0.5 * (terms[1] - sqrt(discriminant));
 		*t0 = q / terms[0];
 		*t1 = terms[2] / q;
 	}
@@ -48,75 +48,99 @@ bool	solve_quad(const double terms[], double *t0, double *t1)
 	return (true);
 }
 
-static inline t_hit	*do_intersect(t_ray *ray, t_hittable *obj)
+static inline t_hit	do_intersect(t_ray ray, t_hittable *obj)
 {
-	t_hit	*hit;
+	t_hit	hit;
 
-	hit = (t_hit *)ft_calloc(1, sizeof(t_hit));
-	if (hit)
-	{
-		hit->object = obj;
-		hit->intersection = false;
-		hit->t = RAY_T_MAX;
-		hit->type = obj->type;
-		hit->ray = ray;
-		hit->normal = (t_v3){0, 0, 0};
-		if (obj->type == e_hit_sphere)
-			intersect_sphere(hit, obj, ray);
-		else if (obj->type == e_hit_sphere_spec)
-			intersect_tr_sphere(hit, obj, ray);
-		else if (obj->type == e_hit_plane)
-			intersect_plane(hit, obj, ray);
-		else if (obj->type == e_hit_cylinder)
-			intersect_cylinder(hit, obj, ray);
-	}
+	hit.object = obj;
+	hit.intersection = false;
+	hit.t = RAY_T_MAX;
+	hit.type = obj->type;
+	hit.ray = ray;
+	hit.normal = (t_v3){0, 0, 0};
+	hit.inside = false;
+	hit.h_point = (t_v3){0, 0, 0};
+	hit.h_point_obj_coord = (t_v3){0, 0, 0};
+	hit.acne_p = (t_v3){0, 0, 0};
+	if (obj->type == e_hit_sphere)
+		intersect_sphere(&hit, obj, ray);
+	else if (obj->type == e_hit_sphere_spec)
+		intersect_tr_sphere(&hit, obj, ray);
+	else if (obj->type == e_hit_plane)
+		intersect_plane(&hit, obj, ray);
+	else if (obj->type == e_hit_cylinder)
+		intersect_cylinder(&hit, obj, ray);
 	return (hit);
 }
 
-t_array	*do_intersect_objs(t_scene *scene, t_ray *ray)
+//t_array	*do_intersect_objs(t_scene *scene, t_ray ray)
+//{
+//	t_array		*records;
+//	t_hittable	*obj;
+//	t_hit		*hit;
+//	size_t		i;
+//
+//	records = ft_new_array();
+//	if (records)
+//	{
+//		i = 0;
+//		while (i < scene->hittable->length)
+//		{
+//			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
+//			hit = do_intersect(ray, obj);
+//			if (hit->intersection == true)
+//				ft_push(records, hit);
+//			else
+//				free(hit);
+//			i++;
+//		}
+//	}
+//	return (records);
+//}
+//
+//t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
+//{
+//	size_t	i;
+//	t_hit	*first_hit;
+//	t_hit	*hit;
+//
+//	first_hit = NULL;
+//	i = 0;
+//	if (!rec)
+//		return (NULL);
+//	while (i < rec->length)
+//	{
+//		hit = (t_hit *)ft_get_elem(rec, i);
+//		if (hit->intersection && (hit->t < max) && (hit->t > min))
+//		{
+//			first_hit = hit;
+//			max = hit->t;
+//		}
+//		i++;
+//	}
+//	return (first_hit);
+//}
+
+t_hit	get_first_obj_hit(t_scene *scene, t_ray ray, double max, double min)
 {
-	t_array		*records;
-	t_hittable	*obj;
-	t_hit		*hit;
+	t_hit		hit;
+	t_hit		closest_hit;
+	t_hittable	*current_obj;
 	size_t		i;
 
-	records = ft_new_array();
-	if (records)
-	{
-		i = 0;
-		while (i < scene->hittable->length)
-		{
-			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
-			hit = do_intersect(ray, obj);
-			if (hit->intersection == true)
-				ft_push(records, hit);
-			else
-				free(hit);
-			i++;
-		}
-	}
-	return (records);
-}
-
-t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
-{
-	size_t	i;
-	t_hit	*first_hit;
-	t_hit	*hit;
-
-	first_hit = NULL;
 	i = 0;
-	if (!rec)
-		return (NULL);
-	while (i < rec->length)
+	closest_hit.intersection = false;
+	closest_hit.t = RAY_T_MAX;
+	while (i < scene->hittable->length)
 	{
-		hit = (t_hit *)ft_get_elem(rec, i);
-		if (hit->intersection && (hit->t < max) && (hit->t > min))
+		current_obj = (t_hittable*)ft_get_elem(scene->hittable, i);
+		hit = do_intersect(ray, current_obj);
+		if (((hit.t > min) && (hit.t < max)) && (hit.intersection == true))
 		{
-			first_hit = hit;
-			max = hit->t;
+			if ((!closest_hit.intersection) || (hit.t < closest_hit.t))
+				closest_hit = hit;
 		}
 		i++;
 	}
-	return (first_hit);
+	return (closest_hit);
 }

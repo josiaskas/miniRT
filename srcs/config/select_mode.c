@@ -14,19 +14,15 @@
 
 static inline t_hittable	*find_selected_object(t_scene	*scn, int x, int y)
 {
-	t_array		*records;
-	t_hit		*first;
+	t_hit		first;
 	t_hittable	*selected;
-	t_ray		*ray;
+	t_ray		ray;
 
-	ray = ray_for_pixel(scn->selected_camera, x, y);
-	records = do_intersect_objs(scn, ray);
-	first = get_first_obj_hit(records, RAY_T_MAX, 0);
 	selected = NULL;
-	if (first)
-		selected = first->object;
-	ft_free_d_array(records);
-	free(ray);
+	ray = ray_for_pixel(scn->selected_camera, x, y);
+	first = get_first_obj_hit(scn, ray, 3000, 0);
+	if (first.intersection)
+		selected = first.object;
 	return (selected);
 }
 
@@ -105,6 +101,7 @@ void	start_selecting_mode(t_app *app, int x, int y)
 			app->conf.selected_obj = NULL;
 			app->conf.c_mode = e_normal_mode;
 			app->conf.rerender = true;
+			render_image(app);
 		}
 		else
 			printf("No object found at that position, try again\n");

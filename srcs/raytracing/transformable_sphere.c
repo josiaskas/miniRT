@@ -27,7 +27,7 @@ void	compute_transformable_sphere_hit(t_hit *hit)
 	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
 }
 
-static inline void	set_point(t_hit *hit, t_ray *obj_r)
+static inline void	set_point(t_hit *hit, t_ray t_ray)
 {
 	if (hit->t < 0)
 	{
@@ -36,22 +36,22 @@ static inline void	set_point(t_hit *hit, t_ray *obj_r)
 	}
 	hit->intersection = true;
 	hit->h_point = get_point_on_ray_at(hit->t, hit->ray);
-	hit->h_point_obj_coord = get_point_on_ray_at(hit->t, obj_r);
+	hit->h_point_obj_coord = get_point_on_ray_at(hit->t, t_ray);
 }
 
-void	intersect_tr_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
+void	intersect_tr_sphere(t_hit *hit, t_hittable *sphere, t_ray ray)
 {
 	double	terms[3];
 	double	t[2];
 	t_v3	sphere_to_ray;
-	t_ray	*s_ray;
+	t_ray	tr_ray;
 
 	t[1] = RAY_T_MAX;
 	t[0] = RAY_T_MAX;
-	s_ray = get_transformed_ray(ray, sphere->inv_tr, (t_v3){0, 0, 0});
-	sphere_to_ray = v3_sub(s_ray->o, (t_v3){0, 0, 0});
-	terms[0] = ft_dot(s_ray->dir, s_ray->dir);
-	terms[1] = 2 * ft_dot(s_ray->dir, sphere_to_ray);
+	tr_ray = get_transformed_ray(ray, sphere->inv_tr, (t_v3){0, 0, 0});
+	sphere_to_ray = v3_sub(tr_ray.o, (t_v3){0, 0, 0});
+	terms[0] = ft_dot(tr_ray.dir, tr_ray.dir);
+	terms[1] = 2 * ft_dot(tr_ray.dir, sphere_to_ray);
 	terms[2] = ft_dot(sphere_to_ray, sphere_to_ray) - 1.0;
 	if (solve_quad(terms, &t[0], &t[1]))
 	{
@@ -63,9 +63,8 @@ void	intersect_tr_sphere(t_hit *hit, t_hittable *sphere, t_ray *ray)
 			hit->inside = true;
 			hit->t = t[1];
 		}
-		set_point(hit, s_ray);
+		set_point(hit, tr_ray);
 	}
-	free(s_ray);
 }
 
 // apply a new transform matrix to the sphere

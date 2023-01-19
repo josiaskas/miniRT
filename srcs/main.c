@@ -23,9 +23,10 @@ static	void	run_app(bool render_in_a_window, t_app *app)
 	}
 	else
 	{
+		app->conf.rerender = true;
 		if (!init_window(app))
 			exit_app(app, true);
-		if (!render(app))
+		if (render_image(app))
 			exit_app(app, true);
 		app_loop(app);
 	}
