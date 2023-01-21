@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:34:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/11/10 18:14:11 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/20 22:48:53 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,54 +73,6 @@ static inline t_hit	do_intersect(t_ray ray, t_hittable *obj)
 	return (hit);
 }
 
-//t_array	*do_intersect_objs(t_scene *scene, t_ray ray)
-//{
-//	t_array		*records;
-//	t_hittable	*obj;
-//	t_hit		*hit;
-//	size_t		i;
-//
-//	records = ft_new_array();
-//	if (records)
-//	{
-//		i = 0;
-//		while (i < scene->hittable->length)
-//		{
-//			obj = (t_hittable *)ft_get_elem(scene->hittable, i);
-//			hit = do_intersect(ray, obj);
-//			if (hit->intersection == true)
-//				ft_push(records, hit);
-//			else
-//				free(hit);
-//			i++;
-//		}
-//	}
-//	return (records);
-//}
-//
-//t_hit	*get_first_obj_hit(t_array *rec, double max, double min)
-//{
-//	size_t	i;
-//	t_hit	*first_hit;
-//	t_hit	*hit;
-//
-//	first_hit = NULL;
-//	i = 0;
-//	if (!rec)
-//		return (NULL);
-//	while (i < rec->length)
-//	{
-//		hit = (t_hit *)ft_get_elem(rec, i);
-//		if (hit->intersection && (hit->t < max) && (hit->t > min))
-//		{
-//			first_hit = hit;
-//			max = hit->t;
-//		}
-//		i++;
-//	}
-//	return (first_hit);
-//}
-
 t_hit	get_first_obj_hit(t_scene *scene, t_ray ray, double max, double min)
 {
 	t_hit		hit;
@@ -133,7 +85,7 @@ t_hit	get_first_obj_hit(t_scene *scene, t_ray ray, double max, double min)
 	closest_hit.t = RAY_T_MAX;
 	while (i < scene->hittable->length)
 	{
-		current_obj = (t_hittable*)ft_get_elem(scene->hittable, i);
+		current_obj = (t_hittable *)ft_get_elem(scene->hittable, i);
 		hit = do_intersect(ray, current_obj);
 		if (((hit.t > min) && (hit.t < max)) && (hit.intersection == true))
 		{

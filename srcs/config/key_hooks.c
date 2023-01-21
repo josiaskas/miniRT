@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/24 14:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 20:59:44 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/20 22:49:40 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	key_pressed_hook(int key, t_app *app)
 		close_window(app);
 	else if (key == MAIN_PAD_C)
 		select_new_camera(app);
-	else if (key == MAIN_PAD_A || key == MAIN_PAD_D || key == MAIN_PAD_S || key == MAIN_PAD_W)
+	else if (key == MAIN_PAD_A || key == MAIN_PAD_D
+		|| key == MAIN_PAD_S || key == MAIN_PAD_W)
 		do_camera_rotation(key, app);
 	else if (key == MAIN_PAD_I)
 	{

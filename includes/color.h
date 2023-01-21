@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/04 18:56:04 by jkasongo          #+#    #+#             */
-/*   Updated: 2022/10/31 17:57:43 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/20 22:49:04 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,5 @@ static inline void	color_correction(t_color *color)
 	if (color->b > 1)
 		color->b = 1;
 }
-
 
 #endif

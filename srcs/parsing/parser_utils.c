@@ -6,7 +6,7 @@
 /*   By: jkasongo <jkasongo@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/23 14:51:21 by jkasongo          #+#    #+#             */
-/*   Updated: 2023/01/17 20:34:45 by jkasongo         ###   ########.fr       */
+/*   Updated: 2023/01/20 22:48:18 by jkasongo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,15 @@ static inline bool	parse_double_suite(char *str, double *result)
 {
 	bool	is_digit;
 	double	decimal;
-	int	    count_digit;
+	int		count_digit;
 
 	decimal = 0.0;
 	count_digit = 0;
 	is_digit = false;
 	while (ft_isdigit(*str) || (*str == '.'))
 	{
-		if ((*str == '.' && is_digit) || (*str == '.' && !ft_isdigit(*(str + 1))))
+		if ((*str == '.' && is_digit)
+			|| (*str == '.' && !ft_isdigit(*(str + 1))))
 			return (false);
 		else if (*str == '.')
 			is_digit = true;
@@ -60,8 +61,8 @@ static inline bool	parse_double_suite(char *str, double *result)
 
 bool	parse_double_from_str(char *str, double *result)
 {
-	bool 	is_valid;
-	bool 	is_negative;
+	bool	is_valid;
+	bool	is_negative;
 
 	is_valid = false;
 	is_negative = false;
