@@ -30,34 +30,22 @@ inline t_color	shade_hit(t_scene *world, t_hit *hit)
 	return (color);
 }
 
-inline t_color	color_at(t_scene *world, t_ray *ray)
+t_color	get_pixel_clr(t_scene *scn, double x, double y)
 {
-	t_array	*records;
-	t_hit	*first_hit;
 	t_color	color;
+	t_cam	*cam;
+	t_hit	first_hit;
+	t_ray	ray;
 
 	color = (t_v4){0, 0, 0, 1};
-	records = do_intersect_objs(world, ray);
-	first_hit = get_first_obj_hit(records, RAY_T_MAX, 0);
-	if (first_hit != NULL)
+	cam = (t_cam *)scn->selected_camera;
+	ray = ray_for_pixel(cam, x, y);
+	first_hit = get_first_obj_hit(scn, ray, 5000, RAY_T_MIN);
+	if (first_hit.intersection)
 	{
-		ft_compute_hit(first_hit);
-		color = shade_hit(world, first_hit);
+		ft_compute_hit(&first_hit);
+		color = shade_hit(scn, &first_hit);
 	}
-	ft_free_d_array(records);
-	return (color);
-}
-
-t_color	get_pixel_clr(t_scene *scene, double x, double y)
-{
-	t_color	color;
-	t_cam	*camera;
-	t_ray	*ray;
-
-	camera = scene->selected_camera;
-	ray = ray_for_pixel(camera, x, y);
-	color = color_at(scene, ray);
-	free(ray);
 	return (color);
 }
 

@@ -20,7 +20,7 @@ static inline t_hittable	*find_selected_object(t_scene	*scn, int x, int y)
 
 	selected = NULL;
 	ray = ray_for_pixel(scn->selected_camera, x, y);
-	first = get_first_obj_hit(scn, ray, 3000, 0);
+	first = get_first_obj_hit(scn, ray, 5000, 0);
 	if (first.intersection)
 		selected = first.object;
 	return (selected);
@@ -31,9 +31,8 @@ static void	change_object_color(t_hittable *obj)
 	t_v4	color;
 
 	color = obj->material.main;
-	printf("> Curent color applied on sphere is : (%lf, %lf, %lf)\n",
+	printf("> Curent color applied on sphere is : (%lf, %lf, %lf)\n> Set new color \n",
 		color.r, color.g, color.b);
-	printf("> Set new color \n");
 	get_line_color(&color);
 	obj->material.main = color;
 }

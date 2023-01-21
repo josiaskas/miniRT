@@ -22,7 +22,7 @@ void	get_trans_vector(t_v3 *v)
 	line = NULL;
 	while (!is_valid)
 	{
-		printf("-Translation (x,y,z): ");
+		ft_printf("-Translation (x,y,z): ");
 		get_next_line(STDIN_FILENO, &line);
 		is_valid = parse_a_vector(line, v);
 		free(line);
@@ -43,7 +43,7 @@ void	get_line_color(t_color *color)
 	v = (t_v3){0, 0, 0};
 	while (!is_valid)
 	{
-		printf("\033[0;32m-Color (r,g,b)[0-255]:\033[0m ");
+		ft_putstr_fd("\033[0;32m-Color (r,g,b)[0-255]:\033[0m ", 1);
 		get_next_line(STDIN_FILENO, &line);
 		is_valid = parse_a_vector(line, &v);
 		free(line);
@@ -70,7 +70,7 @@ void	get_line_angles(t_v3 *angles)
 	*angles = (t_v3){0, 0, 0};
 	while (!is_valid)
 	{
-		printf("\033[0;32m-Angles (x,y,z)[180,-180]:\033[0m ");
+		ft_putstr_fd("\033[0;32m-Angles (x,y,z)[180,-180]:\033[0m ", 1);
 		get_next_line(STDIN_FILENO, &line);
 		is_valid = parse_a_vector(line, angles);
 		free(line);

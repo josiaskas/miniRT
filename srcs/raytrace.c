@@ -34,7 +34,6 @@ static inline unsigned int	get_trgb(t_color *color)
 	return ((a << 24) | (r << 16) | (g << 8) | b);
 }
 
-// clear all data stored to prepare a new frame
 static inline void	print_clr_to_screen(t_app *app, t_color clr, int x, int y)
 {
 	int		pos;
@@ -83,7 +82,7 @@ t_color	get_pixel_clr(t_scene *scn, double x, double y)
 	color = (t_v4){0, 0, 0, 1};
 	cam = (t_cam *)scn->selected_camera;
 	ray = ray_for_pixel(cam, x, y);
-	first_hit = get_first_obj_hit(scn, ray, 3000, RAY_T_MIN);
+	first_hit = get_first_obj_hit(scn, ray, 5000, RAY_T_MIN);
 	if (first_hit.intersection)
 	{
 		ft_compute_hit(&first_hit);

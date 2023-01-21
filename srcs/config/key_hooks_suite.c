@@ -27,6 +27,7 @@ static void	select_plan_mode(t_app *app)
 	else
 		app->conf.c_mode = e_z_y_mode;
 	app->conf.rerender = true;
+	render_image(app);
 }
 
 static void	light_edition(t_light *light, size_t i)
@@ -35,7 +36,7 @@ static void	light_edition(t_light *light, size_t i)
 	t_v3	translate;
 
 	color = light->color;
-	printf("\033[0;31m-- Editing Light: %ld --\033[0m\n", i);
+	printf("\033[0;31m-- Editing Light: %ld --\033[0m\n", (i + 1));
 	printf("> Current light position: (%lf, %lf, %lf)\n",
 		light->o.x, light->o.y, light->o.z);
 	get_trans_vector(&translate);
@@ -49,6 +50,7 @@ static void	light_edition(t_light *light, size_t i)
 		get_line_color(&color);
 		light->color = color;
 	}
+	printf("\033[0;31m-- Light: %ld edited --\033[0m\n", (i + 1));
 }
 
 static void	select_light_edition(int key, t_app *app)
@@ -81,17 +83,17 @@ static void	move_camera_eye(int key, t_app *app)
 
 	cam = app->scene->selected_camera;
 	eye = cam->eye;
-	if (key == MAIN_PAD_H)
+	if (key == ARROW_RIGHT)
 		eye.x += 1.0;
-	else if (key == MAIN_PAD_B)
+	else if (key == ARROW_LEFT)
 		eye.x -= 1.0;
-	else if (key == MAIN_PAD_J)
+	else if (key == NUM_PAD_PLUS || key == MP_PLUS)
 		eye.y += 1.0;
-	else if (key == MAIN_PAD_N)
+	else if (key == NUM_PAD_MINUS || key == MP_MINUS)
 		eye.y -= 1.0;
-	else if (key == MAIN_PAD_K)
+	else if (key == ARROW_UP)
 		eye.z += 1.0;
-	else if (key == MAIN_PAD_M)
+	else
 		eye.z -= 1.0;
 	move_camera(cam, eye, cam->look_at);
 	app->conf.rerender = true;
@@ -104,12 +106,10 @@ int	key_pressed_hook_suite(int key, t_app *app)
 		select_plan_mode(app);
 	else if (MAIN_PAD_1 <= key && key <= MAIN_PAD_9)
 		select_light_edition(key, app);
-	else if (key == MAIN_PAD_H
-		|| key == MAIN_PAD_B
-		|| key == MAIN_PAD_K
-		|| key == MAIN_PAD_M
-		|| key == MAIN_PAD_J
-		|| key == MAIN_PAD_N)
+	else if (key == ARROW_UP || key == ARROW_DOWN
+		|| key == ARROW_LEFT || key == ARROW_RIGHT
+		|| key == NUM_PAD_PLUS || key == NUM_PAD_MINUS
+		|| key == MP_PLUS || key == MP_MINUS)
 		move_camera_eye(key, app);
 	else if (key == MAIN_PAD_R)
 	{

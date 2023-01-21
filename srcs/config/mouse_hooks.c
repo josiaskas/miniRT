@@ -25,6 +25,7 @@ void	ft_zoom_hook(int button, t_app *app)
 	if (fov >= 1 && fov <= 180)
 		update_cam(cam, (double)W_HEIGHT, (double)W_WIDTH, fov);
 	app->conf.rerender = true;
+	render_image(app);
 }
 
 int	mouse_pressed(int button, int x, int y, t_app *app)

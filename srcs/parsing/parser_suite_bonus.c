@@ -31,6 +31,7 @@ bool	parse_sphere_bonus(char **tokens, t_app *app)
 	t_point		origin;
 
 	app->error_message = "Error during parsing, On a bonus sphere";
+	ft_bzero(data, sizeof(t_v3) * 3);
 	if (!tokens_has_valid_params_nbr(tokens, 5))
 		return (false);
 	if (!parse_a_vector(tokens[1], &origin))

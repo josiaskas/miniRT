@@ -24,7 +24,7 @@ void	compute_transformable_sphere_hit(t_hit *hit)
 	hit->normal = normalize((t_v3){n.r, n.g, n.b});
 	if (hit->inside)
 		hit->normal = v3_multi(-1, hit->normal);
-	hit->acne_p = v3_add(hit->h_point, v3_multi(RAY_T_MIN, hit->normal));
+	hit->acne_p = v3_add(hit->h_point, v3_multi(0, hit->normal));
 }
 
 static inline void	set_point(t_hit *hit, t_ray t_ray)

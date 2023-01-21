@@ -31,7 +31,28 @@ static void	run_thread_batch(t_thread	info[], void *(*apply)(void *))
 	return ;
 }
 
-// clear all data stored to prepare a new frame
+static inline unsigned int	get_trgb(t_color *color)
+{
+	unsigned int	r;
+	unsigned int	g;
+	unsigned int	b;
+	unsigned int	a;
+
+	if (color->r > 1)
+		color->r = 1;
+	if (color->g > 1)
+		color->g = 1;
+	if (color->b > 1)
+		color->b = 1;
+	if (color->a > 1)
+		color->a = 1;
+	r = (unsigned int)(color->r * 255);
+	g = (unsigned int)(color->g * 255);
+	b = (unsigned int)(color->b * 255);
+	a = (unsigned int)(color->a);
+	return ((a << 24) | (r << 16) | (g << 8) | b);
+}
+
 static inline void	print_clr_to_screen(t_thread *t, t_color clr, int x, int y)
 {
 	int		pos;
@@ -49,7 +70,7 @@ static inline void	print_clr_to_screen(t_thread *t, t_color clr, int x, int y)
 	{
 		pos = (y * img->line_length) + (x * (img->bits_per_pixel / 8));
 		pixel = img->data + pos;
-		*(unsigned int *)pixel = get_trgb(clr);
+		*(unsigned int *)pixel = get_trgb(&clr);
 	}
 }
 
