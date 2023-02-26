@@ -83,15 +83,15 @@ static void	move_camera_eye(int key, t_app *app)
 
 	cam = app->scene->selected_camera;
 	eye = cam->eye;
-	if (key == ARROW_RIGHT)
+	if (key == MAIN_PAD_D)
 		eye.x += 1.0;
-	else if (key == ARROW_LEFT)
+	else if (key == MAIN_PAD_A)
 		eye.x -= 1.0;
-	else if (key == NUM_PAD_PLUS || key == MP_PLUS)
+	else if (key == MAIN_PAD_R)
 		eye.y += 1.0;
-	else if (key == NUM_PAD_MINUS || key == MP_MINUS)
+	else if (key == MAIN_PAD_F)
 		eye.y -= 1.0;
-	else if (key == ARROW_UP)
+	else if (key == MAIN_PAD_W)
 		eye.z += 1.0;
 	else
 		eye.z -= 1.0;
@@ -106,15 +106,8 @@ int	key_pressed_hook_suite(int key, t_app *app)
 		select_plan_mode(app);
 	else if (MAIN_PAD_1 <= key && key <= MAIN_PAD_9)
 		select_light_edition(key, app);
-	else if (key == ARROW_UP || key == ARROW_DOWN
-		|| key == ARROW_LEFT || key == ARROW_RIGHT
-		|| key == NUM_PAD_PLUS || key == NUM_PAD_MINUS
-		|| key == MP_PLUS || key == MP_MINUS)
+	else if (key == MAIN_PAD_W || key == MAIN_PAD_S || key == MAIN_PAD_A
+		|| key == MAIN_PAD_D || key == MAIN_PAD_R || key == MAIN_PAD_F)
 		move_camera_eye(key, app);
-	else if (key == MAIN_PAD_R)
-	{
-		app->conf.rerender = true;
-		render_image(app);
-	}
 	return (0);
 }

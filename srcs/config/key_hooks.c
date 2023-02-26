@@ -27,8 +27,7 @@ int	key_pressed_hook(int key, t_app *app)
 		close_window(app);
 	else if (key == MAIN_PAD_C)
 		select_new_camera(app);
-	else if (key == MAIN_PAD_A || key == MAIN_PAD_D
-		|| key == MAIN_PAD_S || key == MAIN_PAD_W)
+	else if (key == ARROW_UP || key == ARROW_DOWN || key == 123 || key == 124)
 		do_camera_rotation(key, app);
 	else if (key == MAIN_PAD_I)
 	{

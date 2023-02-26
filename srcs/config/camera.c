@@ -17,13 +17,13 @@ static inline void	rotate_in_x_y(int key, double step, t_cam *cam)
 	t_v4	forward;
 
 	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
-	if (key == MAIN_PAD_W)
+	if (key == ARROW_UP)
 		forward = multiply_m4_v4(rotation_x(-step), forward);
-	else if (key == MAIN_PAD_S)
+	else if (key == ARROW_DOWN)
 		forward = multiply_m4_v4(rotation_x(step), forward);
-	else if (key == MAIN_PAD_A)
+	else if (key == ARROW_LEFT)
 		forward = multiply_m4_v4(rotation_y(-step), forward);
-	else if (key == MAIN_PAD_D)
+	else if (key == ARROW_RIGHT)
 		forward = multiply_m4_v4(rotation_y(step), forward);
 	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
@@ -33,13 +33,13 @@ static inline void	rotate_in_x_z(int key, double step, t_cam *cam)
 	t_v4	forward;
 
 	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
-	if (key == MAIN_PAD_W)
+	if (key == ARROW_UP)
 		forward = multiply_m4_v4(rotation_x(-step), forward);
-	else if (key == MAIN_PAD_S)
+	else if (key == ARROW_DOWN)
 		forward = multiply_m4_v4(rotation_x(step), forward);
-	else if (key == MAIN_PAD_A)
+	else if (key == ARROW_LEFT)
 		forward = multiply_m4_v4(rotation_z(-step), forward);
-	else if (key == MAIN_PAD_D)
+	else if (key == ARROW_RIGHT)
 		forward = multiply_m4_v4(rotation_z(step), forward);
 	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
@@ -49,13 +49,13 @@ static inline void	rotate_in_z_y(int key, double step, t_cam *cam)
 	t_v4	forward;
 
 	forward = (t_v4){cam->look_at.x, cam->look_at.y, cam->look_at.z, 1};
-	if (key == MAIN_PAD_W)
+	if (key == ARROW_UP)
 		forward = multiply_m4_v4(rotation_z(-step), forward);
-	else if (key == MAIN_PAD_S)
+	else if (key == ARROW_DOWN)
 		forward = multiply_m4_v4(rotation_z(step), forward);
-	else if (key == MAIN_PAD_A)
+	else if (key == ARROW_LEFT)
 		forward = multiply_m4_v4(rotation_y(-step), forward);
-	else if (key == MAIN_PAD_D)
+	else if (key == ARROW_RIGHT)
 		forward = multiply_m4_v4(rotation_y(step), forward);
 	move_camera(cam, cam->eye, (t_v3){forward.r, forward.g, forward.b});
 }
