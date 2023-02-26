@@ -5,9 +5,9 @@
     A simple raytracer written in C
 </h4>
 <p align="center">
-    <a href="README.md">Normal</a>
+    <a href="#getting-started">Normal</a>
     ·       
-    <a href="README.fr.md">Bonus</a>
+    <a href="#bonus">Bonus</a>
 </p>
 
 ![MiniRT](./.github/screen/two_light_garage.png)
@@ -71,12 +71,13 @@ Note: If you want to compile the project with the bonus, you can use the followi
 
 ## Bonus
 
-- [x] Multithreading
+- [x] Multithreading (using pthread)
 - [x] Normal mapping
 - [x] Camera switching
 - [x] Save the rendered image in a .bmp file
 - [x] Multiple light sources
 - [x] Multiple objects, with different materials
+- [x] Object own space (sphere, cylinder, plane), with transformations matrix
 
 ## Images
 
